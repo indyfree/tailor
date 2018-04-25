@@ -1,20 +1,22 @@
-.PHONY: clean data lint requirements
+.PHONY: clean data lint requirements venv
 
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-PYTHON_INTERPRETER = python3
+VENV_DIR =  $(PROJECT_DIR)/env
+PYTHON_INTERPRETER = $(VENV_DIR)/bin/python3
+PIP = $(VENV_DIR)/bin/pip
 
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
 
 ## Install Python Dependencies
-requirements:
-	pip install -U pip setuptools wheel
-	pip install -r requirements.txt
+requirements: venv
+	$(PIP) install -U pip setuptools wheel
+	$(PIP) install -r requirements.txt
 
 ## Make Dataset
 data: requirements
@@ -27,5 +29,15 @@ clean:
 
 ## Lint using flake8
 lint:
-	flake8 src
+	$(PYTHON_INTERPRETER) -m flake8 src
+
+## Install virtual environment
+venv:
+ifneq ($(wildcard $(VENV_DIR)/.),)
+	@echo "Found $(VENV_DIR)"
+else
+	@echo "Did not find $(VENV_DIR), creating..."
+	mkdir $(VENV_DIR)
+	python3 -m venv $(VENV_DIR)
+endif
 
