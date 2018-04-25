@@ -4,4 +4,4 @@
 # external requirements
 click
 flake8
-jupiter
+jupyter
