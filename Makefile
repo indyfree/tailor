@@ -12,7 +12,7 @@ PYTHON_INTERPRETER = python3
 #################################################################################
 
 ## Install Python Dependencies
-requirements: test_environment
+requirements:
 	pip install -U pip setuptools wheel
 	pip install -r requirements.txt
 
