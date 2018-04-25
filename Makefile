@@ -33,11 +33,11 @@ lint:
 
 ## Install virtual environment
 venv:
-ifneq ($(wildcard $(VENV_DIR)/.),)
+ifneq ($(wildcard $(VENV_DIR)/*),)
 	@echo "Found $(VENV_DIR)"
 else
 	@echo "Did not find $(VENV_DIR), creating..."
-	mkdir $(VENV_DIR)
+	mkdir -p $(VENV_DIR)
 	python3 -m venv $(VENV_DIR)
 endif
 
