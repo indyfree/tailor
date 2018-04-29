@@ -16,17 +16,11 @@ Stud3 = 'Bullmann, Christoph Alexander, 5585627, bullmanc'
 
 
 # ## Import
-
-# In[13]:
-
-
-get_ipython().run_line_magic('matplotlib', 'inline')
+%matplotlib inline
 
 import numpy
 import pandas as pa
 import matplotlib.pyplot as plt
-
-
 # In[14]:
 
 
