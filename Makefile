@@ -6,6 +6,7 @@
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 VENV_DIR =  $(PROJECT_DIR)/env
+DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
 PYTHON_INTERPRETER = $(VENV_DIR)/bin/python3
 PIP = $(VENV_DIR)/bin/pip
 
@@ -19,8 +20,12 @@ requirements: venv
 	$(PIP) install -r requirements.txt
 
 ## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py
+data:
+ifeq ($(wildcard $(DATA_RAW_DIR)/.),)
+	@echo "Creating directory $(DATA_RAW_DIR)"
+	@mkdir -p $(DATA_RAW_DIR)
+endif
+	$(PYTHON_INTERPRETER) src/data/make_dataset.py $(DATA_RAW_DIR)
 
 ## Delete all compiled Python files
 clean:
