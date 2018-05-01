@@ -6,6 +6,7 @@
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 VENV_DIR =  $(PROJECT_DIR)/env
+NOTEBOOK_DIR =  $(PROJECT_DIR)/notebooks
 DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
 PYTHON_INTERPRETER = $(VENV_DIR)/bin/python3
 PIP = $(VENV_DIR)/bin/pip
@@ -35,6 +36,10 @@ clean:
 ## Lint using flake8
 lint:
 	$(PYTHON_INTERPRETER) -m flake8 src
+
+jupyter:
+	@echo "Running jupyter notebook in background..."
+	@$(PYTHON_INTERPRETER) -m jupyter notebook --notebook-dir=$(NOTEBOOK_DIR) &> /dev/null &
 
 ## Install virtual environment
 venv:
