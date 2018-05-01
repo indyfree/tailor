@@ -18,8 +18,7 @@ def load_dataframe(FILE_PATH):
 
 
 def main():
-    raw_dataframe = load_raw_dataframe()
-
+    return
 
 if __name__ == '__main__':
     main()
