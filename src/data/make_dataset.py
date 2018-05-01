@@ -29,7 +29,11 @@ def download_data(logger):
     LOCAL_DIR = str(project_dir) + '/data/raw/'
     LOCAL_FILE = 'data.csv'
 
-    with pysftp.Connection(host, username=username, password=password) as sftp:
+    # Don't require server to be in ~/.ssh/known_hosts
+    cnopts = pysftp.CnOpts()
+    cnopts.hostkeys = None
+
+    with pysftp.Connection(host, username=username, password=password, cnopts=cnopts) as sftp:
         with sftp.cd(HOST_DIR):                   # temporarily chdir to public
             sftp.get(HOST_FILE, LOCAL_DIR + LOCAL_FILE)        # get a remote file
 
