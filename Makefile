@@ -4,12 +4,14 @@
 # GLOBALS                                                                       #
 #################################################################################
 
-PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-VENV_DIR =  $(PROJECT_DIR)/env
-NOTEBOOK_DIR =  $(PROJECT_DIR)/notebooks
-DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
 PYTHON_INTERPRETER = $(VENV_DIR)/bin/python3
 PIP = $(VENV_DIR)/bin/pip
+
+PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
+NOTEBOOK_DIR =  $(PROJECT_DIR)/notebooks
+VENV_DIR =  $(PROJECT_DIR)/env
 
 #################################################################################
 # COMMANDS                                                                      #
