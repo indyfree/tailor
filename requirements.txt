@@ -5,3 +5,5 @@
 click
 flake8
 jupyter
+pysftp
+python-dotenv
