@@ -8,3 +8,6 @@ jupyter
 pysftp
 python-dotenv
 pandas
+numpy
+matplotlib
+
