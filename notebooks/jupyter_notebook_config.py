@@ -1,4 +1,3 @@
-# Reference: https://svds.com/jupyter-notebook-best-practices-for-data-science/
 import os
 from subprocess import check_call
 
@@ -10,3 +9,6 @@ def post_save(model, os_path, contents_manager):
     check_call(['jupyter', 'nbconvert', '--to', 'script', fname], cwd=d)
 
 c.FileContentsManager.post_save_hook = post_save
+
+# Ignore file types
+c.ContentsManager.hide_globs = ['migrated', '__pycache__',  '*.py', '*.pyc', '*.pyo', '.DS_Store', '*.so', '*.dylib', '*~']
