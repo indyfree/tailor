@@ -72,7 +72,7 @@ target/
 # Spyder
 .spyproject/
 
-# Jupyter NB Checkpoints
+# Jupyter NB
 .ipynb_checkpoints/
 /notebooks/migrated
 
