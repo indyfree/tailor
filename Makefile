@@ -40,7 +40,7 @@ lint:
 
 jupyter:
 	@echo "Running jupyter notebook in background..."
-	@$(PYTHON_INTERPRETER) -m jupyter notebook --notebook-dir=$(NOTEBOOK_DIR) &> /dev/null &
+	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(PYTHON_INTERPRETER) -m jupyter notebook --notebook-dir=$(NOTEBOOK_DIR) &> /dev/null &
 
 ## Install virtual environment
 venv:
