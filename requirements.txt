@@ -9,3 +9,4 @@ pysftp
 python-dotenv
 pandas
 matplotlib
+seaborn
