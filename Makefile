@@ -8,6 +8,7 @@ VENV_DIR =  $(PROJECT_DIR)/env
 
 PYTHON_INTERPRETER = $(VENV_DIR)/bin/python3
 PIP = $(VENV_DIR)/bin/pip
+JUPYTER = $(VENV_DIR)/bin/jupyter
 
 DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
 NOTEBOOK_DIR =  $(PROJECT_DIR)/notebooks
@@ -40,7 +41,7 @@ lint:
 
 jupyter:
 	@echo "Running jupyter notebook in background..."
-	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(PYTHON_INTERPRETER) -m jupyter notebook --notebook-dir=$(NOTEBOOK_DIR) &> /dev/null &
+	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR) &> /dev/null &
 
 ## Install virtual environment
 venv:
