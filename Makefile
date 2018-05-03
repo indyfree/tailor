@@ -8,6 +8,7 @@ VENV_DIR =  $(PROJECT_DIR)/env
 
 PYTHON_INTERPRETER = $(VENV_DIR)/bin/python3
 PIP = $(VENV_DIR)/bin/pip
+IPYTHON = $(VENV_DIR)/bin/ipython
 JUPYTER = $(VENV_DIR)/bin/jupyter
 
 DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
@@ -39,7 +40,12 @@ clean:
 lint:
 	$(PYTHON_INTERPRETER) -m flake8 src
 
+# Launch jupyter server and create custom kernel if necessary
 jupyter:
+ifeq ($(shell $(JUPYTER) kernelspec list | grep tailor),)
+	@echo "Creating custom kernel..."
+	@$(IPYTHON) kernel install --user --name=tailor
+endif
 	@echo "Running jupyter notebook in background..."
 	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR) &> /dev/null &
 
