@@ -1,18 +1,20 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circleci-tailor # directory where steps will run
+    working_directory: ~/circleci-tailor
     docker:
-      - image: circleci/python:3.6.1 # this image as the primary container; this is where all `steps` will run
-    steps: # a collection of executable commands
-      - checkout # special step to check out source code to the working directory
-      - restore_cache: # restores saved dependency cache if the Branch key template or requirements.txt files have not changed since the previous run
+      - image: circleci/python:3.6.1
+    steps:
+      - checkout
+      - restore_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run: # install and activate virtual environment
+      - run:
+          name: "Install virtual environment and requirements"
           command: make requirements
-      - save_cache: # special step to save dependency cache
+      - save_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "env"
-      - run: # run tests
+      - run:
+          name: "Lint sourcefiles and notebooks"
           command: make lint
