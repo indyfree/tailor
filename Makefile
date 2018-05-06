@@ -42,7 +42,7 @@ lint:
 
 # Launch jupyter server and create custom kernel if necessary
 jupyter:
-ifeq ($(shell $(JUPYTER) kernelspec list | grep tailor),)
+ifeq ($(shell $(JUPYTER) kernelspec list | awk '{split($$0,a," "); print a[1]}' | grep tailor),)
 	@echo "Creating custom kernel..."
 	@$(IPYTHON) kernel install --user --name=tailor
 endif
