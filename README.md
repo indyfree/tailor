@@ -1,5 +1,4 @@
 [![CircleCI](https://circleci.com/gh/indyfree/tailor.svg?style=svg&circle-token=9ef56e6ccc4ae36b491f9cd438f6921d5b258727)](https://circleci.com/gh/indyfree/tailor)
-
 # tailor - Tailored Data Solution
 This repository keeps the progress and solution of Group 1 for the *Advanced Data Science in Practice* Seminar.
 The seminar is hold by Prof. Grahl of [University of Cologne](http://www.digital.uni-koeln.de/de/team/prof-dr-joern-grahl/) in cooperation with [tailorit](https://www.tailorit.de).
