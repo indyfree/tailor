@@ -5,6 +5,6 @@ setup(
     packages=find_packages(),
     version='0.0.1',
     description='dsip1',
-    author='niki, chrissy, tobi',
+    author='Niklas R., Christoph B., Tobias R.',
     package_dir={"": "src"},
 )
