@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import src.data.load_dataframe as load
 import src.features.build_features as build
 
-
 PROJECT_DIR = str(Path(__file__).resolve().parents[2])
 OUTPUTPATH = PROJECT_DIR + '/reports/figures/'
 
@@ -15,6 +14,7 @@ def plot_line_chart(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''):
     ax.set_xlabel(x_axis_label, fontsize=12)
     plt.plot(x_axis, y_axis)
     plt.savefig(OUTPUTPATH + filename)
+
 
 def plot_bar_chart(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''):
     fig = plt.figure()
