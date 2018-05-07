@@ -1,9 +1,10 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='src',
-    packages=find_packages(),
+    name='tailor',
+    packages=find_packages('src'),
     version='0.0.1',
     description='dsip1',
-    author='niki, chrissy, tobi',
+    author='Niklas R., Christoph B., Tobias R.',
+    package_dir={"": "src"},
 )
