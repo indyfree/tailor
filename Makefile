@@ -38,11 +38,11 @@ clean:
 
 ## Lint using flake8
 lint:
-	$(PYTHON_INTERPRETER) -m flake8 src
+	$(PYTHON_INTERPRETER) -m flake8 --config=$(PROJECT_DIR)/.flake8 src
 
 # Launch jupyter server and create custom kernel if necessary
 jupyter:
-ifeq ($(shell $(JUPYTER) kernelspec list | grep tailor),)
+ifeq ($(shell $(JUPYTER) kernelspec list | awk '{split($$0,a," "); print a[1]}' | grep tailor),)
 	@echo "Creating custom kernel..."
 	@$(IPYTHON) kernel install --user --name=tailor
 endif
