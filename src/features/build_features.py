@@ -1,5 +1,4 @@
-import src.data.load_dataframe as ld
-import pandas as pd
+
 
 def group_dataframe_by_attribute(dataframe, attribute, mean=False):
 
@@ -10,8 +9,7 @@ def group_dataframe_by_attribute(dataframe, attribute, mean=False):
 
 
 def main():
-    raw_dataframe = ld.load_raw_dataframe()
-    grouped_dataframe = group_dataframe_by_attribute(raw_dataframe, 'time_on_sale')
+    return
 
 if __name__ == '__main__':
     main()
