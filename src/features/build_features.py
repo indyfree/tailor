@@ -11,5 +11,6 @@ def group_dataframe_by_attribute(dataframe, attribute, mean=False):
 def main():
     return
 
+
 if __name__ == '__main__':
     main()
