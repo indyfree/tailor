@@ -47,7 +47,7 @@ ifeq ($(shell $(JUPYTER) kernelspec list | awk '{split($$0,a," "); print a[1]}' 
 	@$(IPYTHON) kernel install --user --name=tailor
 endif
 	@echo "Running jupyter notebook in background..."
-	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR) &> /dev/null &
+	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR)
 
 ## Install virtual environment
 venv:
