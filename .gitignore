@@ -72,8 +72,9 @@ target/
 # Spyder
 .spyproject/
 
-# Jupyter NB Checkpoints
+# Jupyter NB
 .ipynb_checkpoints/
+/notebooks/migrated
 
 # exclude data from source control by default
 /data/

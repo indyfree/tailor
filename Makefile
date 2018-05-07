@@ -1,14 +1,18 @@
-.PHONY: clean data lint requirements venv
+.PHONY: clean data jupyter lint requirements venv
 
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
-
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 VENV_DIR =  $(PROJECT_DIR)/env
-DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
+
 PYTHON_INTERPRETER = $(VENV_DIR)/bin/python3
 PIP = $(VENV_DIR)/bin/pip
+IPYTHON = $(VENV_DIR)/bin/ipython
+JUPYTER = $(VENV_DIR)/bin/jupyter
+
+DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
+NOTEBOOK_DIR =  $(PROJECT_DIR)/notebooks
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -35,6 +39,15 @@ clean:
 ## Lint using flake8
 lint:
 	$(PYTHON_INTERPRETER) -m flake8 src
+
+# Launch jupyter server and create custom kernel if necessary
+jupyter:
+ifeq ($(shell $(JUPYTER) kernelspec list | grep tailor),)
+	@echo "Creating custom kernel..."
+	@$(IPYTHON) kernel install --user --name=tailor
+endif
+	@echo "Running jupyter notebook in background..."
+	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR) &> /dev/null &
 
 ## Install virtual environment
 venv:
