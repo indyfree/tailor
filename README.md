@@ -43,7 +43,7 @@ Download the provided data to `data/raw`.
 ## Run the project
 This project is set up twofold:
 1. Custom functions and algorithms live in the *tailor* python package in `src/tailor`.
-1. A walkthrough through the data science process and visualizations are made with jupyter notebooks in `notebooks`. Required functions from *tailor* are imported.
+2. A walkthrough through the data science process and visualizations are made with jupyter notebooks in `notebooks`. Required functions from *tailor* are imported.
 
 Run the jupyter notebooks with:
 ```bash
