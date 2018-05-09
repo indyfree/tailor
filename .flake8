@@ -1,5 +1,5 @@
 [flake8]
-ignore = H101, H202
+ignore = H101, H202, E501
 exclude =
     .git,
     __pycache__,
