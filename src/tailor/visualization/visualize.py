@@ -1,7 +1,7 @@
 from pathlib import Path
 import matplotlib.pyplot as plt
-import src.tailor.data.load_dataframe as load
-import src.tailor.features.build_features as build
+import tailor
+import tailor.features
 
 PROJECT_DIR = str(Path(__file__).resolve().parents[3])
 OUTPUT_DIR = PROJECT_DIR + '/reports/figures/'
@@ -35,8 +35,8 @@ def plot_scatter_plot(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''
 
 
 def main():
-    raw_dataframe = load.load_raw_dataframe()
-    grouped_dataframe = build.group_dataframe_by_attribute(raw_dataframe, 'article_id', mean=True)
+    raw_dataframe = tailor.load_raw_dataframe()
+    grouped_dataframe = tailor.features.group_dataframe_by_attribute(raw_dataframe, 'article_id', mean=True)
 
     plot_bar_chart(grouped_dataframe['article_id'], grouped_dataframe['revenue'], 'barchart_mean_revenue.png')
 
