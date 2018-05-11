@@ -26,8 +26,14 @@ def download_data(logger):
 
     HOST_DIR = 'incoming'
     HOST_FILE = 'courseData.csv'
-    LOCAL_DIR = str(project_dir) + '/data/raw/'
-    LOCAL_FILE = 'data.csv'
+    my_path = os.path.abspath(os.path.dirname("__file__"))
+    logger.info(my_path)
+    path_target = os.path.join(my_path,"data/raw/data.csv")
+    logger.info(path_target)
+    path_target = os.path.normpath(path_target)
+    logger.info(path_target)
+    #LOCAL_DIR = str(project_dir) + '/data/raw/'
+    #LOCAL_FILE = 'data.csv'
 
     # Don't require server to be in ~/.ssh/known_hosts
     cnopts = pysftp.CnOpts()
@@ -35,7 +41,7 @@ def download_data(logger):
 
     with pysftp.Connection(host, username=username, password=password, cnopts=cnopts) as sftp:
         with sftp.cd(HOST_DIR):                   # temporarily chdir to public
-            sftp.get(HOST_FILE, LOCAL_DIR + LOCAL_FILE)        # get a remote file
+            sftp.get(HOST_FILE, path_target) #LOCAL_DIR + LOCAL_FILE)        # get a remote file
 
 
     logger.info("successfully downloaded data")
