@@ -17,9 +17,3 @@ def load_dataframe(FILE_PATH):
 
     return dataframe
 
-
-def main():
-    return
-
-if __name__ == '__main__':
-    main()
