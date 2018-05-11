@@ -7,7 +7,6 @@ from dotenv import find_dotenv, load_dotenv
 from pathlib import Path
 
 
-
 @click.command()
 @click.argument('output_filepath', type=click.Path())
 def main(output_filepath):
@@ -36,7 +35,6 @@ def download_data(logger):
     with pysftp.Connection(host, username=username, password=password, cnopts=cnopts) as sftp:
         with sftp.cd(HOST_DIR):                   # temporarily chdir to public
             sftp.get(HOST_FILE, LOCAL_DIR + LOCAL_FILE)        # get a remote file
-
 
     logger.info("successfully downloaded data")
 
