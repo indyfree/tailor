@@ -6,6 +6,7 @@ def load_raw_dataframe():
     PROJECT_DIR = str(Path(__file__).resolve().parents[3])
     RAW_DATA_DIR = '/data/raw/'
     RAW_DATA_FILE = 'data.csv'
+
     raw_dataframe = load_dataframe(PROJECT_DIR + RAW_DATA_DIR + RAW_DATA_FILE)
 
     return raw_dataframe
