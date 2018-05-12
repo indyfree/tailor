@@ -29,7 +29,7 @@ ifeq ($(wildcard $(DATA_RAW_DIR)/.),)
 	@echo "Creating directory $(DATA_RAW_DIR)"
 	@mkdir -p $(DATA_RAW_DIR)
 endif
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py $(DATA_RAW_DIR)
+	$(PYTHON_INTERPRETER) src/tailor/data/make_dataset.py $(DATA_RAW_DIR)
 
 ## Delete all compiled Python files
 clean:
