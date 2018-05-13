@@ -44,7 +44,7 @@ lint:
 jupyter:
 ifeq ($(shell $(JUPYTER) kernelspec list | awk '{split($$0,a," "); print a[1]}' | grep tailor),)
 	@echo "Creating custom kernel..."
-	@$(IPYTHON) kernel install --user --name=tailor
+	@$(IPYTHON) kernel install --sys-prefix --name=tailor
 endif
 	@echo "Running jupyter notebook in background..."
 	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR)
