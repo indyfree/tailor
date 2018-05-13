@@ -3,8 +3,10 @@
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
+PROJECT_NAME = tailor
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 VENV_DIR =  $(PROJECT_DIR)/env
+JUPYTER_DIR =  $(VENV_DIR)/share/jupyter
 
 PYTHON_INTERPRETER = $(VENV_DIR)/bin/python3
 PIP = $(VENV_DIR)/bin/pip
@@ -29,7 +31,7 @@ ifeq ($(wildcard $(DATA_RAW_DIR)/.),)
 	@echo "Creating directory $(DATA_RAW_DIR)"
 	@mkdir -p $(DATA_RAW_DIR)
 endif
-	$(PYTHON_INTERPRETER) src/tailor/data/make_dataset.py $(DATA_RAW_DIR)
+	$(PYTHON_INTERPRETER) src/$(PROJECT_NAME)/data/make_dataset.py $(DATA_RAW_DIR)
 
 ## Delete all compiled Python files
 clean:
@@ -42,18 +44,21 @@ lint:
 
 # Launch jupyter server and create custom kernel if necessary
 jupyter:
-ifeq ($(shell $(JUPYTER) kernelspec list | awk '{split($$0,a," "); print a[1]}' | grep tailor),)
+ifeq ($(wildcard $(JUPYTER_DIR)/kernels/$(PROJECT_NAME)/*),)
 	@echo "Creating custom kernel..."
-	@$(IPYTHON) kernel install --sys-prefix --name=tailor
+	@$(IPYTHON) kernel install --sys-prefix --name=$(PROJECT_NAME)
+endif
+ifeq ($(shell ls -1 $(JUPYTER_DIR)/nbextensions | wc -l),1)
+	@echo "Installing jupyter notebook extensions..."
+	@$(JUPYTER) contrib nbextension install --sys-prefix
+	@$(JUPYTER) nbextensions_configurator enable --sys-prefix
 endif
 	@echo "Running jupyter notebook in background..."
 	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR)
 
 ## Install virtual environment
 venv:
-ifneq ($(wildcard $(VENV_DIR)/*),)
-	@echo "Found $(VENV_DIR)"
-else
+ifeq ($(wildcard $(VENV_DIR)/*),)
 	@echo "Did not find $(VENV_DIR), creating..."
 	mkdir -p $(VENV_DIR)
 	python3 -m venv $(VENV_DIR)
