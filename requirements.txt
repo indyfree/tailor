@@ -9,4 +9,7 @@ matplotlib
 pysftp
 python-dotenv
 pandas
+numpy
+matplotlib
+scipy
 seaborn
