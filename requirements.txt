@@ -5,9 +5,11 @@
 click
 flake8
 jupyter
+matplotlib
 pysftp
 python-dotenv
 pandas
 numpy
 matplotlib
 scipy
+seaborn
