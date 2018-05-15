@@ -1,0 +1,8 @@
+{
+  "load_extensions": {
+    "code_prettify/autopep8": true,
+    "spellchecker/main": true,
+    "table_beautifier/main": true,
+    "collapsible_headings/main": true
+  }
+}
