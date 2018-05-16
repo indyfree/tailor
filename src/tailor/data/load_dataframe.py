@@ -27,4 +27,3 @@ def load_csv():
     RAW_DATA_FILE = '/data/raw/data.csv'
 
     return pd.read_csv(PROJECT_DIR + RAW_DATA_FILE, encoding='iso-8859-1')
-
