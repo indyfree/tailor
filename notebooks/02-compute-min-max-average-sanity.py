@@ -8,13 +8,13 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import tailor.data.load_dataframe as ld
+import tailor
 
 
 # In[2]:
 
 
-data_raw = ld.load_raw_dataframe()
+data_raw = tailor.load_raw_dataframe()
 
 
 # In[3]:
@@ -159,22 +159,28 @@ sorted(data_raw.Abteilung.unique())
 # In[25]:
 
 
-sorted(data_raw.WHG.unique())
+data_raw.Abteilung.value_counts()
 
 
 # In[26]:
 
 
-data_raw.WHG.value_counts()
+sorted(data_raw.WHG.unique())
 
 
 # In[27]:
 
 
-sorted(data_raw.WUG.unique())
+data_raw.WHG.value_counts()
 
 
 # In[28]:
+
+
+sorted(data_raw.WUG.unique())
+
+
+# In[29]:
 
 
 data_raw.WUG.value_counts()
