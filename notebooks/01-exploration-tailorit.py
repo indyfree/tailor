@@ -1,30 +1,65 @@
 
 # coding: utf-8
 
-# # Hauptseminar Advanced Data Science in Practice
+# # Tailorit - Data Exploration
 
-# ## Gruppe: 1
+# ### Import required packages
 
-# ### Erster
-
-# In[4]:
+# In[42]:
 
 
-Stud1 = 'Reinhold, Niklas, 5377277, nreinhol' 
-Stud2 = 'Richter, Tobias, 5583705, indyfree' 
-Stud3 = 'Bullmann, Christoph Alexander, 5585627, bullmanc' 
+# Display plots inline
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+# Autoreload all package before excecuting a call
+get_ipython().run_line_magic('load_ext', 'autoreload')
+get_ipython().run_line_magic('autoreload', '2')
 
 
-# ## Import
-%matplotlib inline
-
-import numpy
-import pandas as pa
-import matplotlib.pyplot as plt
-# In[14]:
+# In[43]:
 
 
-plt.plot([1,2,3,3])
-plt.ylabel('some numbers')
-plt.show()
+import numpy as np
+import pandas as pd
 
+import tailor
+
+
+# ### Load data
+
+# In[65]:
+
+
+df = tailor.load_data()
+
+
+# ### Get an overview over the dataset
+
+# In[46]:
+
+
+df.head(20)
+
+
+# In[72]:
+
+
+pd.options.display.float_format = "{:.2f}".format
+df.describe(include=np.number)
+
+
+# In[68]:
+
+
+df.describe(include=['category'])
+
+
+# ### Check for null values
+
+# In[71]:
+
+
+df.isna().values.any()
+
+
+# Wow, we're in luck, there are no null values in the dataset!
