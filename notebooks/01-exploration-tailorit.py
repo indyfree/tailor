@@ -70,7 +70,7 @@ df.isna().values.any()
 # In[8]:
 
 
-article = df.loc[df.article_id == 900003, ["time_on_sale", "revenue", "article_count", "avq", "sells_price"]]
+article = df.loc[df.article_id == 900003, ["time_on_sale", "article_count", "avq"]]
 plt.plot(article.time_on_sale, article.article_count)
 plt.plot(article.time_on_sale, article.avq);
 
