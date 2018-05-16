@@ -16,10 +16,3 @@ def load_dataframe(FILE_PATH):
     dataframe = pd.read_csv(FILE_PATH, encoding='iso-8859-1')
 
     return dataframe
-
-
-def main():
-    return
-
-if __name__ == '__main__':
-    main()
