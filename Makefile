@@ -48,7 +48,7 @@ ifeq ($(wildcard $(JUPYTER_DIR)/kernels/$(PROJECT_NAME)/*),)
 	@echo "Creating custom kernel..."
 	@$(IPYTHON) kernel install --sys-prefix --name=$(PROJECT_NAME)
 endif
-ifeq ($(shell ls -1 $(JUPYTER_DIR)/nbextensions | wc -l),1)
+ifeq ($(wildcard $(JUPYTER_DIR)/nbextensions/table_beautifier/*),)
 	@echo "Installing jupyter notebook extensions..."
 	@$(JUPYTER) contrib nbextension install --sys-prefix
 	@$(JUPYTER) nbextensions_configurator enable --sys-prefix
