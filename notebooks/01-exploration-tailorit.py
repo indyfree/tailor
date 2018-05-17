@@ -28,7 +28,7 @@ import tailor
 
 # ### Load data
 
-# In[ ]:
+# In[3]:
 
 
 df = tailor.load_data()
@@ -36,20 +36,20 @@ df = tailor.load_data()
 
 # ### Get an overview over the dataset
 
-# In[ ]:
+# In[4]:
 
 
 df.head(20)
 
 
-# In[ ]:
+# In[5]:
 
 
 pd.options.display.float_format = "{:.2f}".format
 df.describe(include=np.number)
 
 
-# In[ ]:
+# In[6]:
 
 
 df.describe(include=['category'])
@@ -57,7 +57,7 @@ df.describe(include=['category'])
 
 # ### Check for null values
 
-# In[ ]:
+# In[7]:
 
 
 df.isna().values.any()
@@ -67,7 +67,7 @@ df.isna().values.any()
 
 # ### Plot sample article
 
-# In[ ]:
+# In[8]:
 
 
 article = df.loc[df.article_id == 900003, ["time_on_sale", "article_count", "avq", "revenue"]]
