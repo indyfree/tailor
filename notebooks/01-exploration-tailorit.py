@@ -76,4 +76,4 @@ plt.xlabel('weeks on sale')
 plt.legend();
 
 
-# We can see the clear relationship between the amount of articles sold, it's sells price (including markdown and discounts) and the generated revenue and here.
+# We can see the clear relationship between the amount of articles sold, it's sells price (including markdown and discounts) and the generated revenue here.
