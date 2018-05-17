@@ -69,4 +69,6 @@ article = df.loc[df.article_id == 900003, [
 plt.plot(article.time_on_sale, article.article_count, 'blue')
 plt.plot(article.time_on_sale, article.revenue/40, 'orange')
 plt.plot(article.time_on_sale, article.avq, 'green')
+plt.xlabel('time on sale')
+plt.legend();
 
