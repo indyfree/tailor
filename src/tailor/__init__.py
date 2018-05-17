@@ -1,1 +1,1 @@
-from .data import load_raw_dataframe # noqa
+from .data import load_data # noqa

@@ -14,7 +14,7 @@ import tailor
 # In[2]:
 
 
-data_raw = tailor.load_raw_dataframe()
+data_raw = tailor.load_data()
 
 
 # In[3]:
