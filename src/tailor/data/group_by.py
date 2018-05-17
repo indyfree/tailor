@@ -11,3 +11,11 @@ def weeks_on_sale(df):
     # Aggregate numeric values by mean and drop meaningless time on sale
     df = grouped.mean().drop(columns=['time_on_sale'])
     return df
+
+
+def attribute(dataframe, attribute, mean=False):
+    if(mean):
+        return dataframe.groupby(attribute, as_index=False).mean()
+    else:
+        return dataframe.groupby(attribute, as_index=False).sum()
+
