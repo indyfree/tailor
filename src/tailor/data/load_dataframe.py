@@ -1,6 +1,8 @@
 from pathlib import Path
 import pandas as pd
 
+import tailor.features
+
 
 def load_data():
     '''Loads the raw data and returns a dataframe with formatted columns'''
@@ -19,6 +21,10 @@ def load_data():
 
     # Set all other types as categories
     df[df.select_dtypes(['object']).columns] = df.select_dtypes(['object']).apply(lambda x: x.astype('category'))
+
+    # Build new features
+    df = tailor.features.build(df)
+
     return df
 
 
