@@ -4,12 +4,14 @@
 # In[1]:
 
 
-import tailor
-import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+import tailor
 
 
-# # Create initial DataFrame
+# ### Create initial DataFrame
 
 # In[2]:
 
@@ -18,7 +20,7 @@ raw_df = tailor.load_raw_dataframe()
 df_revenue = raw_df[['article_id', 'time_on_sale', 'revenue']]
 
 
-# ### To give an example, the dataframe looks like this ...
+# To give an example, the dataframe looks like this ...
 
 # In[3]:
 
@@ -26,9 +28,9 @@ df_revenue = raw_df[['article_id', 'time_on_sale', 'revenue']]
 df_revenue.head()
 
 
-# # Create a Benchmark Series
+# ### Create a Benchmark Series
 # 
-# ### Now reshape the dataframes into a format which makes it easier to calculate the mean of each time_on_sale value.  The following steps must be done for each  performance measure.  For now, we will just do it for the dataframe with the column 'revenue' (df_revenue)
+# Now reshape the dataframes into a format which makes it easier to calculate the mean of each time_on_sale value.  The following steps must be done for each  performance measure.  For now, we will just do it for the dataframe with the column 'revenue' (df_revenue)
 # 
 # 
 
@@ -40,7 +42,7 @@ df_reshaped = pd.DataFrame(df_pivoted.to_records()) #cast pivot table into DataF
 df_reshaped.head()
 
 
-# ### Next, calculate the mean of each column. Therefore, you have the mean for each time_on_sale value. This series can be used as a benchmark series. 
+# Next, calculate the mean of each column. Therefore, you have the mean for each time_on_sale value. This series can be used as a benchmark series. 
 
 # In[5]:
 
@@ -49,7 +51,7 @@ revenue_benchmark = df_reshaped.mean(axis=0)
 revenue_benchmark.head()
 
 
-# ### Drop mean of article ids. It makes no sense and we dont need it 
+# Drop mean of article ids. It makes no sense and we dont need it 
 
 # In[6]:
 
@@ -58,7 +60,7 @@ revenue_benchmark = revenue_benchmark.drop(revenue_benchmark.index[0])
 revenue_benchmark.head()
 
 
-# ### Cast series into a DataFrame
+# Cast series into a DataFrame
 
 # In[7]:
 
@@ -69,11 +71,18 @@ df_revenue_benchmark['mean_revenue'] = revenue_benchmark.values
 df_revenue_benchmark.head()
 
 
-# # Calculate distance to Benchmark Series
-# 
-# ### Merging both DataFrames yields in ...
-
 # In[8]:
+
+
+plt.plot(df_revenue_benchmark.time_on_sale, df_revenue_benchmark.mean_revenue);
+plt.xticks(np.arange(0, 181, step=20));
+
+
+# ### Calculate distance to Benchmark Series
+# 
+# Merging both DataFrames yields in ...
+
+# In[9]:
 
 
 result = pd.merge(df_revenue, df_revenue_benchmark, how='left', on='time_on_sale', left_index=False, right_index=True, sort=True, validate='m:1')
@@ -83,18 +92,18 @@ result = result.rename(index=str, columns={'mean_revenue_y':'mean_revenue'})
 result.head()
 
 
-# ### Calculate the distance between revenue and mean_revenue
+# Calculate the distance between revenue and mean_revenue
 
-# In[9]:
+# In[10]:
 
 
 result['distance'] = ((result['revenue'] - result['mean_revenue'])**2)**0.5
 result.head()
 
 
-# ### Sum up all distances to get just one value for similiarity measurement
+# Sum up all distances to get just one value for similiarity measurement
 
-# In[10]:
+# In[11]:
 
 
 result = result.groupby('article_id').sum()
@@ -103,35 +112,53 @@ result = result = result.drop(['revenue', 'mean_revenue'], axis=1)
 result.head()
 
 
-# In[11]:
+# In[12]:
 
 
-result = result.sort_values('distance', ascending=False)
+result = result.sort_values('distance', ascending=True)
 result.head()
 
 
-# # First evaluation of the similarity measurement
+# ### First evaluation of the similarity measurement
 # 
-# ### Let us plot some articles with similiar distances. To find similiar values, I just had a look at the sorted result dataframe
+# Plot the two article with
 
-# In[12]:
+# In[13]:
+
+
+lowest_distance = result.iloc[0]
+second_lowest_distance = result.iloc[1]
+df_revenue_lowest = df_revenue[df_revenue['article_id']==lowest_distance.article_id]
+df_revenue_second_lowest = df_revenue[df_revenue['article_id']==second_lowest_distance.article_id]
+
+
+# In[14]:
+
+
+plt.plot(df_revenue_benchmark.time_on_sale, df_revenue_benchmark.mean_revenue, 'b');
+plt.plot(df_revenue_lowest.time_on_sale, df_revenue_lowest.revenue, 'r')
+plt.plot(df_revenue_second_lowest.time_on_sale, df_revenue_second_lowest.revenue, 'g')
+plt.xticks(np.arange(0, 181, step=20));
+
+
+# Let us plot some articles with similiar distances. To find similiar values, I just had a look at the sorted result dataframe
+
+# In[15]:
 
 
 article_one = raw_df[raw_df['article_id']==902792]
 article_two = raw_df[raw_df['article_id']==901825]
 
-plt.plot(article_one['time_on_sale'], article_one['revenue'], 'r')
-plt.plot(article_two['time_on_sale'], article_two['revenue'], 'b')
+plt.plot(article_one['time_on_sale'], article_one['revenue'], 'r');
+plt.plot(article_two['time_on_sale'], article_two['revenue'], 'b');
 
 
-# In[13]:
+# In[16]:
 
 
 article_three = raw_df[raw_df['article_id']==900546]
 article_four = raw_df[raw_df['article_id']==906171]
 
-plt.plot(article_three['time_on_sale'], article_three['revenue'], 'r')
-plt.plot(article_four['time_on_sale'], article_four['revenue'], 'b')
+plt.plot(article_three['time_on_sale'], article_three['revenue'], 'r');
+plt.plot(article_four['time_on_sale'], article_four['revenue'], 'b');
 
-
-# ### Looks not too bad, but maybe we could split the benchmark series into multiple pieces and calculate the distances to those pieces. That could level out the effect of different shapes on similiar distances.
