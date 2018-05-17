@@ -37,15 +37,21 @@ df = group_by.weeks_on_sale(df)
 
 
 # ### Get an overview over the dataset
-df.head(20)
+
 # In[4]:
+
+
+df.head(20)
+
+
+# In[5]:
 
 
 pd.options.display.float_format = "{:.2f}".format
 df.describe(include=np.number)
 
 
-# In[5]:
+# In[6]:
 
 
 df.describe(include=['category'])
@@ -53,7 +59,7 @@ df.describe(include=['category'])
 
 # ### Check for null values
 
-# In[6]:
+# In[7]:
 
 
 df.isna().values.any()
@@ -63,7 +69,7 @@ df.isna().values.any()
 
 # ### Plot sample article
 
-# In[7]:
+# In[8]:
 
 
 article = df.loc[df.article_id == 900003, [
