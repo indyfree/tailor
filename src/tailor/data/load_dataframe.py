@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 
-import tailor.features
+from tailor import features
 
 
 def load_data():
@@ -23,7 +23,7 @@ def load_data():
     df[df.select_dtypes(['object']).columns] = df.select_dtypes(['object']).apply(lambda x: x.astype('category'))
 
     # Build new features
-    df = tailor.features.build(df)
+    df = features.build(df)
 
     return df
 
