@@ -3,6 +3,7 @@ from tailor.data import group_by
 
 def build(df):
     '''Build new features'''
+
     df = weeks_on_sale(df)
     return df
 
