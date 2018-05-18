@@ -6,7 +6,7 @@ def weeks_on_sale(df):
     groupers.append('weeks_on_sale')
 
     # Group dataframe by categories, which are all the same for an article, and weeks on sale
-    grouped = df.groupby(by=groupers,as_index=False, sort=False, observed=True)
+    grouped = df.groupby(by=groupers, as_index=False, sort=False, observed=True)
 
     # Aggregate numeric values by mean and drop meaningless time on sale
     df = grouped.mean().drop(columns=['time_on_sale'])
@@ -18,4 +18,3 @@ def attribute(dataframe, attribute, mean=False):
         return dataframe.groupby(attribute, as_index=False).mean()
     else:
         return dataframe.groupby(attribute, as_index=False).sum()
-

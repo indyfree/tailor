@@ -1,5 +1,6 @@
 from tailor.data import group_by
 
+
 def build(df):
     '''Build new features'''
     df = weeks_on_sale(df)
@@ -13,6 +14,7 @@ def get_performance_measures(dataframe, column, characteristic):
     grouped_dataframe = group_by.attributes(filtered_dataframe, 'time_on_sale')
 
     return grouped_dataframe[['time_on_sale', 'revenue', 'avq', 'article_count']]
+
 
 def weeks_on_sale(df):
     '''Calculate weeks an article has been on sale'''
