@@ -1,4 +1,3 @@
-from pathlib import Path
 import matplotlib.pyplot as plt
 import tailor
 import tailor.features

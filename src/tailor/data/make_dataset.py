@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import click
+from dotenv import find_dotenv, load_dotenv
 import logging
 import pysftp
 import os
-from dotenv import find_dotenv, load_dotenv
-from pathlib import Path
+
+import tailor
 
 
 @click.command()
@@ -25,7 +26,7 @@ def download_data(logger):
 
     HOST_DIR = 'incoming'
     HOST_FILE = 'courseData.csv'
-    LOCAL_DIR = str(project_dir) + '/data/raw/'
+    LOCAL_DIR = tailor.PROJECT_DIR + '/data/raw/'
     LOCAL_FILE = 'data.csv'
 
     # Don't require server to be in ~/.ssh/known_hosts
