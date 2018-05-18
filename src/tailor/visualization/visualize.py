@@ -3,8 +3,7 @@ import matplotlib.pyplot as plt
 import tailor
 import tailor.features
 
-PROJECT_DIR = str(Path(__file__).resolve().parents[3])
-OUTPUT_DIR = PROJECT_DIR + '/reports/figures/'
+OUTPUT_DIR = tailor.PROJECT_DIR + '/reports/figures/'
 
 
 def plot_line_chart(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''):
@@ -35,7 +34,7 @@ def plot_scatter_plot(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''
 
 
 def main():
-    raw_dataframe = tailor.load_raw_dataframe()
+    raw_dataframe = tailor.load_data()
     grouped_dataframe = tailor.features.group(raw_dataframe, 'article_id', mean=True)
 
     plot_bar_chart(grouped_dataframe['article_id'], grouped_dataframe['revenue'], 'barchart_mean_revenue.png')

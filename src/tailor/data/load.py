@@ -1,6 +1,7 @@
-from pathlib import Path
 import pandas as pd
+from pathlib import Path
 
+PROJECT_DIR = str(Path(__file__).resolve().parents[3])
 
 def load_data():
     '''Loads the raw data and returns a dataframe with formatted columns'''
@@ -23,7 +24,6 @@ def load_data():
 
 
 def load_csv():
-    PROJECT_DIR = str(Path(__file__).resolve().parents[3])
-    RAW_DATA_FILE = '/data/raw/data.csv'
+    RAW_DATA_FILE= PROJECT_DIR + '/data/raw/data.csv'
 
-    return pd.read_csv(PROJECT_DIR + RAW_DATA_FILE, encoding='iso-8859-1')
+    return pd.read_csv(RAW_DATA_FILE, encoding='iso-8859-1')
