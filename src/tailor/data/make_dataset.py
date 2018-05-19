@@ -20,9 +20,15 @@ def main():
 
 
 def download_data():
+    # load up the .env entries as environment variables
+    load_dotenv(find_dotenv())
+
     host = os.getenv("TAILORIT_SERVER_ADDRESS")
     username = os.getenv("TAILORIT_USER")
     password = os.getenv("TAILORIT_PW")
+
+    if not all([host, username, password]):
+        raise ValueError("Could not load all required credentials from .env")
 
     HOST_DIR = 'incoming'
     HOST_FILE = 'courseData.csv'
@@ -40,11 +46,16 @@ def download_data():
             sftp.get(HOST_FILE, data.RAW_DATA_FILE)    # get a remote file
 
     print('Successfully downloaded data to', data.RAW_DATA_FILE)
+    return True
 
 
 def process_data():
     if os.path.isfile(data.RAW_DATA_FILE) is False:
-        download_data()
+        try:
+            success = download_data()
+        except ValueError as error:
+            print(error)
+            return
 
     print('Processing data...')
     df = data.load_csv()
@@ -59,8 +70,4 @@ def process_data():
 
 
 if __name__ == '__main__':
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
     main()
