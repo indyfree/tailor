@@ -1,17 +1,18 @@
+import os
 import pandas as pd
 
-import tailor
+from tailor import data
 
 
-# PROCESSED_DATA_FILE = tailor.PROJECT_DIR + '/data/processed/data.pkl'
 def load_data():
-    return null
+    if os.path.isfile(data.PROCESSED_DATA_FILE) is False:
+        data.process_data()
 
-    
-#     # if os.path.isfile(PROCESSED_DATA_FILE) is False:
+    return pd.read_pickle(data.PROCESSED_DATA_FILE)
 
 
 def load_csv():
-    RAW_DATA_FILE = tailor.PROJECT_DIR + '/data/raw/data.csv'
+    if os.path.isfile(data.RAW_DATA_FILE) is False:
+        data.download_data()
 
-    return pd.read_csv(RAW_DATA_FILE, encoding='iso-8859-1')
+    return pd.read_csv(data.RAW_DATA_FILE, encoding='iso-8859-1')
