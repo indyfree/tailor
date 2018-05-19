@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import click
-import logging
 import pandas as pd
 import pysftp
 import os
