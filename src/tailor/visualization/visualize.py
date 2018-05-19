@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg') # Do not output graphs to window
 import matplotlib.pyplot as plt
 import tailor
 import tailor.features
