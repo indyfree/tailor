@@ -16,7 +16,10 @@ def main():
     """ Runs data processing scripts to download data and turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
-    process_data()
+    try:
+        process_data()
+    except ValueError as error:
+        print(error)
 
 
 def download_data():
@@ -46,16 +49,14 @@ def download_data():
             sftp.get(HOST_FILE, data.RAW_DATA_FILE)    # get a remote file
 
     print('Successfully downloaded data to', data.RAW_DATA_FILE)
-    return True
 
 
 def process_data():
     if os.path.isfile(data.RAW_DATA_FILE) is False:
         try:
-            success = download_data()
+            download_data()
         except ValueError as error:
-            print(error)
-            return
+            raise
 
     print('Processing data...')
     df = data.load_csv()
