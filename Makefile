@@ -57,7 +57,7 @@ endif
 	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR)
 
 plots:
-	@$(PYTHON_INTERPRETER) src/$(PROJECT_NAME)/visualization.py
+	@$(PYTHON_INTERPRETER) src/$(PROJECT_NAME)/visualization/visualize.py
 
 ## Install virtual environment
 venv:
