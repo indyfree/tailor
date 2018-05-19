@@ -1,8 +1,10 @@
-import matplotlib
-matplotlib.use('Agg') # Do not output graphs to window
-import matplotlib.pyplot as plt
 import tailor
 import tailor.features
+
+import matplotlib
+# Do not use X-Server backend, we only want to output png
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt # noqa
 
 OUTPUT_DIR = tailor.PROJECT_DIR + '/reports/figures/'
 
