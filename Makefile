@@ -1,4 +1,4 @@
-.PHONY: clean data jupyter lint requirements venv
+.PHONY: clean data jupyter lint plots requirements venv
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -55,6 +55,9 @@ ifeq ($(wildcard $(JUPYTER_DIR)/nbextensions/table_beautifier/*),)
 endif
 	@echo "Running jupyter notebook in background..."
 	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR)
+
+plots:
+	@$(PYTHON_INTERPRETER) src/$(PROJECT_NAME)/visualization.py
 
 ## Install virtual environment
 venv:
