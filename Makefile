@@ -13,7 +13,6 @@ PIP = $(VENV_DIR)/bin/pip
 IPYTHON = $(VENV_DIR)/bin/ipython
 JUPYTER = $(VENV_DIR)/bin/jupyter
 
-DATA_RAW_DIR = $(PROJECT_DIR)/data/raw
 NOTEBOOK_DIR =  $(PROJECT_DIR)/notebooks
 
 #################################################################################
@@ -27,11 +26,7 @@ requirements: venv
 
 ## Make Dataset
 data:
-ifeq ($(wildcard $(DATA_RAW_DIR)/.),)
-	@echo "Creating directory $(DATA_RAW_DIR)"
-	@mkdir -p $(DATA_RAW_DIR)
-endif
-	$(PYTHON_INTERPRETER) src/$(PROJECT_NAME)/data/make_dataset.py
+	@$(PYTHON_INTERPRETER) src/$(PROJECT_NAME)/data/make_dataset.py
 
 ## Delete all compiled Python files
 clean:
@@ -40,7 +35,7 @@ clean:
 
 ## Lint using flake8
 lint:
-	$(PYTHON_INTERPRETER) -m flake8 --config=$(PROJECT_DIR)/.flake8 src
+	@$(PYTHON_INTERPRETER) -m flake8 --config=$(PROJECT_DIR)/.flake8 src
 
 # Launch jupyter server and create custom kernel if necessary
 jupyter:
