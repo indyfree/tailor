@@ -1,7 +1,7 @@
-from pathlib import Path
 import pandas as pd
 
-PROJECT_DIR = str(Path(__file__).resolve().parents[3])
+import tailor
+from tailor import features
 
 
 def load_data():
@@ -21,10 +21,14 @@ def load_data():
 
     # Set all other types as categories
     df[df.select_dtypes(['object']).columns] = df.select_dtypes(['object']).apply(lambda x: x.astype('category'))
+
+    # Build new features
+    df = features.build(df)
+
     return df
 
 
 def load_csv():
-    RAW_DATA_FILE = PROJECT_DIR + '/data/raw/data.csv'
+    RAW_DATA_FILE = tailor.PROJECT_DIR + '/data/raw/data.csv'
 
     return pd.read_csv(RAW_DATA_FILE, encoding='iso-8859-1')
