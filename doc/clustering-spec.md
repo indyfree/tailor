@@ -16,6 +16,7 @@ valid population for further analysis.
 
 1. Rank features by their variance between the feature characteristics
     1. Group articles by their feature characteristics
+
     | feature          | weeks on sale | revenue |
     |------------------|---------------|---------|
     | characteristic A | 1             | 10      |
@@ -25,6 +26,7 @@ valid population for further analysis.
     |                  | 2             | 10      |
     |                  | 3             | 15      |
     | ...              | ...           | ...     |
+
     2. Determine inter- and intra feature variance
 
 
