@@ -1,4 +1,3 @@
-from . import group_by # noqa
 from .load import load_data # noqa
 from .load import load_csv # noqa
 from .make_dataset import process_data # noqa
