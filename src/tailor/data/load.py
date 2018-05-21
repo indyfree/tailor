@@ -4,8 +4,11 @@ import pandas as pd
 from tailor import data
 
 
-def load_data():
-    if os.path.isfile(data.PROCESSED_DATA_FILE) is False:
+def load_data(rebuild=False):
+    '''Loads processed data into a dataframe, process again if needed'''
+    if rebuild is True:
+        data.process_data()
+    elif os.path.isfile(data.PROCESSED_DATA_FILE) is False:
         data.process_data()
 
     return pd.read_pickle(data.PROCESSED_DATA_FILE)
