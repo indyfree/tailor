@@ -1,3 +1,4 @@
+import pandas as pd
 from tailor.data import group_by
 
 
