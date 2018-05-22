@@ -49,7 +49,7 @@ ifeq ($(wildcard $(JUPYTER_DIR)/nbextensions/table_beautifier/*),)
 	@$(JUPYTER) nbextensions_configurator enable --sys-prefix
 endif
 	@echo "Running jupyter notebook in background..."
-	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR)
+	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR) --NotebookApp.iopub_data_rate_limit=10000000000
 
 ## Install virtual environment
 venv:

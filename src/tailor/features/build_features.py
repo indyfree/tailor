@@ -4,7 +4,6 @@ from tailor.data import group_by
 
 def build(df):
     '''Build new features'''
-
     df = weeks_on_sale(df)
     df = expand_date_info(df)
     return df
@@ -23,6 +22,7 @@ def weeks_on_sale(df):
     '''Calculate weeks an article has been on sale'''
 
     df['weeks_on_sale'] = df.apply(lambda row: days_to_week(row['time_on_sale']), axis=1)
+    print("finished building weeks_on_sale")
     return df
 
 
@@ -46,18 +46,20 @@ def meteor_season(month):
 def expand_date_info(df):
     '''Calculate the weekday, month and actual season'''
 
-    season = list()
-    weekday = list()
+    seasons = list()
+    weekdays = list()
     months = list()
 
     # three different functions therefore faster than three separate .apply()
     for i in df.transaction_date:
         month = i.month
-        season.append(meteor_season(month))
+        seasons.append(meteor_season(month))
         months.append(month)
-        weekday.append(i.weekday())
-
-    df['season_buy'] = pd.Series(season, index=df.index)
+        weekdays.append(i.weekday())
+    df['season_buy'] = pd.Series(seasons, index=df.index)
+    print("finished building season_buy")
     df['month'] = pd.Series(months, index=df.index)
-    df['weekday'] = pd.Series(weekday, index=df.index)
+    print("finished building month")
+    df['weekday'] = pd.Series(weekdays, index=df.index)
+    print("finished building weekday")
     return df
