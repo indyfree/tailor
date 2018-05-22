@@ -60,3 +60,4 @@ def expand_date_info(df):
     df['season_buy'] = pd.Series(season, index=df.index)
     df['month'] = pd.Series(months, index=df.index)
     df['weekday'] = pd.Series(weekday, index=df.index)
+    return df
