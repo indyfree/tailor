@@ -29,7 +29,7 @@ def days_to_week(days):
     return days // 7
 
 
-def meteor_season(month)
+def meteor_season(month):
     '''return meteorological season'''
 
     if 2 < month < 6:
@@ -42,7 +42,7 @@ def meteor_season(month)
         return 'winter'
 
 
-def expand_date_info(df)
+def expand_date_info(df):
     '''Calculate the weekday, month and actual season'''
 
     season = list()
