@@ -15,7 +15,7 @@ valid population for further analysis.
 
 ## Outline of the Algorithm
 
-1. Rank features by their variance.
+1. *Rank features* by their variance.
     1. Group articles by their feature characteristics.
 
     _Example:_
@@ -71,6 +71,9 @@ valid population for further analysis.
     | 4       | blue, white | adidas, puma |
 
 
-3. Evaluate the quality of the cluster using measure which determines the _Cluster Fit_ or _Cluster Goodness_.
-4. Determine the best possible Clustering by using the number of features in
+3. *Evaluate the quality* of the cluster using measure which determines the _Cluster Fit_ or _Cluster Goodness_.
+4. Determine the *best possible clustering* by using the number of features in
    `2.` which has the highest Quality in `3`.
+
+Alternative to `2.`: Use every combination of the _x_ highest scored features
+and calculate distance between every subset and then combine close subsets to clusters.
