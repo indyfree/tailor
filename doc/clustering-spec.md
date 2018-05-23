@@ -17,6 +17,7 @@ valid population for further analysis.
 
 1. Rank features by their variance.
     1. Group articles by their feature characteristics.
+
     _Example:_
 
     | feature          | weeks on sale | revenue |
@@ -36,6 +37,7 @@ valid population for further analysis.
     1. Determine which combination of characteristics could be grouped together (low variance) and which should form separate clusters (high variance)
     2. If `f` is the first feature:
     Use this combinations of characteristics to form clusters.
+
     _Example:_
 
     | Cluster | color       |
@@ -46,7 +48,8 @@ valid population for further analysis.
 
     3. Else:
     For every existing cluster `c`: Split `c` by each characteristic of `f` and
-    determine which of these "sub-clusters" can be unified again. Eg.:
+    determine which of these "sub-clusters" can be unified again.
+
     _Example:_
 
     | Cluster | color       | brand  |
@@ -58,7 +61,7 @@ valid population for further analysis.
     | 5       | blue, white | adidas |
     | 6       | blue, white | puma   |
 
-    Unify similar ones using the variance/distance measure again:
+    Unify similar (sub-)clusters using the variance/distance measure again:
 
     | Cluster | color       | brand        |
     |---------|-------------|--------------|
