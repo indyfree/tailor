@@ -12,3 +12,6 @@ c.FileContentsManager.post_save_hook = post_save
 
 # Ignore file types
 c.ContentsManager.hide_globs = ['nbconfig', 'migrated', '__pycache__',  '*.py', '*.pyc', '*.pyo', '.DS_Store', '*.so', '*.dylib', '*~']
+
+# Remove data_rate_limit
+c.NotebookApp.iopub_data_rate_limit = 0
