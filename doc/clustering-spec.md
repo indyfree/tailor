@@ -16,27 +16,58 @@ valid population for further analysis.
 ## Outline of the Algorithm
 
 1. Rank features by their variance.
-    1. Group articles by their feature characteristics. Eg.
+    1. Group articles by their feature characteristics.
+    _Example:_
 
     | feature          | weeks on sale | revenue |
     |------------------|---------------|---------|
     | characteristic A | 1             | 10      |
     |                  | 2             | 20      |
-    |                  | 3             | 25      |
+    |                  | ..            | ..      |
     | characteristic B | 1             | 5       |
     |                  | 2             | 10      |
-    |                  | 3             | 15      |
+    |                  | ..            | ..      |
+    | characteristic C | 1             | 7       |
     | ...              | ...           | ...     |
 
     2. Determine inter- and intra-feature variance of each feature.
     3. Calculate a *Score* of these measures to rank each feature by its importance.
-2. For every feature in descending order of their importance:
+2. Clustering: For every feature `f` in descending order of their *Score*:
     1. Determine which combination of characteristics could be grouped together (low variance) and which should form separate clusters (high variance)
-    2. Identify existing clusters, to group these sets of characteristics with
-       or form new ones. (Divide existing clusters)
-3. Calculate a measure which determines the _Cluster Fit_
-4.
+    2. If `f` is the first feature:
+    Use this combinations of characteristics to form clusters.
+    _Example:_
+
+    | Cluster | color       |
+    |---------|-------------|
+    | 1       | red         |
+    | 2       | green       |
+    | 3       | blue, white |
+
+    3. Else:
+    For every existing cluster `c`: Split `c` by each characteristic of `f` and
+    determine which of these "sub-clusters" can be unified again. Eg.:
+    _Example:_
+
+    | Cluster | color       | brand  |
+    |---------|-------------|--------|
+    | 1       | red         | adidas |
+    | 2       | red         | puma   |
+    | 3       | green       | adidas |
+    | 4       | green       | puma   |
+    | 5       | blue, white | adidas |
+    | 6       | blue, white | puma   |
+
+    Unify similar ones using the variance/distance measure again:
+
+    | Cluster | color       | brand        |
+    |---------|-------------|--------------|
+    | 1       | red         | adidas, puma |
+    | 2       | green       | adidas       |
+    | 3       | green       | puma         |
+    | 4       | blue, white | adidas, puma |
 
 
-
-
+3. Evaluate the quality of the cluster using measure which determines the _Cluster Fit_ or _Cluster Goodness_.
+4. Determine the best possible Clustering by using the number of features in
+   `2.` which has the highest Quality in `3`.
