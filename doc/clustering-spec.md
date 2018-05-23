@@ -75,5 +75,6 @@ valid population for further analysis.
 4. Determine the *best possible clustering* by using the number of features in
    `2.` which has the highest Quality in `3`.
 
-Alternative to `2.`: Use every combination of the _x_ highest scored features
+### Alternative to `2.`:
+Use every combination of the _x_ highest scored features
 and calculate distance between every subset and then combine close subsets to clusters.
