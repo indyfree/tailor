@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import tailor
 from tailor import data
+from tailor import features
 
 
 # In[2]:
@@ -19,7 +20,7 @@ df = data.load_csv()
 # In[3]:
 
 
-df.head()
+df = df.head()
 
 
 # In[4]:
@@ -37,34 +38,28 @@ df.head()
 # In[6]:
 
 
-from tailor import features
+df = features.build_features.weeks_on_sale(df)
 
 
 # In[7]:
 
 
-df = features.build_features.weeks_on_sale(df)
+df = features.build_features.date_info(df)
 
 
 # In[8]:
 
 
-df = features.build_features.expand_date_info(df)
+df.head()
 
 
 # In[9]:
 
 
-df.head()
+df = features.build(df)
 
 
 # In[10]:
-
-
-df = tailor.load_data()
-
-
-# In[11]:
 
 
 df.head()

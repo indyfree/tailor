@@ -1,3 +1,4 @@
+import calendar
 import pandas as pd
 from tailor.data import group_by
 
@@ -5,7 +6,7 @@ from tailor.data import group_by
 def build(df):
     '''Build new features'''
     df = weeks_on_sale(df)
-    df = expand_date_info(df)
+    df = date_info(df)
     return df
 
 
@@ -23,6 +24,7 @@ def weeks_on_sale(df):
 
     df['weeks_on_sale'] = df.apply(lambda row: days_to_week(row['time_on_sale']), axis=1)
     print("finished building weeks_on_sale")
+
     return df
 
 
@@ -33,33 +35,38 @@ def days_to_week(days):
 def meteor_season(month):
     '''return meteorological season'''
 
+    # spring is months 3 to 5
     if 2 < month < 6:
-        return 'spring'
+        return 'Spring'
+    # summer is months 6 to 8
     elif 5 < month < 9:
-        return 'summer'
+        return 'Summer'
+    # fall is months 9 to 11
     elif 8 < month < 12:
-        return 'fall'
+        return 'Fall'
+    # winter is months 12, 1, 2
     else:
-        return 'winter'
+        return 'Winter'
 
 
-def expand_date_info(df):
+def date_info(df):
     '''Calculate the weekday, month and actual season'''
 
     seasons = list()
     weekdays = list()
     months = list()
 
-    # three different functions therefore faster than three separate .apply()
     for i in df.transaction_date:
         month = i.month
         seasons.append(meteor_season(month))
-        months.append(month)
-        weekdays.append(i.weekday())
-    df['season_buy'] = pd.Series(seasons, index=df.index)
+        months.append(calendar.month_abbr[month])
+        weekdays.append(calendar.day_abbr[i.weekday()])
+
+    df['season_buy'] = pd.Series(seasons, index=df.index).astype('category')
     print("finished building season_buy")
-    df['month'] = pd.Series(months, index=df.index)
+    df['month'] = pd.Series(months, index=df.index).astype('category')
     print("finished building month")
-    df['weekday'] = pd.Series(weekdays, index=df.index)
+    df['weekday'] = pd.Series(weekdays, index=df.index).astype('category')
     print("finished building weekday")
+
     return df
