@@ -4,7 +4,7 @@ import tailor
 from tailor.data import group_by
 
 
-def plot_article_history(df, articles, measure):
+def plot_article_history(df, articles, measure, legend=True):
     plt.figure()
     ax = plt.axes()
     ax.set_ylabel(measure, fontsize=12)
@@ -15,7 +15,9 @@ def plot_article_history(df, articles, measure):
         y = df.loc[df.article_id == a, measure]
         plt.plot(x, y, label=str(a))
 
-    plt.legend()
+    if legend is True:
+        plt.legend()
+
     return plt
 
 
