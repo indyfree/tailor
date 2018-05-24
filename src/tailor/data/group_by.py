@@ -4,6 +4,10 @@ def weeks_on_sale(df):
     # Select groupers
     groupers = df.select_dtypes(['category']).columns.tolist()
     groupers.append('weeks_on_sale')
+    # Don't group by date data
+    groupers.remove('month')
+    groupers.remove('weekday')
+    groupers.remove('season_buy')
 
     # Group dataframe by categories, which are all the same for an article, and weeks on sale
     grouped = df.groupby(by=groupers, as_index=False, sort=False, observed=True)
