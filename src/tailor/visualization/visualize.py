@@ -23,7 +23,7 @@ def main():
     df = tailor.load_data()
     df = group_by.weeks_on_sale(df)
     plt = plot_article_history(df, [900001, 900002], 'revenue')
-    plt.savefig(tailor.PROJECT_DIR + '/reports/figures/article_history.png')
+    plt.savefig(tailor.PROJECT_DIR + '/reports/figures/weekly_article_history.png')
 
 
 if __name__ == '__main__':
