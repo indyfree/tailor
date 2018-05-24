@@ -13,7 +13,7 @@ import tailor
 
 # ### Create initial DataFrame
 
-# In[ ]:
+# In[2]:
 
 
 raw_df = tailor.load_data()
@@ -23,7 +23,7 @@ df_revenue = raw_df[['article_id', 'time_on_sale', 'revenue']]
 
 # To give an example, the dataframe looks like this ...
 
-# In[ ]:
+# In[3]:
 
 
 df_revenue.head()
@@ -35,7 +35,7 @@ df_revenue.head()
 # 
 # 
 
-# In[ ]:
+# In[4]:
 
 
 df_pivoted = df_revenue.pivot_table(values='revenue', index='article_id', columns='time_on_sale')
@@ -45,7 +45,7 @@ df_reshaped.head()
 
 # Next, calculate the mean of each column. Therefore, you have the mean for each time_on_sale value. This series can be used as a benchmark series. 
 
-# In[ ]:
+# In[5]:
 
 
 revenue_benchmark = df_reshaped.mean(axis=0)
@@ -54,7 +54,7 @@ revenue_benchmark.head()
 
 # Drop mean of article ids. It makes no sense and we dont need it 
 
-# In[ ]:
+# In[6]:
 
 
 revenue_benchmark = revenue_benchmark.drop(revenue_benchmark.index[0])
@@ -63,16 +63,16 @@ revenue_benchmark.head()
 
 # Cast series into a DataFrame
 
-# In[ ]:
+# In[7]:
 
 
 df_revenue_benchmark = pd.DataFrame()
-df_revenue_benchmark['time_on_sale'] = revenue_benchmark.keys()
+df_revenue_benchmark['time_on_sale'] = revenue_benchmark.keys().astype(int)
 df_revenue_benchmark['mean_revenue'] = revenue_benchmark.values
 df_revenue_benchmark.head()
 
 
-# In[ ]:
+# In[8]:
 
 
 plt.plot(df_revenue_benchmark.time_on_sale, df_revenue_benchmark.mean_revenue);
@@ -83,7 +83,7 @@ plt.xticks(np.arange(0, 181, step=20));
 # 
 # Merging both DataFrames yields in ...
 
-# In[ ]:
+# In[9]:
 
 
 result = pd.merge(df_revenue, df_revenue_benchmark, how='left', on='time_on_sale', left_index=False, right_index=True, sort=True, validate='m:1')
@@ -95,7 +95,7 @@ result.head()
 
 # Calculate the distance between revenue and mean_revenue
 
-# In[ ]:
+# In[10]:
 
 
 result['distance'] = ((result['revenue'] - result['mean_revenue'])**2)**0.5
@@ -104,7 +104,7 @@ result.head()
 
 # Sum up all distances to get just one value for similiarity measurement
 
-# In[ ]:
+# In[11]:
 
 
 result = result.groupby('article_id').sum()
@@ -113,7 +113,7 @@ result = result.drop(['revenue', 'mean_revenue'], axis=1)
 result.head()
 
 
-# In[ ]:
+# In[12]:
 
 
 result = result.sort_values('distance', ascending=True)
@@ -122,9 +122,9 @@ result.head()
 
 # ### First evaluation of the similarity measurement
 # 
-# Plot the two article with
+# Plot the two article with the lowest distance 
 
-# In[ ]:
+# In[13]:
 
 
 lowest_distance = result.iloc[0]
@@ -133,7 +133,7 @@ df_revenue_lowest = df_revenue[df_revenue['article_id']==lowest_distance.article
 df_revenue_second_lowest = df_revenue[df_revenue['article_id']==second_lowest_distance.article_id]
 
 
-# In[ ]:
+# In[14]:
 
 
 plt.plot(df_revenue_benchmark.time_on_sale, df_revenue_benchmark.mean_revenue, 'b');
@@ -144,7 +144,7 @@ plt.xticks(np.arange(0, 181, step=20));
 
 # Let us plot some articles with similiar distances. To find similiar values, I just had a look at the sorted result dataframe
 
-# In[ ]:
+# In[15]:
 
 
 article_one = raw_df[raw_df['article_id']==902792]
@@ -154,7 +154,7 @@ plt.plot(article_one['time_on_sale'], article_one['revenue'], 'r');
 plt.plot(article_two['time_on_sale'], article_two['revenue'], 'b');
 
 
-# In[ ]:
+# In[16]:
 
 
 article_three = raw_df[raw_df['article_id']==900546]
