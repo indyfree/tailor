@@ -16,5 +16,11 @@ jobs:
           paths:
             - "env"
       - run:
-          name: "Lint sourcefiles and notebooks"
+          name: "Lint sourcefiles"
           command: make lint
+      - run:
+          name: "Download data and run processing"
+          command: make data
+      - run:
+          name: "Create plots"
+          command: make plots
