@@ -16,7 +16,8 @@ import tailor
 # In[2]:
 
 
-raw_df = tailor.load_raw_dataframe()
+raw_df = tailor.load_data()
+raw_df.article_id = raw_df.article_id.astype(int)
 df_revenue = raw_df[['article_id', 'time_on_sale', 'revenue']]
 
 
@@ -37,7 +38,7 @@ df_revenue.head()
 # In[4]:
 
 
-df_pivoted = pd.pivot_table(df_revenue, values='revenue', index='article_id', columns='time_on_sale')
+df_pivoted = df_revenue.pivot_table(values='revenue', index='article_id', columns='time_on_sale')
 df_reshaped = pd.DataFrame(df_pivoted.to_records()) #cast pivot table into DataFrame 
 df_reshaped.head()
 
@@ -66,7 +67,7 @@ revenue_benchmark.head()
 
 
 df_revenue_benchmark = pd.DataFrame()
-df_revenue_benchmark['time_on_sale'] = revenue_benchmark.keys()
+df_revenue_benchmark['time_on_sale'] = revenue_benchmark.keys().astype(int)
 df_revenue_benchmark['mean_revenue'] = revenue_benchmark.values
 df_revenue_benchmark.head()
 
@@ -108,7 +109,7 @@ result.head()
 
 result = result.groupby('article_id').sum()
 result = result.reset_index()
-result = result = result.drop(['revenue', 'mean_revenue'], axis=1)
+result = result.drop(['revenue', 'mean_revenue'], axis=1)
 result.head()
 
 
@@ -121,7 +122,7 @@ result.head()
 
 # ### First evaluation of the similarity measurement
 # 
-# Plot the two article with
+# Plot the two article with the lowest distance 
 
 # In[13]:
 
