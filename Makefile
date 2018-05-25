@@ -51,6 +51,11 @@ endif
 	@echo "Running jupyter notebook in background..."
 	@JUPYTER_CONFIG_DIR=$(NOTEBOOK_DIR) $(JUPYTER) notebook --notebook-dir=$(NOTEBOOK_DIR)
 
+# Generate plots
+plots:
+	@echo "Creating plots..."
+	@$(PYTHON_INTERPRETER) src/$(PROJECT_NAME)/visualization/visualize.py
+
 ## Install virtual environment
 venv:
 ifeq ($(wildcard $(VENV_DIR)/*),)
