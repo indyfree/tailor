@@ -21,7 +21,7 @@ def plot_article_history(df, articles, measure, legend=True):
     return plt
 
 
-def plot_line_chart(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''):
+def plot_line_chart(x_axis, y_axis, x_axis_label='', y_axis_label=''):
     plt.figure()
     ax = plt.axes()
     ax.set_ylabel(y_axis_label, fontsize=12)
@@ -30,7 +30,7 @@ def plot_line_chart(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''):
     return plt
 
 
-def plot_bar_chart(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''):
+def plot_bar_chart(x_axis, y_axis, x_axis_label='', y_axis_label=''):
     plt.figure()
     ax = plt.axes()
     ax.set_ylabel(y_axis_label, fontsize=12)
@@ -39,7 +39,7 @@ def plot_bar_chart(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''):
     return plt
 
 
-def plot_scatter_plot(x_axis, y_axis, filename, x_axis_label='', y_axis_label=''):
+def plot_scatter_plot(x_axis, y_axis, x_axis_label='', y_axis_label=''):
     plt.figure()
     ax = plt.axes()
     ax.set_ylabel(y_axis_label, fontsize=12)
