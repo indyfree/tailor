@@ -31,8 +31,9 @@ valid population for further analysis.
     | characteristic C | 1             | 7       |
     | ...              | ...           | ...     |
 
-    2. Determine inter- and intra-feature variance of each feature.
-    3. Calculate a *Score* of these measures to rank each feature by its importance.
+    2. Determine and intra-feature variance of each feature.
+    3. Determine inter-feature distance with a suitable distance measure (e.g. DTW )
+    4. Calculate a *Score* of these measures to rank each feature by its importance.
 2. Clustering: For every feature `f` in descending order of their *Score*:
     1. Determine which combination of characteristics could be grouped together (low variance) and which should form separate clusters (high variance)
     2. If `f` is the first feature:
