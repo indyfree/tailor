@@ -22,8 +22,11 @@ def weeks_on_sale(df):
     return df
 
 
-def attribute(dataframe, attribute, mean=False):
+def attribute(df, attribute, mean=False):
+    if attribute not in df.columns:
+        raise ValueError("Cannot group on '{0}', not a column".format(attribute))
+
     if(mean):
-        return dataframe.groupby(attribute, as_index=False).mean()
+        return df.groupby(attribute, as_index=False).mean()
     else:
-        return dataframe.groupby(attribute, as_index=False).sum()
+        return df.groupby(attribute, as_index=False).sum()
