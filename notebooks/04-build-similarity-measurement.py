@@ -38,8 +38,10 @@ df_revenue.head()
 # In[4]:
 
 
-df_pivoted = df_revenue.pivot_table(values='revenue', index='article_id', columns='time_on_sale')
-df_reshaped = pd.DataFrame(df_pivoted.to_records()) #cast pivot table into DataFrame 
+df_pivoted = df_revenue.pivot_table(
+    values='revenue', index='article_id', columns='time_on_sale')
+# cast pivot table into DataFrame
+df_reshaped = pd.DataFrame(df_pivoted.to_records())
 df_reshaped.head()
 
 
@@ -76,7 +78,6 @@ df_revenue_benchmark.head()
 
 
 plt.plot(df_revenue_benchmark.time_on_sale, df_revenue_benchmark.mean_revenue);
-plt.xticks(np.arange(0, 181, step=20));
 
 
 # ### Calculate distance to Benchmark Series
@@ -86,10 +87,11 @@ plt.xticks(np.arange(0, 181, step=20));
 # In[9]:
 
 
-result = pd.merge(df_revenue, df_revenue_benchmark, how='left', on='time_on_sale', left_index=False, right_index=True, sort=True, validate='m:1')
+result = pd.merge(df_revenue, df_revenue_benchmark, how='left', on='time_on_sale',
+                  left_index=False, right_index=True, sort=True, validate='m:1')
 result = result.reset_index()
 result = result.drop('index', axis=1)
-result = result.rename(index=str, columns={'mean_revenue_y':'mean_revenue'})
+result = result.rename(index=str, columns={'mean_revenue_y': 'mean_revenue'})
 result.head()
 
 
@@ -129,17 +131,20 @@ result.head()
 
 lowest_distance = result.iloc[0]
 second_lowest_distance = result.iloc[1]
-df_revenue_lowest = df_revenue[df_revenue['article_id']==lowest_distance.article_id]
-df_revenue_second_lowest = df_revenue[df_revenue['article_id']==second_lowest_distance.article_id]
+df_revenue_lowest = df_revenue[df_revenue['article_id']
+                               == lowest_distance.article_id]
+df_revenue_second_lowest = df_revenue[df_revenue['article_id']
+                                      == second_lowest_distance.article_id]
 
 
 # In[14]:
 
 
-plt.plot(df_revenue_benchmark.time_on_sale, df_revenue_benchmark.mean_revenue, 'b');
+plt.plot(df_revenue_benchmark.time_on_sale,
+         df_revenue_benchmark.mean_revenue, 'b')
 plt.plot(df_revenue_lowest.time_on_sale, df_revenue_lowest.revenue, 'r')
-plt.plot(df_revenue_second_lowest.time_on_sale, df_revenue_second_lowest.revenue, 'g')
-plt.xticks(np.arange(0, 181, step=20));
+plt.plot(df_revenue_second_lowest.time_on_sale,
+         df_revenue_second_lowest.revenue, 'g');
 
 
 # Let us plot some articles with similiar distances. To find similiar values, I just had a look at the sorted result dataframe
@@ -147,19 +152,19 @@ plt.xticks(np.arange(0, 181, step=20));
 # In[15]:
 
 
-article_one = raw_df[raw_df['article_id']==902792]
-article_two = raw_df[raw_df['article_id']==901825]
+article_one = raw_df[raw_df['article_id'] == 902792]
+article_two = raw_df[raw_df['article_id'] == 901825]
 
-plt.plot(article_one['time_on_sale'], article_one['revenue'], 'r');
+plt.plot(article_one['time_on_sale'], article_one['revenue'], 'r')
 plt.plot(article_two['time_on_sale'], article_two['revenue'], 'b');
 
 
 # In[16]:
 
 
-article_three = raw_df[raw_df['article_id']==900546]
-article_four = raw_df[raw_df['article_id']==906171]
+article_three = raw_df[raw_df['article_id'] == 900546]
+article_four = raw_df[raw_df['article_id'] == 906171]
 
-plt.plot(article_three['time_on_sale'], article_three['revenue'], 'r');
+plt.plot(article_three['time_on_sale'], article_three['revenue'], 'r')
 plt.plot(article_four['time_on_sale'], article_four['revenue'], 'b');
 
