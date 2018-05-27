@@ -2,9 +2,9 @@ from tailor.clustering import rank_features
 
 
 def cluster(df, distance_measure, target):
-    '''The Tailor Cluster Algorithm
+    '''The Tailor Clustering Algorithm
 
-    Takes a dataframe, a distance_measure (e.g. dynamic_time_warp)
+    Takes a dataframe, a distance measure (e.g. dynamic_time_warp)
     and a target variable (e.g. 'article_count') as inputs and retuns
     a dataframe where each article is assinged a cluster.
 
