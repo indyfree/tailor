@@ -25,7 +25,6 @@ import pandas as pd
 
 import tailor
 from tailor.data import group_by
-from tailor.visualization import plot_article_history
 
 
 # ### Load data
