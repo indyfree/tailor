@@ -1,6 +1,9 @@
 def weeks_on_sale(df):
     ''' Return dataframe which is grouped by weeks_on_sale'''
 
+    if 'weeks_on_sale' not in df.columns:
+        raise ValueError("Cannot group on 'weeks_on_sale', not a column")
+
     # Select groupers (include categorical features to not drop them)
     groupers = df.select_dtypes(['category']).columns.tolist()
     groupers.append('weeks_on_sale')
