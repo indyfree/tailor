@@ -8,10 +8,10 @@ def plot_article_history(df, articles, measure, legend=True):
     plt.figure()
     ax = plt.axes()
     ax.set_ylabel(measure, fontsize=12)
-    ax.set_xlabel('weeks on sale', fontsize=12)
+    ax.set_xlabel('time on sale', fontsize=12)
 
     for a in articles:
-        x = df.loc[df.article_id == a, 'weeks_on_sale']
+        x = df.loc[df.article_id == a, 'time_on_sale']
         y = df.loc[df.article_id == a, measure]
         plt.plot(x, y, label=str(a))
 
