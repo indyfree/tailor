@@ -33,7 +33,6 @@ from tailor.data import group_by
 
 
 df = tailor.load_data()
-df = group_by.weeks_on_sale(df)
 
 
 # ### Get an overview over the dataset
@@ -72,13 +71,13 @@ df.isna().values.any()
 # In[8]:
 
 
-article = df.loc[df.article_id == 900003, [
-    "weeks_on_sale", "article_count", "avq", "revenue", "sells_price", "original_price"]]
-plt.plot(article.weeks_on_sale, article.article_count, 'blue')
-plt.plot(article.weeks_on_sale, article.revenue/article.original_price, 'orange', label='revenue')
-plt.plot(article.weeks_on_sale, article.avq, 'green')
-plt.plot(article.weeks_on_sale, article.sells_price, 'red')
-plt.xlabel('weeks on sale')
+sample_id = df.sample().article_id.values
+article = df.loc[df.article_id == sample_id]
+plt.plot(article.time_on_sale, article.article_count, 'blue')
+plt.plot(article.time_on_sale, article.revenue/article.original_price, 'orange', label='revenue')
+plt.plot(article.time_on_sale, article.avq, 'green')
+plt.plot(article.time_on_sale, article.sells_price, 'red')
+plt.xlabel('time on sale')
 plt.legend();
 
 

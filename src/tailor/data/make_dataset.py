@@ -62,6 +62,7 @@ def process_data():
     df = data.load_csv()
     df = data.transform_datatypes(df)
     df = features.build(df)
+    df = data.group_by.weeks_on_sale(df)
 
     if not os.path.exists(data.PROCESSED_DATA_PATH):
         os.makedirs(data.PROCESSED_DATA_PATH)

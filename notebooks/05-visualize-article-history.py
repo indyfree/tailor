@@ -32,7 +32,6 @@ from tailor.visualization import plot_article_history
 
 
 df = tailor.load_data()
-df = group_by.weeks_on_sale(df)
 
 
 # ### Visualizing the Weekly History of Articles
