@@ -26,7 +26,7 @@ def weeks_on_sale(df):
 
 
 def feature(df, feature, aggregation_function=DataFrameGroupBy.mean):
-    ''' Groupds dataframe by the characteristic of a feature'''
+    ''' Groups dataframe by the characteristic of a given feature'''
 
     if feature not in df.columns:
         raise ValueError("Cannot group on '{0}', not a column".format(feature))
