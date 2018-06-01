@@ -51,7 +51,6 @@ def plot_scatter_plot(x_axis, y_axis, x_axis_label='', y_axis_label=''):
 def main():
     OUTPUT_DIR = tailor.PROJECT_DIR + '/reports/figures'
     df = tailor.load_data()
-    df = group_by.weeks_on_sale(df)
     plt = plot_article_history(df, [900001, 900002], 'revenue')
     plt.savefig(OUTPUT_DIR + '/weekly_article_history.png')
     print("Plots have been saved to:", OUTPUT_DIR)
