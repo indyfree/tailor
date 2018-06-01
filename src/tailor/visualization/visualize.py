@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 
 import tailor
-from tailor.data import group_by
 
 
 def plot_article_history(df, articles, measure, legend=True):
