@@ -1,3 +1,6 @@
+from pandas.core.groupby import DataFrameGroupBy
+
+
 def weeks_on_sale(df):
     ''' Return dataframe which is grouped by weeks_on_sale'''
 
@@ -22,11 +25,15 @@ def weeks_on_sale(df):
     return df
 
 
-def attribute(df, attribute, mean=False):
-    if attribute not in df.columns:
-        raise ValueError("Cannot group on '{0}', not a column".format(attribute))
+def feature(df, feature, aggregation_function=DataFrameGroupBy.mean):
+    ''' Groupds dataframe by the characteristic of a feature'''
 
-    if(mean):
-        return df.groupby(attribute, as_index=False).mean()
-    else:
-        return df.groupby(attribute, as_index=False).sum()
+    if feature not in df.columns:
+        raise ValueError("Cannot group on '{0}', not a column".format(feature))
+
+    groupers = list()
+    groupers.append(feature)
+    groupers.append('time_on_sale')
+    groups = df.groupby(by=groupers, as_index=False, sort=False)
+
+    return aggregation_function(groups)
