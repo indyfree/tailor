@@ -78,9 +78,9 @@ def accurate_season(df):
     '''Rebuild the season column with season of first transaction'''
 
     # build dictionary with first season per article_id
-    new_season = df.groupby('article_id').apply(lambda x : meteor_season(x.transaction_date.min().month))
+    new_season = df.groupby('article_id').apply(lambda x: meteor_season(x.transaction_date.min().month))
     # apply dictionary to season column
-    df['season'] = df['article_id'].apply(lambda x : new_season[x])
+    df['season'] = df['article_id'].apply(lambda x: new_season[x])
     print("finished rebuilding season")
 
     return df
