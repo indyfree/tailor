@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
 import tailor
+from tailor.data import group_by
 
 
 def plot_article_history(df, articles, measure, legend=True):
@@ -13,6 +14,25 @@ def plot_article_history(df, articles, measure, legend=True):
         x = df.loc[df.article_id == a, 'time_on_sale']
         y = df.loc[df.article_id == a, measure]
         plt.plot(x, y, label=str(a))
+
+    if legend is True:
+        plt.legend()
+
+    return plt
+
+
+def plot_feature_history(df, feature, measure, legend=True):
+    plt.figure()
+    ax = plt.axes()
+    ax.set_ylabel(measure, fontsize=12)
+    ax.set_xlabel('time on sale', fontsize=12)
+
+    df = group_by.feature(df, feature)
+
+    for characteristic in df[feature].unique():
+        x = df.loc[df[feature] == characteristic, 'time_on_sale']
+        y = df.loc[df[feature] == characteristic, measure]
+        plt.plot(x, y, label=str(characteristic))
 
     if legend is True:
         plt.legend()
