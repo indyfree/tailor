@@ -1,4 +1,5 @@
 import calendar
+import numpy as np
 import pandas as pd
 from tailor.data import group_by
 
@@ -7,6 +8,7 @@ def build(df):
     '''Build new features'''
     df = weeks_on_sale(df)
     df = date_info(df)
+    df = accurate_season(df)
     return df
 
 
@@ -68,5 +70,17 @@ def date_info(df):
     print("finished building month")
     df['weekday'] = pd.Series(weekdays, index=df.index).astype('category')
     print("finished building weekday")
+
+    return df
+
+
+def accurate_season(df):
+    '''Rebuild the season column with season of first transaction'''
+
+    # build dictionary with first season per article_id
+    new_season = df.groupby('article_id').apply(lambda x : meteor_season(x.transaction_date.min().month))
+    # apply dictionary to season column
+    df['season'] = df['article_id'].apply(lambda x : new_season[x])
+    print("finished rebuilding season")
 
     return df
