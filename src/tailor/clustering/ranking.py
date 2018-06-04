@@ -25,7 +25,7 @@ def intra_feat_variance(df, distance_maesure, feat):
 
     for characteristic in all_characteristics:
         df_characteristic = df[df[feat] == characteristic]
-        df_mean = group_by.attribute(df_characteristic, 'time_on_sale', mean=True)
+        df_mean = df_characteristic.groupby('time_on_sale').mean()
 
         mean_article_count = df_mean['article_count'].reset_index()
         variances = pd.Series()
