@@ -25,7 +25,7 @@ import pandas as pd
 
 import tailor
 from tailor.data import group_by
-from tailor.visualization import plot_article_history
+from tailor.visualization import plot_article_history, plot_feature_history
 
 
 # In[3]:
@@ -67,4 +67,21 @@ brown_fimmilena = df.loc[(df.color == 'mittelbraun') & (df.brand == 'Fimmilena')
 ids = brown_fimmilena.article_id.unique()
 
 plot_article_history(brown_fimmilena, ids, 'article_count', False);
+
+
+# It's also possible to plot the mean curve for the characteristics of a feature:
+
+# In[8]:
+
+
+plot_feature_history(df, 'Abteilung', 'article_count');
+
+
+# We can now look at a specific feature characteristic to possible identify a cluster characteristic:
+
+# In[1]:
+
+
+ids = df.loc[(df.Abteilung == 'Abteilung003', 'article_id')].unique()
+plot_article_history(df, ids, 'article_count');
 
