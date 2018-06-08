@@ -20,7 +20,7 @@ df = data.load_csv()
 # In[3]:
 
 
-df = df.head()
+# df = df.head()
 
 
 # In[4]:
@@ -32,7 +32,7 @@ df = data.transform_datatypes(df)
 # In[5]:
 
 
-df.head()
+# df
 
 
 # In[6]:
@@ -56,10 +56,16 @@ df.head()
 # In[9]:
 
 
-df = features.build(df)
+df = features.build_features.accurate_season(df)
 
 
 # In[10]:
+
+
+df = features.build(df)
+
+
+# In[11]:
 
 
 df.head()
