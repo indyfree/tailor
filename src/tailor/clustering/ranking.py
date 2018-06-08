@@ -17,7 +17,7 @@ def inter_feat_variance(df, distance_measure, feat):
     return None
 
 
-def intra_feat_variance(df, distance_measure, feat):
+def intra_feat_variance(df, distance_measure, feat, distance_target):
     '''Determines the intra feature variances of all characteristics for the given feature'''
 
     intra_feat_variance = pd.Series()
@@ -27,12 +27,12 @@ def intra_feat_variance(df, distance_measure, feat):
         df_characteristic = df[df[feat] == characteristic]
         df_mean = df_characteristic.groupby('time_on_sale').mean()
 
-        mean_article_count = df_mean['article_count'].reset_index()
+        mean_article_count = df_mean[distance_target].reset_index()
         variances = pd.Series()
         all_articles = df_characteristic['article_id'].unique()
 
         for article in all_articles:
-            article_count_of_article = df_characteristic[df_characteristic['article_id'] == article]['article_count'].reset_index()
+            article_count_of_article = df_characteristic[df_characteristic['article_id'] == article][distance_target].reset_index()
             distance = distance_measure(mean_article_count, article_count_of_article)
             variances = variances.append(distance**2)
 
@@ -50,10 +50,9 @@ def distance_measure(series_a, series_b):
 
 def main():
     df = tailor.load_data()
-    df = group_by.weeks_on_sale(df)
 
     start_time = time.time()
-    df_test = intra_feat_variance(df, distance_measure, 'color')
+    df_test = intra_feat_variance(df, distance_measure, 'color', 'article_count')
     end_time = time.time() - start_time
     print(df_test)
     print(end_time)
