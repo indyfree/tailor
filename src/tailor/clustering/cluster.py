@@ -1,6 +1,3 @@
-from tailor.clustering import rank_features
-
-
 def cluster(df, distance_measure, target):
     '''The Tailor Clustering Algorithm
 
