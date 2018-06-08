@@ -1,6 +1,3 @@
-from tailor.clustering import rank_features
-
-
 def cluster(df, distance_measure, target):
     '''The Tailor Clustering Algorithm
 
@@ -12,12 +9,7 @@ def cluster(df, distance_measure, target):
 
     feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
 
-    ranked_feats = rank_features(df, distance_measure, feats)
-
-    for f in ranked_feats:
-        df = build_clusters(df, f)
-
-    return df
+    return feats
 
 
 def build_clusters(df, feature):
