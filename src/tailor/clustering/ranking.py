@@ -22,11 +22,11 @@ def inter_feat_variance(df, distance_measure, feat, distance_target):
     # Is is different because of missing values at some ToS values
     mean_curve = df_f.groupby('time_on_sale').mean()[distance_target]
 
-    features = df_f[feat].unique()
-    for f in features:
-        characteristic_curve = df_f[df_f[feat] == f].set_index('time_on_sale')[distance_target]
+    characteristics = df_f[feat].unique()
+    for c in characteristics:
+        characteristic_curve = df_f[df_f[feat] == c].set_index('time_on_sale')[distance_target]
         distance = distance_measure(mean_curve, characteristic_curve)
-        inter_feat_variance[f] = distance**2
+        inter_feat_variance[c] = distance**2
 
     return inter_feat_variance
 
@@ -35,8 +35,8 @@ def intra_feat_variance(df, distance_measure, feat, distance_target):
     '''Determines the intra feature variances of all characteristics for the given feature'''
 
     intra_feat_variance = pd.Series()
-    characteristics = df[feat].unique()
 
+    characteristics = df[feat].unique()
     for c in characteristics:
         df_c = df[df[feat] == c]
         mean_curve = df_c.groupby('time_on_sale')[distance_target].mean()
