@@ -6,13 +6,14 @@ from tailor import data
 def rank_features(df, distance_measure, feats, distance_target):
     '''Returns a list of features, sorted by their variance score'''
 
-    feature_variances = pd.Series()
+    weighted_feature_variances = pd.Series()
 
     for f in feats:
         feature_variance = inter_feat_variance(df, distance_measure, f, distance_target).mean()
-        feature_variances[f] = feature_variance
+        num_characteristics = len(df[f].unique())
+        weighted_feature_variances[f] = feature_variance / num_characteristics
 
-    ranked_features = feature_variances.sort_values(ascending=False)
+    ranked_features = weighted_feature_variances.sort_values(ascending=False)
 
     return ranked_features
 
