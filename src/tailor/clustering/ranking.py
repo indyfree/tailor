@@ -34,7 +34,7 @@ def intra_feat_variance(df, distance_measure, feat):
         for article in all_articles:
             article_count_of_article = df_characteristic[df_characteristic['article_id'] == article]['article_count'].reset_index()
             distance = distance_measure(mean_article_count, article_count_of_article)
-            variances = variances.append(distance)
+            variances = variances.append(distance**2)
 
         variance = variances.mean()
         intra_feat_variance[characteristic] = variance
