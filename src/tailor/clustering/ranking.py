@@ -2,6 +2,7 @@ import pandas as pd
 import time
 
 import tailor
+from tailor import data
 
 
 def rank_features(df, distance_measure, feats):
@@ -10,10 +11,21 @@ def rank_features(df, distance_measure, feats):
     return None
 
 
-def inter_feat_variance(df, distance_measure, feat):
+def inter_feat_variance(df, distance_measure, feat, distance_target):
     '''Determines the variance of the given feature in respect to the grouped characteristics'''
 
-    return None
+    inter_feat_variance = pd.Series()
+    df_grouped_feat = data.group_by.feature(df, feat)
+    all_features = df_grouped_feat[feat].unique()
+    mean_series = df.groupby(df_grouped_feat.time_on_sale).mean()[distance_target]
+
+    for feature in all_features:
+        feat_series = df_grouped_feat[df_grouped_feat[feat] == feature].set_index('time_on_sale')[distance_target]
+        distance = distance_measure(mean_series, feat_series)
+        variance = distance**2
+        inter_feat_variance[feature] = variance
+
+    return inter_feat_variance
 
 
 def intra_feat_variance(df, distance_measure, feat, distance_target):
