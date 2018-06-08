@@ -9,7 +9,7 @@ def cluster(df, distance_measure, target):
 
     feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
 
-    return df
+    return feats
 
 
 def build_clusters(df, feature):
