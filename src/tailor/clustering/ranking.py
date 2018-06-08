@@ -17,7 +17,7 @@ def inter_feat_variance(df, distance_measure, feat):
     return None
 
 
-def intra_feat_variance(df, distance_maesure, feat):
+def intra_feat_variance(df, distance_measure, feat):
     '''Determines the intra feature variances of all characteristics for the given feature'''
 
     intra_feat_variance = pd.Series()
@@ -33,7 +33,7 @@ def intra_feat_variance(df, distance_maesure, feat):
 
         for article in all_articles:
             article_count_of_article = df_characteristic[df_characteristic['article_id'] == article]['article_count'].reset_index()
-            distance = distance_maesure(mean_article_count, article_count_of_article)
+            distance = distance_measure(mean_article_count, article_count_of_article)
             variances = variances.append(distance)
 
         variance = variances.mean()
