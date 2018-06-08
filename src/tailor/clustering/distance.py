@@ -1,6 +1,7 @@
 import pandas as pd
 import scipy.interpolate as spi
 
+
 def euclidean(a, b):
     '''returns the mean absolute difference'''
     return abs(a - b).mean()
