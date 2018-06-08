@@ -1,5 +1,5 @@
 def euclidean(x, y):
-    return None
+    return abs(x - y).mean()
 
 
 def derivative_euclidean(x, y):
