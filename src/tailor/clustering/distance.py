@@ -8,22 +8,22 @@ def euclidean(a, b):
     return abs(a - b).mean()
 
 
-def derivative_euclidean(a, b, smooth=1):
+def interpolate_function(a, degree=1, smooth=1):
+    '''returns an interpolated function based on a Series'''
+    return spi.UnivariateSpline(a.index, a.values, s=smooth, k=degree)
+
+
+def derivative_euclidean(a, b, degree=1, smooth=1):
     '''returns the mean absolute difference between the interpolation derivatives'''
-    # creating the interpolated derivative for a
-    xa = a.index
-    ya = a.values
-    sa = spi.UnivariateSpline(xa, ya, s=smooth)
-    sa = sa.derivative()
-    # creating the interpolated derivative for b
-    xb = b.index
-    yb = b.values
-    sb = spi.UnivariateSpline(xb, yb, s=smooth)
-    sb = sb.derivative
-    # calculating new Series
-    a_d = pd.Series(data=sa(xa), index=xa)
-    b_d = pd.Series(data=sb(xb), index=xb)
-    return abs(a_d - b_d).mean()
+    # creating the interpolated derivatives
+    da = interpolate_function(a, degree, smooth).derivative()
+    db = interpolate_function(b, degree, smooth).derivative()
+    # create new Series
+    # da(a.index) takes the index as x and calculates new y values
+    # this way only y for existing x are calculated
+    a_new = pd.Series(data=da(a.index), index=a.index)
+    b_new = pd.Series(data=db(b.index), index=b.index)
+    return euclidean(a_new,b_new)
 
 
 def dynamic_time_warp(a, b):
