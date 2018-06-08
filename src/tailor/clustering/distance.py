@@ -21,7 +21,7 @@ def derivative_euclidean(a, b, smooth=1):
     # calculating new Series
     a_d = pd.Series(data=sa(xa), index=xa)
     b_d = pd.Series(data=sb(xb), index=xb)
-    return abs(a_b - b_b).mean()
+    return abs(a_d - b_d).mean()
 
 
 def dynamic_time_warp(a, b):
