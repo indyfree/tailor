@@ -2,6 +2,7 @@ import pandas as pd
 import time
 
 import tailor
+from tailor.clustering import distance
 
 
 def rank_features(df, distance_measure, feats):
@@ -20,38 +21,28 @@ def intra_feat_variance(df, distance_measure, feat, distance_target):
     '''Determines the intra feature variances of all characteristics for the given feature'''
 
     intra_feat_variance = pd.Series()
-    all_characteristics = df[feat].unique()
+    characteristics = df[feat].unique()
 
-    for characteristic in all_characteristics:
-        df_characteristic = df[df[feat] == characteristic]
-        df_mean = df_characteristic.groupby('time_on_sale').mean()
+    for c in characteristics:
+        df_c = df[df[feat] == c]
+        mean_curve = df_c.groupby('time_on_sale')[distance_target].mean()
 
-        mean_article_count = df_mean[distance_target].reset_index()
-        variances = pd.Series()
-        all_articles = df_characteristic['article_id'].unique()
+        variances = []
+        for a in df_c.article_id.unique():
+            article_curve = df_c[df_c.article_id == a].set_index('time_on_sale')[distance_target]
+            distance = distance_measure(mean_curve, article_curve)
+            variances.append(distance**2)
 
-        for article in all_articles:
-            article_count_of_article = df_characteristic[df_characteristic['article_id'] == article][distance_target].reset_index()
-            distance = distance_measure(mean_article_count, article_count_of_article)
-            variances = variances.append(distance**2)
-
-        variance = variances.mean()
-        intra_feat_variance[characteristic] = variance
+        intra_feat_variance[c] = pd.Series(variances).mean()
 
     return intra_feat_variance
-
-
-def distance_measure(series_a, series_b):
-    distances = (series_a - series_b)**2**0.5
-    distance = distances.mean()
-    return distance
 
 
 def main():
     df = tailor.load_data()
 
     start_time = time.time()
-    df_test = intra_feat_variance(df, distance_measure, 'color', 'article_count')
+    df_test = intra_feat_variance(df, distance.euclidean, 'color', 'article_count')
     end_time = time.time() - start_time
     print(df_test)
     print(end_time)
