@@ -2,7 +2,6 @@ import pandas as pd
 import time
 
 import tailor
-from tailor.data import group_by
 
 
 def rank_features(df, distance_measure, feats):
