@@ -9,11 +9,6 @@ def cluster(df, distance_measure, target):
 
     feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
 
-    ranked_feats = rank_features(df, distance_measure, feats)
-
-    for f in ranked_feats:
-        df = build_clusters(df, f)
-
     return df
 
 
