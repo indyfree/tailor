@@ -16,15 +16,17 @@ def inter_feat_variance(df, distance_measure, feat, distance_target):
     '''Determines the variance of the given feature in respect to the grouped characteristics'''
 
     inter_feat_variance = pd.Series()
-    df_grouped_feat = data.group_by.feature(df, feat)
-    all_features = df_grouped_feat[feat].unique()
-    mean_series = df.groupby(df_grouped_feat.time_on_sale).mean()[distance_target]
+    df_f = data.group_by.feature(df, feat)
 
-    for feature in all_features:
-        feat_series = df_grouped_feat[df_grouped_feat[feat] == feature].set_index('time_on_sale')[distance_target]
-        distance = distance_measure(mean_series, feat_series)
-        variance = distance**2
-        inter_feat_variance[feature] = variance
+    # NOTE: grouped on mean of characteristics not all articles
+    # Is is different because of missing values at some ToS values
+    mean_curve = df_f.groupby('time_on_sale').mean()[distance_target]
+
+    features = df_f[feat].unique()
+    for f in features:
+        characteristic_curve = df_f[df_f[feat] == f].set_index('time_on_sale')[distance_target]
+        distance = distance_measure(mean_curve, characteristic_curve)
+        inter_feat_variance[f] = distance**2
 
     return inter_feat_variance
 
@@ -54,9 +56,9 @@ def main():
     df = tailor.load_data()
 
     start_time = time.time()
-    df_test = intra_feat_variance(df, distance.euclidean, 'color', 'article_count')
+    print("intra variance: ", intra_feat_variance(df, distance.euclidean, 'color', 'article_count'))
+    print("inter variance: ", inter_feat_variance(df, distance.euclidean, 'color', 'article_count'))
     end_time = time.time() - start_time
-    print(df_test)
     print(end_time)
 
 
