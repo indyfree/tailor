@@ -1,15 +1,21 @@
 import pandas as pd
-import time
 
-import tailor
 from tailor import data
-from tailor.clustering import distance
 
 
-def rank_features(df, distance_measure, feats):
+def rank_features(df, distance_measure, feats, distance_target):
     '''Returns a list of features, sorted by their variance score'''
 
-    return None
+    weighted_feature_variances = pd.Series()
+
+    for f in feats:
+        feature_variance = inter_feat_variance(df, distance_measure, f, distance_target).mean()
+        num_characteristics = len(df[f].unique())
+        weighted_feature_variances[f] = feature_variance / num_characteristics
+
+    ranked_features = weighted_feature_variances.sort_values(ascending=False)
+
+    return ranked_features
 
 
 def inter_feat_variance(df, distance_measure, feat, distance_target):
@@ -50,17 +56,3 @@ def intra_feat_variance(df, distance_measure, feat, distance_target):
         intra_feat_variance[c] = pd.Series(variances).mean()
 
     return intra_feat_variance
-
-
-def main():
-    df = tailor.load_data()
-
-    start_time = time.time()
-    print("intra variance: ", intra_feat_variance(df, distance.euclidean, 'color', 'article_count'))
-    print("inter variance: ", inter_feat_variance(df, distance.euclidean, 'color', 'article_count'))
-    end_time = time.time() - start_time
-    print(end_time)
-
-
-if __name__ == '__main__':
-    main()
