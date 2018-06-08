@@ -12,7 +12,6 @@ def weeks_on_sale(df):
     groupers.append('weeks_on_sale')
 
     # Don't group by date data
-    groupers.remove('month')
     groupers.remove('weekday')
     groupers.remove('season_buy')
 
