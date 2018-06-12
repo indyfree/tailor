@@ -4,7 +4,7 @@ import tailor
 from tailor.data import group_by
 
 
-def plot_article_history(df, articles, measure, legend=True):
+def plot_articles(df, articles, measure, legend=True):
     plt.figure()
     ax = plt.axes()
     ax.set_ylabel(measure, fontsize=12)
@@ -42,7 +42,7 @@ def plot_feature_history(df, feature, measure, legend=True):
 def plot_cluster_articles(df, cluster, distance_target, legend=True):
     cluster_articles = df.loc[df.cluster == cluster]
     ids = cluster_articles.article_id.unique()
-    return plot_article_history(df, ids, distance_target, legend)
+    return plot_articles(df, ids, distance_target, legend)
 
 
 def plot_line_chart(x_axis, y_axis, x_axis_label='', y_axis_label=''):
@@ -75,7 +75,7 @@ def plot_scatter_plot(x_axis, y_axis, x_axis_label='', y_axis_label=''):
 def main():
     OUTPUT_DIR = tailor.PROJECT_DIR + '/reports/figures'
     df = tailor.load_data()
-    plt = plot_article_history(df, [900001, 900002], 'revenue')
+    plt = plot_articles(df, [900001, 900002], 'revenue')
     plt.savefig(OUTPUT_DIR + '/weekly_article_history.png')
     print("Plots have been saved to:", OUTPUT_DIR)
 
