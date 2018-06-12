@@ -36,7 +36,7 @@ df = tailor.load_data()
 feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
 ranked_features = ranking.rank_features(df, distance.euclidean, feats, 'article_count')
 print(ranked_features)
-feat = 'brand'
+feat = 'Abteilung'
 
 
 # In[5]:
@@ -45,29 +45,41 @@ feat = 'brand'
 get_ipython().run_cell_magic('time', '', "df_cluster = build_clusters(df, feat, distance.euclidean, 'article_count')")
 
 
-# In[9]:
+# In[6]:
 
 
-print("Number Characteristics: ", len(df[feat].unique()))
-plot_feature_history(df, feat, 'article_count', False);
+get_ipython().run_cell_magic('time', '', "cluster_feat = df_cluster.loc[:, [feat, 'cluster']].groupby(feat).mean()\ndf = df.merge(cluster_feat, left_on=feat, right_on=feat)")
 
 
 # In[7]:
 
 
-print("Number Cluster: ", len(df_cluster['cluster'].unique()))
-plot_feature_history(df_cluster, 'cluster', 'article_count');
+print("Number Characteristics: ", len(df[feat].unique()))
+plot_feature_characteristics(df, feat, 'article_count', legend=True);
 
-
-# ### Plot characteristics that are included in a Cluster
 
 # In[8]:
 
 
-plot_feature_history(df_cluster.loc[df_cluster.cluster == 0], feat, 'article_count', False);
+print("Number Clusters: ", len(df_cluster['cluster'].unique()))
+plot_feature_characteristics(df_cluster, 'cluster', 'article_count');
+
+
+# ### Plot characteristics that are included in a specific Cluster
+
+# In[9]:
+
+
+plot_feature_characteristics(df_cluster.loc[df_cluster.cluster == 1], feat, 'article_count', legend=False);
+
+
+# ### Plot articles that are included in a Cluster
+
+# In[10]:
+
+
+plot_cluster_articles(df, 1, 'article_count', legend=False);
 
 
 # ## Todo: 
 # - Cluster/Characteristics that are not defined for the full time on sale values
-# - Visualize inside cluster
-# - Merge cluster-assignment with big df to be able to cluster with multiple features
