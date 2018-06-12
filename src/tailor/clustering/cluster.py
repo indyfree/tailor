@@ -34,6 +34,8 @@ def build_clusters(df, feature, distance_measure, distance_target):
         if (a or b) is None:
             break
 
+        # TODO: Print characteristics of clusters
+        # print("Merging Cluster:", a, b)
         df_cluster.loc[df_cluster.cluster == a, 'cluster'] = b
 
     return df_cluster
