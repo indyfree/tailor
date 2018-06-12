@@ -22,20 +22,28 @@ def cluster(df, distance_measure, distance_target):
 
 
 def build_clusters(df, feature, distance_measure, distance_target):
-    ''' Build cluster for a specific feature '''
+    ''' Build clusters from the features characteristics '''
 
     df_cluster = data.group_by.feature(df, feature)
-    df_cluster['cluster'] = df_cluster[feature].cat.codes  # each characteristic forms a cluster
 
-    while(True):
+    # Assign the initial clusters, where each characteristic forms a cluster
+    df_cluster['cluster'] = df_cluster[feature].cat.codes
+
+    # Merge closest clusters till there are no close clusters anymore
+    while True:
         distances = cluster_distances(df_cluster, distance_measure, distance_target)
-        a, b = closest_clusters(distances)
 
+        # Set the merging threshold as the values which fall below half of the average distance
+        # NOTE: This is arbitrary and should be statistically proven
+        threshold = distances.cluster_distance.mean() / 2
+
+        a, b = closest_clusters(distances, threshold)
         if (a or b) is None:
             break
 
         # TODO: Print characteristics of clusters
         # print("Merging Cluster:", a, b)
+        # Merge closest clusters below the threshold
         df_cluster.loc[df_cluster.cluster == a, 'cluster'] = b
 
     return df_cluster
@@ -64,10 +72,9 @@ def cluster_distances(df, distance_measure, distance_target):
     return pd.DataFrame(distances, columns=['from', 'to', 'cluster_distance'])
 
 
-def closest_clusters(distances):
+def closest_clusters(distances, threshold):
     ''' Return the two closest clusters '''
 
-    threshold = distances.cluster_distance.mean() / 2
     distances = distances.loc[distances.cluster_distance < threshold]
     min_distance = distances.loc[distances.cluster_distance == distances.cluster_distance.min()]
 
