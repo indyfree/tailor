@@ -31,7 +31,7 @@ def build_clusters(df, feature, distance_measure, distance_target):
         distances = cluster_distances(df_cluster, distance_measure, distance_target)
         a, b = closest_clusters(distances)
 
-        if (not a or not b):
+        if (a or b) is None:
             break
 
         df_cluster.loc[df_cluster.cluster == a, 'cluster'] = b
