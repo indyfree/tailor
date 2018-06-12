@@ -21,7 +21,7 @@ def plot_articles(df, articles, measure, legend=True):
     return plt
 
 
-def plot_feature_history(df, feature, measure, legend=True):
+def plot_feature_characteristics(df, feature, measure, legend=True):
     plt.figure()
     ax = plt.axes()
     ax.set_ylabel(measure, fontsize=12)
