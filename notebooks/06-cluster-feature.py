@@ -34,67 +34,117 @@ df = tailor.load_data()
 # In[4]:
 
 
-df.head()
-
-
-# In[5]:
-
-
 feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season']
 
 r_feats = rank_features(df, distance.euclidean, feats, 'article_count')
 print(r_feats)
 
 
+# In[5]:
+
+
+feat = r_feats.index[0]
+print(feat)
+plot_feature_history(df, feat, 'article_count');
+
+
 # In[6]:
 
 
-f = feat.index[5]
-print(f)
+df_f = group_by.feature(df, feat)
+df_f
 
 
-# In[49]:
+# ### Each characteristic forms a cluster
+
+# In[7]:
 
 
-plot_feature_history(df, f, 'article_count');
+df_f['cluster'] = df_f[feat].cat.codes
 
 
-# In[50]:
+# In[8]:
 
 
-df_f = group_by.feature(df, f)
-A5 = df_f.loc[df_f.Abteilung == 'Abteilung007'].set_index('time_on_sale')
-A6 = df_f.loc[df_f.Abteilung == 'Abteilung006'].set_index('time_on_sale')
-distance.euclidean(A5['article_count'],A6['article_count'])
+plot_feature_history(df_f, 'cluster', 'article_count');
 
 
-# In[51]:
+# ### Calculate distance between clusters
+
+# In[9]:
 
 
-chars = df_f[f].unique()
-dists = np.empty((len(chars), len(chars)))
-l = []
-                 
-for i, x in enumerate(chars):
-    x_rev = df_f.loc[df_f[f] == x].set_index('time_on_sale')
-    
-    for k, y in enumerate(chars):
-        if y <= x:
-            continue
-            
-        y_rev = df_f.loc[df_f[f] == y].set_index('time_on_sale')
-        d = distance.euclidean(x_rev['article_count'], y_rev['article_count'])
-        dists[i][k] = d
-        l.append((d,x,y))
+def cluster_distances(df, distance_target):
+    cluster = df_f.cluster.unique()
+    l = []
+    for i, x in enumerate(cluster):
+        x_curve = df_f.loc[df_f.cluster == x].set_index('time_on_sale')
 
-df_d = pd.DataFrame(l, columns=['distance', 'charA', 'charB'])
-df_d = df_d.loc[df_d.charA != df_d.charB].sort_values(by='distance')
-threshhold = df_d.distance.mean() / 2
-df_t = df_d.loc[df_d.distance < threshhold]
+        for k, y in enumerate(cluster):
+            if k <= i:
+                continue
+
+            y_curve = df_f.loc[df_f.cluster == y].set_index('time_on_sale')
+            d = distance.euclidean(
+                x_curve[distance_target], y_curve[distance_target])
+            l.append((x, y, d))
+
+    return pd.DataFrame(l, columns=['from', 'to','cluster_distance'])
+
+distances = cluster_distances(df_f, 'article_count')
 
 
-# In[52]:
+# ### Find out characteristics to cluster together
+
+# In[10]:
 
 
+# Fix threshold value
+threshold = distances.cluster_distance.mean()/2
+print(threshold)
+df_t = distances.loc[distances.cluster_distance < threshold]
+df_t
+
+
+# In[11]:
+
+
+to_cluster = df_t.loc[df_t.cluster_distance == df_t.cluster_distance.min()]
+
+
+# In[12]:
+
+
+plot_feature_history(df_f, 'cluster', 'article_count');
+
+
+# ### Reassign characteristic cluster
+
+# In[13]:
+
+
+df_f.loc[df_f.cluster == to_cluster['to'].values[0], 'cluster'] = to_cluster['from'].values[0]
+
+
+# In[14]:
+
+
+df_c = group_by.feature(df_f, 'cluster')
+
+
+# In[15]:
+
+
+plot_feature_history(df_c, 'cluster', 'article_count');
+
+
+# In[16]:
+
+
+distances = cluster_distances(df_f, 'article_count')
+# Fix threshold value
+threshold = distances.cluster_distance.mean()/2
+print(threshold)
+df_t = distances.loc[distances.cluster_distance < threshold]
 df_t
 
