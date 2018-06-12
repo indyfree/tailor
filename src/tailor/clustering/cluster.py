@@ -15,10 +15,12 @@ def cluster(df, distance_measure, distance_target):
 
     feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
     ranked_features = clustering.rank_features(df, distance_measure, feats, distance_target)
-    cluster_feat = ranked_features.index[0]
-    df_clusters = build_clusters(df, cluster_feat, distance_measure, distance_target)
+    first_feat = ranked_features.index[0]
+    df_clusters = build_clusters(df, first_feat, distance_measure, distance_target)
 
-    return df_clusters
+    characteristic_clusters = df_cluster.loc[:, [feat, 'cluster']].groupby(feat).mean()
+    df = df.merge(characteristic_clusters, left_on=feat, right_on=feat)
+    return df
 
 
 def build_clusters(df, feature, distance_measure, distance_target):
