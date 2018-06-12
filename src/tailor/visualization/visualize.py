@@ -39,6 +39,11 @@ def plot_feature_history(df, feature, measure, legend=True):
 
     return plt
 
+def plot_cluster_articles(df, cluster, distance_target, legend=True):
+    cluster_articles = df.loc[df.cluster == cluster]
+    ids = cluster_articles.article_id.unique()
+    return plot_article_history(df, ids, distance_target, legend)
+
 
 def plot_line_chart(x_axis, y_axis, x_axis_label='', y_axis_label=''):
     plt.figure()
