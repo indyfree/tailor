@@ -25,8 +25,10 @@ def cluster(df, distance_measure, distance_target):
 def build_clusters(df, feature, distance_measure, distance_target):
     df_grouped = data.group_by.feature(df, feature)
     df_grouped['cluster'] = df_grouped[feature].cat.codes  # each characteristic forms a cluster
+
+
     distances = cluster_distances(df_grouped, distance_measure, distance_target)
-    a, b = closes_clusters(distances)
+    a, b = closest_clusters(distances)
     df_grouped.loc[df_grouped.cluster == a, 'cluster'] = b
 
     return df_grouped
@@ -55,7 +57,7 @@ def cluster_distances(df, distance_measure, distance_target):
     return pd.DataFrame(distances, columns=['from', 'to', 'cluster_distance'])
 
 
-def closes_clusters(distances):
+def closest_clusters(distances):
     threshold = distances.cluster_distance.mean() / 2
     distances = distances.loc[distances.cluster_distance < threshold]
     min_distance = distances.loc[distances.cluster_distance == distances.cluster_distance.min()]
