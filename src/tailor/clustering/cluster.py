@@ -1,4 +1,3 @@
-import tailor
 from tailor import clustering
 from tailor import data
 
@@ -17,21 +16,27 @@ def cluster(df, distance_measure, distance_target):
     feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
     ranked_features = clustering.rank_features(df, distance_measure, feats, distance_target)
     cluster_feat = ranked_features.index[0]
-    df_grouped = build_clusters(df, cluster_feat, distance_measure, distance_target)
+    df_clusters = build_clusters(df, cluster_feat, distance_measure, distance_target)
 
-    return df_grouped
+    return df_clusters
 
 
 def build_clusters(df, feature, distance_measure, distance_target):
-    df_grouped = data.group_by.feature(df, feature)
-    df_grouped['cluster'] = df_grouped[feature].cat.codes  # each characteristic forms a cluster
+    ''' Build cluster for a specific feature '''
 
+    df_cluster = data.group_by.feature(df, feature)
+    df_cluster['cluster'] = df_cluster[feature].cat.codes  # each characteristic forms a cluster
 
-    distances = cluster_distances(df_grouped, distance_measure, distance_target)
-    a, b = closest_clusters(distances)
-    df_grouped.loc[df_grouped.cluster == a, 'cluster'] = b
+    while(True):
+        distances = cluster_distances(df_cluster, distance_measure, distance_target)
+        a, b = closest_clusters(distances)
 
-    return df_grouped
+        if (not a or not b):
+            break
+
+        df_cluster.loc[df_cluster.cluster == a, 'cluster'] = b
+
+    return df_cluster
 
 
 def cluster_distances(df, distance_measure, distance_target):
@@ -58,18 +63,13 @@ def cluster_distances(df, distance_measure, distance_target):
 
 
 def closest_clusters(distances):
+    ''' Return the two closest clusters '''
+
     threshold = distances.cluster_distance.mean() / 2
     distances = distances.loc[distances.cluster_distance < threshold]
     min_distance = distances.loc[distances.cluster_distance == distances.cluster_distance.min()]
 
-    return min_distance['to'].values[0], min_distance['from'].values[0]
-
-
-def main():
-    df = tailor.load_data()
-    df_cluster = cluster(df, clustering.euclidean, 'article_count')
-    print(df_cluster)
-
-
-if __name__ == '__main__':
-    main()
+    if(not min_distance.empty):
+        return min_distance['to'].values[0], min_distance['from'].values[0]
+    else:
+        return None, None
