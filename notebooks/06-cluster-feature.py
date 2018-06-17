@@ -20,7 +20,6 @@ import numpy as np
 
 import tailor
 from tailor.clustering import *
-from tailor.clustering import ranking
 from tailor.visualization import *
 
 
@@ -42,43 +41,37 @@ feat = 'Abteilung'
 # In[5]:
 
 
-get_ipython().run_cell_magic('time', '', "df_cluster = build_clusters(df, feat, distance.euclidean, 'article_count')")
+get_ipython().run_cell_magic('time', '', "df_cluster = build_clusters(df, feat, distance.euclidean, 'article_count')\ncharacteristic_clusters = df_cluster.loc[:, [feat, 'cluster']].groupby(feat).mean()\ndf = df.merge(characteristic_clusters, left_on=feat, right_on=feat)")
 
 
 # In[6]:
-
-
-get_ipython().run_cell_magic('time', '', "cluster_feat = df_cluster.loc[:, [feat, 'cluster']].groupby(feat).mean()\ndf = df.merge(cluster_feat, left_on=feat, right_on=feat)")
-
-
-# In[7]:
 
 
 print("Number Characteristics: ", len(df[feat].unique()))
 plot_feature_characteristics(df, feat, 'article_count', legend=True);
 
 
-# In[8]:
+# In[7]:
 
 
 print("Number Clusters: ", len(df_cluster['cluster'].unique()))
-plot_feature_characteristics(df_cluster, 'cluster', 'article_count');
+plot_feature_characteristics(df, 'cluster', 'article_count');
 
 
 # ### Plot characteristics that are included in a specific Cluster
 
-# In[9]:
+# In[8]:
 
 
-plot_feature_characteristics(df_cluster.loc[df_cluster.cluster == 1], feat, 'article_count', legend=False);
+plot_cluster_characteristics(df, 1, feat, 'article_count', legend=True);
 
 
 # ### Plot articles that are included in a Cluster
 
-# In[10]:
+# In[9]:
 
 
-plot_cluster_articles(df, 1, 'article_count', legend=False);
+plot_cluster_articles(df, 2, 'article_count', legend=False);
 
 
 # ## Todo: 
