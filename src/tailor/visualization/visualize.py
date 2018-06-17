@@ -50,33 +50,6 @@ def plot_feature_characteristics(df, feature, measure, legend=True):
     return plt
 
 
-def plot_line_chart(x_axis, y_axis, x_axis_label='', y_axis_label=''):
-    plt.figure()
-    ax = plt.axes()
-    ax.set_ylabel(y_axis_label, fontsize=12)
-    ax.set_xlabel(x_axis_label, fontsize=12)
-    plt.plot(x_axis, y_axis)
-    return plt
-
-
-def plot_bar_chart(x_axis, y_axis, x_axis_label='', y_axis_label=''):
-    plt.figure()
-    ax = plt.axes()
-    ax.set_ylabel(y_axis_label, fontsize=12)
-    ax.set_xlabel(x_axis_label, fontsize=12)
-    plt.bar(x_axis, y_axis)
-    return plt
-
-
-def plot_scatter_plot(x_axis, y_axis, x_axis_label='', y_axis_label=''):
-    plt.figure()
-    ax = plt.axes()
-    ax.set_ylabel(y_axis_label, fontsize=12)
-    ax.set_xlabel(x_axis_label, fontsize=12)
-    plt.scatter(x_axis, y_axis, alpha=0.3, cmap='viridis', s=1.5)
-    return plt
-
-
 def main():
     OUTPUT_DIR = tailor.PROJECT_DIR + '/reports/figures'
     df = tailor.load_data()
