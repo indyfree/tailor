@@ -43,6 +43,7 @@ def plot_feature_characteristics(df, feature, measure, legend=True):
 
     return plt
 
+
 def _setup_plot(xlabel, ylabel):
     plt.figure()
     ax = plt.axes()
