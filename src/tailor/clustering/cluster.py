@@ -84,3 +84,8 @@ def closest_clusters(distances, threshold):
         return min_distance['to'].values[0], min_distance['from'].values[0]
     else:
         return None, None
+
+
+def output_clusters(df, feat):
+    c = df.groupby(['cluster', feat], observed=True, as_index=False).sum()
+    return c.groupby('cluster')[feat].apply(lambda x: "%s" % ', '.join(x))
