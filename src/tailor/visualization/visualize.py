@@ -21,6 +21,16 @@ def plot_articles(df, articles, measure, legend=True):
     return plt
 
 
+def plot_cluster_articles(df, cluster, distance_target, legend=True):
+    cluster_articles = df.loc[df.cluster == cluster]
+    ids = cluster_articles.article_id.unique()
+    return plot_articles(df, ids, distance_target, legend)
+
+
+def plot_cluster_characteristics(df, cluster, feature, distance_target, legend=True):
+    df_cluster = df.loc[df['cluster'] == cluster]
+    return plot_feature_characteristics(df_cluster, feature, distance_target, legend)
+
 def plot_feature_characteristics(df, feature, measure, legend=True):
     plt.figure()
     ax = plt.axes()
@@ -38,11 +48,6 @@ def plot_feature_characteristics(df, feature, measure, legend=True):
         plt.legend()
 
     return plt
-
-def plot_cluster_articles(df, cluster, distance_target, legend=True):
-    cluster_articles = df.loc[df.cluster == cluster]
-    ids = cluster_articles.article_id.unique()
-    return plot_articles(df, ids, distance_target, legend)
 
 
 def plot_line_chart(x_axis, y_axis, x_axis_label='', y_axis_label=''):
