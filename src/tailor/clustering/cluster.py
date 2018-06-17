@@ -18,8 +18,8 @@ def cluster(df, distance_measure, distance_target):
     first_feat = ranked_features.index[0]
     df_clusters = build_clusters(df, first_feat, distance_measure, distance_target)
 
-    characteristic_clusters = df_cluster.loc[:, [feat, 'cluster']].groupby(feat).mean()
-    df = df.merge(characteristic_clusters, left_on=feat, right_on=feat)
+    characteristic_to_cluster = df_clusters.loc[:, [first_feat, 'cluster']].groupby(first_feat).mean()
+    df = df.merge(characteristic_to_cluster, left_on=first_feat, right_on=first_feat)
     return df
 
 
