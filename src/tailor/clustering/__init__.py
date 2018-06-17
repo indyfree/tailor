@@ -8,3 +8,4 @@ from .distance import interpolate_function # noqa
 from .ranking import rank_features # noqa
 from .evaluation import cluster_scatter # noqa
 from .evaluation import cluster_separation # noqa
+from .evaluation import davis_bouldin # noqa
