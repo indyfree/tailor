@@ -18,7 +18,7 @@ def davis_bouldin(df, distance_measure, distance_target):
 
         d.append(pd.Series(d1).max())
 
-    return pd.Series(d / len(clusters))
+    return (pd.Series(d).sum() / len(clusters))
 
 
 def cluster_scatter(df, cluster, distance_measure, distance_target):
