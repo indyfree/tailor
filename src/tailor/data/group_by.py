@@ -30,6 +30,6 @@ def feature(df, feature, aggregation_function=DataFrameGroupBy.mean):
     if feature not in df.columns:
         raise ValueError("Cannot group on '{0}', not a column".format(feature))
 
-    groups = df.groupby(by=[feature, 'time_on_sale'], as_index=False, sort=False, observed=True)
+    groups = df.groupby(by=[feature, 'time_on_sale'], as_index=False, sort=True, observed=True)
 
     return aggregation_function(groups)
