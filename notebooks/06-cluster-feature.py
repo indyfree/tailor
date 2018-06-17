@@ -41,7 +41,7 @@ feat = 'Abteilung'
 # In[5]:
 
 
-get_ipython().run_cell_magic('time', '', "df_cluster = build_clusters(df, feat, distance.euclidean, 'article_count')\ncharacteristic_clusters = df_cluster.loc[:, [feat, 'cluster']].groupby(feat).mean()\ndf = df.merge(characteristic_clusters, left_on=feat, right_on=feat)")
+get_ipython().run_cell_magic('time', '', "df_cluster = build_clusters(df, feat, distance.euclidean, 'article_count')\ncharacteristic_clusters = df_cluster.loc[:, [feat, 'cluster']].groupby(feat).mean()\ndf = df.merge(characteristic_clusters, left_on=feat, right_on=feat)\nprint(output_clusters(df, feat))")
 
 
 # In[6]:
