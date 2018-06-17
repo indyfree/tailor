@@ -5,10 +5,7 @@ from tailor.data import group_by
 
 
 def plot_articles(df, articles, measure, legend=True):
-    plt.figure()
-    ax = plt.axes()
-    ax.set_ylabel(measure, fontsize=12)
-    ax.set_xlabel('time on sale', fontsize=12)
+    plt = _setup_plot('time on sale', measure)
 
     for a in articles:
         x = df.loc[df.article_id == a, 'time_on_sale']
@@ -31,12 +28,9 @@ def plot_cluster_characteristics(df, cluster, feature, distance_target, legend=T
     df_cluster = df.loc[df['cluster'] == cluster]
     return plot_feature_characteristics(df_cluster, feature, distance_target, legend)
 
-def plot_feature_characteristics(df, feature, measure, legend=True):
-    plt.figure()
-    ax = plt.axes()
-    ax.set_ylabel(measure, fontsize=12)
-    ax.set_xlabel('time on sale', fontsize=12)
 
+def plot_feature_characteristics(df, feature, measure, legend=True):
+    plt = _setup_plot('time on sale', measure)
     df = group_by.feature(df, feature)
 
     for characteristic in df[feature].unique():
@@ -47,6 +41,13 @@ def plot_feature_characteristics(df, feature, measure, legend=True):
     if legend is True:
         plt.legend()
 
+    return plt
+
+def _setup_plot(xlabel, ylabel):
+    plt.figure()
+    ax = plt.axes()
+    ax.set_xlabel(xlabel.replace("_", " "), fontsize=12)
+    ax.set_ylabel(ylabel.replace("_", " "), fontsize=12)
     return plt
 
 
