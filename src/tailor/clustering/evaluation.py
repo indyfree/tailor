@@ -1,16 +1,24 @@
 import pandas as pd
 
-from tailor import data
 
 def davis_bouldin(df, distance_measure, distance_target):
-    for c1 in sorted(df.cluster.unique()):
+    d = []
+    clusters = sorted(df.cluster.unique())
+    for c1 in clusters:
         s1 = cluster_scatter(df, c1, distance_measure, distance_target)
-
-        for c2 in sorted(df.cluster.unique()):
+        d1 = []
+        for c2 in clusters:
             if c2 <= c1:
                 continue
 
             s2 = cluster_scatter(df, c2, distance_measure, distance_target)
+            m = cluster_separation(df, c1, c2, distance_measure, distance_target)
+            r = (s1 + s2 / m)
+            d1.append(r)
+
+        d.append(pd.Series(d1).max())
+
+    return pd.Series(d / len(clusters))
 
 
 def cluster_scatter(df, cluster, distance_measure, distance_target):
@@ -28,6 +36,7 @@ def cluster_scatter(df, cluster, distance_measure, distance_target):
         scatter.append(distance_measure(mean_curve, article_curve))
 
     return pd.Series(scatter).mean()
+
 
 def cluster_separation(df, c1, c2, distance_measure, distance_target):
     '''Returns the cluster separation 'M'
