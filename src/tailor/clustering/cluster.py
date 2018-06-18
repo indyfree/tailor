@@ -89,6 +89,7 @@ def closest_clusters(distances, threshold):
         return None, None
 
 
-def output_clusters(df_feat, feat):
+def cluster_characteristics(df, feat):
+    ''' Returns a series with with a list of the feature characteristics assigned to a cluster '''
     c = df.groupby(['cluster', feat], observed=True, as_index=False).sum()
     return c.groupby('cluster')[feat].apply(lambda x: "%s" % ', '.join(x))
