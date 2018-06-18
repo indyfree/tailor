@@ -16,10 +16,8 @@ def cluster(df, distance_measure, distance_target):
     feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
     ranked_features = clustering.rank_features(df, distance_measure, feats, distance_target)
     first_feat = ranked_features.index[0]
-    df_clusters = build_clusters(df, first_feat, distance_measure, distance_target)
+    df = build_clusters(df, first_feat, distance_measure, distance_target)
 
-    characteristic_to_cluster = df_clusters.loc[:, [first_feat, 'cluster']].groupby(first_feat).mean()
-    df = df.merge(characteristic_to_cluster, left_on=first_feat, right_on=first_feat)
     return df
 
 
@@ -43,31 +41,34 @@ def build_clusters(df, feature, distance_measure, distance_target):
         if (a or b) is None:
             break
 
-        # TODO: Print characteristics of clusters
-        # print("Merging Cluster:", a, b)
-        # Merge closest clusters below the threshold
+        # Merge the two closest clusters with a distance value below the threshold
         df_cluster.loc[df_cluster.cluster == a, 'cluster'] = b
 
-    return df_cluster
+    # Find out which feature characteristics are assigned to which cluster
+    char_to_cluster_map = df_cluster[[feature, 'cluster']].groupby(feature).mean()
+    # Add Cluster label to the original (article-level) dataframe
+    df = df.merge(char_to_cluster_map, on=feature)
+
+    return df
 
 
-def cluster_distances(df, distance_measure, distance_target):
+def cluster_distances(df_cluster, distance_measure, distance_target):
     '''
-    Takes the dataframe which is grouped by the feature that is currently used to cluster.
-    Return the distances between the feature characteristics.
+    Takes a grouped dataframe with cluster labels and return a dataframe
+    with the distances between each pair of clusters.
     '''
 
-    cluster = df.cluster.unique()
+    cluster = df_cluster.cluster.unique()
     distances = []
 
     for i, x in enumerate(cluster):
-        x_curve = df.loc[df.cluster == x].set_index('time_on_sale')
+        x_curve = df_cluster.loc[df_cluster.cluster == x].set_index('time_on_sale')
 
         for k, y in enumerate(cluster):
             if k <= i:
                 continue
 
-            y_curve = df.loc[df.cluster == y].set_index('time_on_sale')
+            y_curve = df_cluster.loc[df_cluster.cluster == y].set_index('time_on_sale')
             d = distance_measure(x_curve[distance_target], y_curve[distance_target])
             distances.append((x, y, d))
 
@@ -86,6 +87,6 @@ def closest_clusters(distances, threshold):
         return None, None
 
 
-def output_clusters(df, feat):
+def output_clusters(df_feat, feat):
     c = df.groupby(['cluster', feat], observed=True, as_index=False).sum()
     return c.groupby('cluster')[feat].apply(lambda x: "%s" % ', '.join(x))
