@@ -61,16 +61,18 @@ def cluster_distances(df_cluster, distance_measure, distance_target):
     cluster = df_cluster.cluster.unique()
     distances = []
 
-    for i, x in enumerate(cluster):
-        x_curve = df_cluster.loc[df_cluster.cluster == x].set_index('time_on_sale')
+    # Loop over each cluster a and find out distance to every other cluster b
+    for i, a in enumerate(cluster):
+        a_curve = df_cluster.loc[df_cluster.cluster == a].set_index('time_on_sale')
 
-        for k, y in enumerate(cluster):
+        for k, b in enumerate(cluster):
             if k <= i:
                 continue
 
-            y_curve = df_cluster.loc[df_cluster.cluster == y].set_index('time_on_sale')
-            d = distance_measure(x_curve[distance_target], y_curve[distance_target])
-            distances.append((x, y, d))
+            b_curve = df_cluster.loc[df_cluster.cluster == b].set_index('time_on_sale')
+            # Calculate distance between cluster a and b
+            d = distance_measure(a_curve[distance_target], b_curve[distance_target])
+            distances.append((a, b, d))
 
     return pd.DataFrame(distances, columns=['from', 'to', 'cluster_distance'])
 
