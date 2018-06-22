@@ -51,7 +51,7 @@ ranking.rank_features(data, distance.euclidean, feats, 'article_count')
 # In[5]:
 
 
-feat = 'Abteilung'
+feat = 'WUG'
 
 
 # ### Run the Clustering Algorithm
@@ -60,6 +60,13 @@ feat = 'Abteilung'
 
 
 df = build_clusters(data, feat, distance.euclidean, 'article_count', 50)
+cluster_characteristics(df, feat)
+
+
+# In[ ]:
+
+
+df = build_clusters(data, feat, distance.euclidean, 'article_count', 0)
 cluster_characteristics(df, feat)
 
 
