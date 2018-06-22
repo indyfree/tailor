@@ -59,7 +59,7 @@ feat = 'Abteilung'
 # In[6]:
 
 
-df = build_clusters(data, feat, distance.euclidean, 'article_count')
+df = build_clusters(data, feat, distance.euclidean, 'article_count', 50)
 cluster_characteristics(df, feat)
 
 
