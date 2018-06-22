@@ -42,7 +42,6 @@ def build_clusters(df, feature, distance_measure, distance_target, min_cluster_s
             a, b = closest_clusters(distances, distances.cluster_distance.max())
             df_cluster.loc[df_cluster.cluster == a, 'cluster'] = b
 
-
     # Merge closest clusters till there are no close clusters anymore
     while True:
         distances = cluster_distances(df_cluster, distance_measure, distance_target)
@@ -73,13 +72,22 @@ def cluster_distances(df_cluster, distance_measure, distance_target):
     '''
 
     cluster = df_cluster.cluster.unique()
-    distances = pd.DataFrame()
+    distances = []
 
     # Loop over each cluster a and find out distance to every other cluster b
     for i, a in enumerate(cluster):
-        distances = distances.append(cluster_distance(df_cluster, a, distance_measure, distance_target))
+        a_curve = df_cluster.loc[df_cluster.cluster == a].set_index('time_on_sale')
 
-    return distances
+        for k, b in enumerate(cluster):
+            if k <= i:
+                continue
+
+            b_curve = df_cluster.loc[df_cluster.cluster == b].set_index('time_on_sale')
+            # Calculate distance between cluster a and b
+            d = distance_measure(a_curve[distance_target], b_curve[distance_target])
+            distances.append((a, b, d))
+
+    return pd.DataFrame(distances, columns=['from', 'to', 'cluster_distance'])
 
 
 def cluster_distance(df_cluster, cluster_id, distance_measure, distance_target):
