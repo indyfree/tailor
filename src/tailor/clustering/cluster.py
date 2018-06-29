@@ -1,7 +1,7 @@
 import pandas as pd
-from tailor.clustering import distance
-from tailor.clustering import ranking
 from tailor import data
+from tailor.clustering import ranking
+
 
 def multi_feature_split(df, distance_measure, min_cluster_size):
     '''this is the top-down cluster split that returns all clusters of the process
@@ -60,7 +60,7 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
 
         for position, cluster in enumerate(split_results['Clusters'][str(split_number)]):
             if (cluster['DataFrame']['article_id'].nunique() > min_cluster_size):
-                if (split_possible == False):
+                if (split_possible is False):
                     split_possible = True
                 # retrieving the feature to split the cluster
                 split_feature = split_results['Features'][str(split_number)][position]
@@ -86,7 +86,7 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
                     # retrieve the features relevant for clustering
                     usable_features = new_cluster['DataFrame'].select_dtypes(include=['category']).drop(columns=['article_id']).columns.values
                     # determine the feature the new cluster will be split by
-                    new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure , usable_features, 'article_count').index[0]
+                    new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure, usable_features, 'article_count').index[0]
                     # add the cluster to the split_results
                     split_results['Clusters'][str(new_layer)].append(new_cluster)
                     split_results['Features'][str(new_layer)].append(new_split_feature)
@@ -95,9 +95,6 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
 
     return split_results
 
-
-
-# legacy code after here
 
 def single_feature(df, distance_measure, distance_target):
     '''The Tailor Clustering Algorithm
