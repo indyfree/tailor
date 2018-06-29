@@ -1,10 +1,105 @@
-from tailor import clustering
+import pandas as pd
+from tailor.clustering import distance
+from tailor.clustering import ranking
 from tailor import data
 
-import pandas as pd
+def multi_feature_split(df, distance_measure, min_cluster_size):
+    '''this is the top-down cluster split that returns all clusters of the process
+
+    example of the result:
+
+    accessing the first cluster of the second split
+    split_results['Clusters']["2"][0]
+
+    accessing the split feature for the next split of the first cluster of the second split
+    split_results['Features']["2"][0]
+
+    accessing the DataFrame of the first cluster of the second split
+    split_results['Clusters']["2"][0]['DataFrame']
+
+    accessing the cluster defining features
+    cluster['Features']
+
+    accessing the cluster name which contains the split hierarchy
+    cluster['Name']
+    e.g. 0_3_1_7 means that the cluster is the 7th split of the 1st split of the 3rd split of the starting cluster
+    '''
+    # retrieve the features relevant for clustering
+    usable_features = df.select_dtypes(include=['category']).drop(columns=['article_id']).columns.values
+    split_number = 0
+    split_possible = True
+
+    # this will contain the whole hierarchical top-down clustering
+    split_results = pd.Series()
+    # this will contain all the clusters in an array with the split_number as index
+    split_results['Clusters'] = pd.Series()
+    # this will contain all the clusters' split features in an array with the split_number as index
+    split_results['Features'] = pd.Series()
+
+    # this is the data structure used for all clusters
+    first_cluster = pd.Series()
+    # this only contains the cluster's articles, all split clusteres will use splines of this
+    first_cluster['DataFrame'] = df.copy()
+    # this contains the features and characteristics used for the cluster
+    first_cluster['Features'] = pd.Series()
+    # the name will be defined in a manner that the hierarchy of the clustering will become clear
+    first_cluster['Name'] = "0"
+
+    # initializing the 0 split
+    # adding the base cluster
+    split_results['Clusters'][str(split_number)] = list()
+    split_results['Clusters'][str(split_number)].append(first_cluster)
+    # determining the feature the cluster should be split by
+    split_feature = ranking.rank_features(df, distance_measure, usable_features, 'article_count').index[0]
+    # the split_feature is saved
+    split_results['Features'][str(split_number)] = list()
+    split_results['Features'][str(split_number)].append(split_feature)
+
+    while (split_possible):
+        split_possible = False
+
+        for position, cluster in enumerate(split_results['Clusters'][str(split_number)]):
+            if (cluster['DataFrame']['article_id'].nunique() > min_cluster_size):
+                if (split_possible == False):
+                    split_possible = True
+                # retrieving the feature to split the cluster
+                split_feature = split_results['Features'][str(split_number)][position]
+                # retrieving the values the cluster will be split into
+                feature_uniques = cluster['DataFrame'][split_feature].unique()
+                df_temp = cluster['DataFrame']
+                # generating the new split layer
+                new_layer = split_number + 1
+                split_results['Clusters'][str(new_layer)] = list()
+                split_results['Features'][str(new_layer)] = list()
+
+                for position, characteristic in enumerate(feature_uniques):
+                    # create new cluster
+                    new_cluster = pd.Series()
+                    # select the relevant part of the dataframe
+                    new_cluster['DataFrame'] = df_temp[df_temp[split_feature] == characteristic].drop(columns=[split_feature])
+                    # copy the features from the parent cluster
+                    new_cluster['Features'] = cluster['Features'].copy()
+                    # add the split feature to it
+                    new_cluster['Features'][split_feature] = characteristic
+                    # name the cluster
+                    new_cluster['Name'] = cluster['Name'] + "_" + str(position + 1)
+                    # retrieve the features relevant for clustering
+                    usable_features = new_cluster['DataFrame'].select_dtypes(include=['category']).drop(columns=['article_id']).columns.values
+                    # determine the feature the new cluster will be split by
+                    new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure , usable_features, 'article_count').index[0]
+                    # add the cluster to the split_results
+                    split_results['Clusters'][str(new_layer)].append(new_cluster)
+                    split_results['Features'][str(new_layer)].append(new_split_feature)
+
+        split_number += 1
+
+    return split_results
 
 
-def cluster(df, distance_measure, distance_target):
+
+# legacy code after here
+
+def single_feature(df, distance_measure, distance_target):
     '''The Tailor Clustering Algorithm
 
     Takes a dataframe, a distance measure (e.g. dynamic_time_warp)
@@ -14,7 +109,7 @@ def cluster(df, distance_measure, distance_target):
     '''
 
     feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
-    ranked_features = clustering.rank_features(df, distance_measure, feats, distance_target)
+    ranked_features = ranking.rank_features(df, distance_measure, feats, distance_target)
     first_feat = ranked_features.index[0]
     df = build_clusters(df, first_feat, distance_measure, distance_target)
 

@@ -60,7 +60,7 @@ ranking.rank_features(data, distance.derivative_euclidean , feats, 'article_coun
 
 # While both distance measures find 'Abteilung' the most informative first clustering feature by a large margin and 'color' the least informative, the order of the other features is quite different.
 
-# In[36]:
+# In[7]:
 
 
 dfs_abteilung = pd.Series()
@@ -73,23 +73,23 @@ for abteilung in uniques:
     dfs_abteilung[abteilung] = data[data.Abteilung == abteilung].drop(columns='Abteilung')
     print(abteilung + ":")
     print(ranking.rank_features(dfs_abteilung[abteilung], distance.derivative_euclidean , feats, 'article_count'))
-    print("")plot_feature_characteristics(df, feat, 'article_count', legend=True);
+    print("")
 
 
-# In[81]:
+# In[8]:
 
 
 df = dfs_abteilung['Abteilung001']
 df.article_id.unique()
 
 
-# In[65]:
+# In[9]:
 
 
 plot_feature_characteristics(df, 'WUG', 'article_count', legend=True);
 
 
-# In[80]:
+# In[10]:
 
 
 df_temp = df[df.WUG == 'WUG004']
@@ -98,14 +98,14 @@ df_temp.article_id.unique()
 
 # WUG has scored high in our rank_features method for 'Abteilung001', but results in an inefficient separation as 'WUG004' only contains 1 article.
 
-# In[82]:
+# In[11]:
 
 
 df = dfs_abteilung['Abteilung002']
 df.article_id.unique()
 
 
-# In[84]:
+# In[12]:
 
 
 plot_feature_characteristics(df, 'WUG', 'article_count', legend=False);
