@@ -57,6 +57,10 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
 
     while (split_possible):
         split_possible = False
+        # generating the new split layer
+        new_layer = split_number + 1
+        split_results['Clusters'][str(new_layer)] = list()
+        split_results['Features'][str(new_layer)] = list()
 
         for position, cluster in enumerate(split_results['Clusters'][str(split_number)]):
             if (cluster['DataFrame']['article_id'].nunique() > min_cluster_size):
@@ -67,10 +71,6 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
                 # retrieving the values the cluster will be split into
                 feature_uniques = cluster['DataFrame'][split_feature].unique()
                 df_temp = cluster['DataFrame']
-                # generating the new split layer
-                new_layer = split_number + 1
-                split_results['Clusters'][str(new_layer)] = list()
-                split_results['Features'][str(new_layer)] = list()
 
                 for position, characteristic in enumerate(feature_uniques):
                     # create new cluster
@@ -85,11 +85,12 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
                     new_cluster['Name'] = cluster['Name'] + "_" + str(position + 1)
                     # retrieve the features relevant for clustering
                     usable_features = new_cluster['DataFrame'].select_dtypes(include=['category']).drop(columns=['article_id']).columns.values
-                    # determine the feature the new cluster will be split by
-                    new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure, usable_features, 'article_count').index[0]
-                    # add the cluster to the split_results
-                    split_results['Clusters'][str(new_layer)].append(new_cluster)
-                    split_results['Features'][str(new_layer)].append(new_split_feature)
+                    if len(usable_features) > 0:
+                        # determine the feature the new cluster will be split by
+                        new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure, usable_features, 'article_count').index[0]
+                        # add the cluster to the split_results
+                        split_results['Clusters'][str(new_layer)].append(new_cluster)
+                        split_results['Features'][str(new_layer)].append(new_split_feature)
 
         split_number += 1
 
