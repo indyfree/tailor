@@ -57,41 +57,48 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
 
     while (split_possible):
         split_possible = False
-        # generating the new split layer
-        new_layer = split_number + 1
-        split_results['Clusters'][str(new_layer)] = list()
-        split_results['Features'][str(new_layer)] = list()
-
+        # iterate through all split target clusters
         for position, cluster in enumerate(split_results['Clusters'][str(split_number)]):
             if (cluster['DataFrame']['article_id'].nunique() > min_cluster_size):
-                if (split_possible is False):
-                    split_possible = True
                 # retrieving the feature to split the cluster
                 split_feature = split_results['Features'][str(split_number)][position]
-                # retrieving the values the cluster will be split into
-                feature_uniques = cluster['DataFrame'][split_feature].unique()
-                df_temp = cluster['DataFrame']
+                # sanity check
+                if (split_feature is not None):
+                    # split initialization
+                    if (split_possible is False):
+                        split_possible = True
+                        # generating the new split layer
+                        new_layer = split_number + 1
+                        split_results['Clusters'][str(new_layer)] = list()
+                        split_results['Features'][str(new_layer)] = list()
 
-                for position, characteristic in enumerate(feature_uniques):
-                    # create new cluster
-                    new_cluster = pd.Series()
-                    # select the relevant part of the dataframe
-                    new_cluster['DataFrame'] = df_temp[df_temp[split_feature] == characteristic].drop(columns=[split_feature])
-                    # copy the features from the parent cluster
-                    new_cluster['Features'] = cluster['Features'].copy()
-                    # add the split feature to it
-                    new_cluster['Features'][split_feature] = characteristic
-                    # name the cluster
-                    new_cluster['Name'] = cluster['Name'] + "_" + str(position + 1)
-                    # retrieve the features relevant for clustering
-                    usable_features = new_cluster['DataFrame'].select_dtypes(include=['category']).drop(columns=['article_id']).columns.values
-                    if len(usable_features) > 0:
-                        # determine the feature the new cluster will be split by
-                        new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure, usable_features, 'article_count').index[0]
-                        # add the cluster to the split_results
-                        split_results['Clusters'][str(new_layer)].append(new_cluster)
-                        split_results['Features'][str(new_layer)].append(new_split_feature)
+                    # retrieving the values the cluster will be split into
+                    feature_uniques = cluster['DataFrame'][split_feature].unique()
+                    df_temp = cluster['DataFrame']
 
+                    for position, characteristic in enumerate(feature_uniques):
+                        # create new cluster
+                        new_cluster = pd.Series()
+                        # select the relevant part of the dataframe
+                        new_cluster['DataFrame'] = df_temp[df_temp[split_feature] == characteristic].drop(columns=[split_feature])
+                        # copy the features from the parent cluster
+                        new_cluster['Features'] = cluster['Features'].copy()
+                        # add the split feature to it
+                        new_cluster['Features'][split_feature] = characteristic
+                        # name the cluster
+                        new_cluster['Name'] = cluster['Name'] + "_" + str(position + 1)
+                        # retrieve the features relevant for clustering
+                        usable_features = new_cluster['DataFrame'].select_dtypes(include=['category']).drop(columns=['article_id']).columns.values
+                        if len(usable_features) > 0:
+                            # determine the feature the new cluster will be split by
+                            new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure, usable_features, 'article_count').index[0]
+                            # add the cluster to the split_results
+                            split_results['Clusters'][str(new_layer)].append(new_cluster)
+                            split_results['Features'][str(new_layer)].append(new_split_feature)
+                        else:
+                            # no categorical columns left
+                            split_results['Clusters'][str(new_layer)].append(new_cluster)
+                            split_results['Features'][str(new_layer)].append(None)
         split_number += 1
 
     return split_results
