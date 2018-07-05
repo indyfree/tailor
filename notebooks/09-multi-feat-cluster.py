@@ -105,29 +105,138 @@ len(names)
 # In[14]:
 
 
-get_ipython().run_cell_magic('time', '', "\n# get all clusters that are above min_cluster_size\nparents = list()\n\n# iterate through all layers of the clustering\nfor layer in split_results['Clusters'].index:\n    # add all layer leaves and remove leaf parents\n    for cluster in split_results['Clusters'][layer]:\n        if cluster['Name'] in names:\n            parents.append(cluster)")
+get_ipython().run_cell_magic('time', '', "\n# get all clusters based on the name\nclusters = list()\n\n# iterate through all layers of the clustering\nfor layer in split_results['Clusters'].index:\n    # add all layer leaves and remove leaf parents\n    for cluster in split_results['Clusters'][layer]:\n        if cluster['Name'] in names:\n            clusters.append(cluster)")
 
 
 # In[15]:
 
 
-len(parents)
+len(clusters)
 
 
-# In[86]:
+# In[101]:
 
 
-get_ipython().run_cell_magic('time', '', "\nlength = len(parents)\ndistances = pd.DataFrame(index=range(length),columns=range(length))\ntargets = list()\n\n# dress the clusters for better distance performance\nfor i, cluster in enumerate(parents):\n    # only select the distance relevant slice of the Dataframe\n    target = cluster['DataFrame'].groupby(['time_on_sale']).mean()['article_count']\n    if (len(target) < 26):\n        # fill with 0 for better performance later on\n        target = target.reindex(pd.RangeIndex(26)).fillna(0)\n    targets.append(target)")
+get_ipython().run_cell_magic('time', '', "\nlength = len(clusters)\ndistances = pd.DataFrame(index=range(length),columns=range(length))\ntargets = list()\n\n# dress the clusters for better distance performance\nfor i, cluster in enumerate(clusters):\n    # only select the distance relevant slice of the Dataframe\n    target = cluster['DataFrame'].groupby(['time_on_sale']).mean()['article_count']\n    if (len(target) < 26):\n        # fill with 0 until index 25 so all comparison arrays are the same length\n        # this improves performance dramatically\n        target = target.reindex(pd.RangeIndex(26)).fillna(0)\n    targets.append(target)")
 
 
-# In[98]:
+# In[103]:
 
 
 get_ipython().run_cell_magic('time', '', 'length = len(targets)\nfor i, a in enumerate(targets):\n    for k, b in enumerate(reversed(targets)):\n        j = length - 1 - k\n        if j <= i:\n            break\n        else:\n            try:\n                d = distance.euclidean(a.values,b.values)\n                distances[i][j] = d\n                distances[j][i] = d\n            except:\n                print(str(i) + " " + str(k))')
 
 
-# In[99]:
+# In[104]:
 
 
 distances
+
+
+# In[112]:
+
+
+min_index = np.nanargmin(distances[0])
+min_value = np.nanmin(distances[0])
+print(str(min_index) + " " + str(min_value))
+
+
+# In[114]:
+
+
+distances[0][41]
+
+
+# In[339]:
+
+
+# get the closest cluster for each cluster
+# generates a Series with pointer lists
+closest_clusters = pd.Series(index=range(length), dtype='object')
+for i in distances.index:
+    target_index = np.nanargmin(distances[i]).item()
+    # only one value now, but we will add values later
+    closest_clusters[i] = list()
+    closest_clusters[i].append(target_index)
+
+    
+cluster_groups = closest_clusters
+    
+# generate initial groups by adding the index to the target
+for i, group in cluster_groups.iteritems():
+    # first value is the initial closest cluster
+    target = group[0]
+    cluster_groups[target].append(i)
+
+# merge until there are only loners and groups with a pointer loop  
+# a pointer loop is when two cluster point towards each other, even over multiple cluster between
+finished = False 
+while not finished:
+    finished = True
+    
+    # merge dependencies
+    for i, group in cluster_groups.iteritems():
+        # ignore loners
+        if len(group) > 1:
+            # first value is the initial closest cluster
+            target = group[0]
+            # rest of the values are pointers added by dependent groups
+            pointers = group[1:]
+            try:
+                # check whether this is a dependent group without a pointer loop
+                if (target not in pointers):
+                    # still dependent groups left, we need to iterate at least one more time
+                    finished = False
+                    # sanity check whether looping is required
+                    if ((pointers is list) or (pointers is tuple)):
+                        # multiple entries we can loop
+                        for x in pointers:
+                            if (x not in cluster_groups[target]):
+                                cluster_groups[target].append(x)
+                    elif len(pointers) > 0:
+                        cluster_groups[target].append(pointers[0])
+                    # dependent group is spent, create loner
+                    cluster_groups[i] = list()
+                    cluster_groups[i].append(target)
+            except:
+                print("shit's on fire, yo")
+                print(str(i) + " " + str(group) + " " + str(target) + " " + str(pointers))
+
+# clear loners
+for i, group in cluster_groups.iteritems():
+    if (len(group) <= 1):
+        cluster_groups = cluster_groups.drop(i) 
+
+# dress up the group list        
+merged_groups = list()
+for i, group in cluster_groups.iteritems():
+    # replace target with own index
+    temp = group
+    temp[0] = i
+    temp = sorted(temp)
+    merged_groups.append(temp)
+merged_groups = sorted(merged_groups)
+
+# merge connected groups and remove duplicates
+for i, group_a in enumerate(merged_groups):
+    if group_a is not None:
+        for k, group_b in enumerate(merged_groups):
+            if k != i:
+                for x in group_a:
+                    if group_b is not None:
+                        if x in set(group_b):
+                            group_a = sorted(list(set(group_a).union(set(group_b))))
+                            merged_groups[k] = None
+clean = list(filter(lambda x: x is not None, merged_groups))
+
+
+# In[340]:
+
+
+len(clean)
+
+
+# In[341]:
+
+
+clean
 
