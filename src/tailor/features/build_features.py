@@ -1,4 +1,5 @@
 import calendar
+import datetime
 import pandas as pd
 from tailor.data import group_by
 
@@ -49,10 +50,6 @@ def meteor_season(month):
         return 'Winter'
 
 
-def day_to_month(day):
-    return day.month
-
-
 def accurate_season(df):
     '''Rebuild the season column with season of first transaction'''
 
@@ -60,7 +57,7 @@ def accurate_season(df):
     df_id = df.groupby('article_id')
     print("Calculate starting month")
     # Add month of first transaction 
-    feats['month'] = df_id.apply(lambda row: day_to_month(row.transaction_date.min()))
+    feats['month'] = df_id.apply(lambda row: row.transaction_date.min().strftime("%B")).astype('category')
     print("Calculate starting season")
     # Add season of first transaction
     feats['season'] = df_id.apply(lambda row: meteor_season(row.transaction_date.min().month)).astype('category')
