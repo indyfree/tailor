@@ -4,6 +4,7 @@ import pandas as pd
 def transform_datatypes(df):
     '''Transform the raw data and returns a dataframe with correct dataypes'''
 
+    print("Transforming datatypes")
     # Set article_id as category despite it's beeing a number
     df["article_id"] = df["article_id"].astype('category')
 
