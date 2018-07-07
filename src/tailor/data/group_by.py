@@ -11,9 +11,7 @@ def weeks_on_sale(df):
     groupers = df.select_dtypes(['category']).columns.tolist()
     groupers.append('weeks_on_sale')
 
-    # Don't group by date data
-    groupers.remove('weekday')
-    groupers.remove('season_buy')
+    print(groupers)
 
     # Group dataframe and aggreagate with mean
     df = df.groupby(by=groupers, as_index=False, sort=False, observed=True).mean()
