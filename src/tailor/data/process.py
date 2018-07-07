@@ -1,6 +1,26 @@
 import pandas as pd
 
 
+def fill_missing_values(df):
+    '''
+    Not all articels have values defines for the whole time_on_sale range.
+    Fill the missing values with 0 values.
+    '''
+
+    # Groupby time_on_sale to get NaN for article values that does not exists
+    filled = df.groupby(by=['article_id', 'time_on_sale'], as_index=True).mean()
+    # Fill NaN values with zeros
+    filled = filled.fillna(0).reset_index()
+
+    # Re-add lost categorical columns if previous step
+    groupers = df.select_dtypes(['category']).columns.tolist()
+    # Find out categorical values per article_id
+    article_cats = df.groupby(by=groupers, as_index=False, observed=True).mean()
+    article_cats = article_cats.select_dtypes(['category'])
+
+    return filled.merge(article_cats, on='article_id', how='inner')
+
+
 def transform_datatypes(df):
     '''Transform the raw data and returns a dataframe with correct dataypes'''
 

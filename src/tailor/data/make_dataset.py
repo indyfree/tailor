@@ -61,6 +61,7 @@ def process_data():
     print('Processing data...')
     df = data.load_csv()
     df = data.transform_datatypes(df)
+    df = data.fill_missing_values(df)
     df = features.build(df)
     df = data.group_by.weeks_on_sale(df)
 
