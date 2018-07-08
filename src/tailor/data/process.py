@@ -7,18 +7,18 @@ def fill_missing_values(df):
     Fill the missing values with 0 values.
     '''
 
-    # Groupby time_on_sale to get NaN for article values that does not exists
-    filled = df.groupby(by=['article_id', 'time_on_sale'], as_index=True).mean()
-    # Fill NaN values with zeros
-    filled = filled.fillna(0).reset_index()
+    print("Add missing time on sale values")
+    df.set_index(['article_id', 'time_on_sale'], inplace=True)
 
-    # Re-add lost categorical columns if previous step
-    groupers = df.select_dtypes(['category']).columns.tolist()
-    # Find out categorical values per article_id
-    article_cats = df.groupby(by=groupers, as_index=False, observed=True).mean()
-    article_cats = article_cats.select_dtypes(['category'])
+    # Create MultiIndex with all article_ids and all 182 time on sale values
+    ids = df.index.levels[0].tolist()
+    tos = pd.RangeIndex(182).tolist()
+    idx = pd.MultiIndex.from_product([ids,tos], names=['article_id', 'time_on_sale'])
 
-    return filled.merge(article_cats, on='article_id', how='inner')
+    # Reindex and fill values for previously indefined time_on_sale rows with 0
+    df = df.reindex(idx, fill_value=0).reset_index()
+    df["article_id"] = df["article_id"].astype('category')
+    return df
 
 
 def transform_datatypes(df):
