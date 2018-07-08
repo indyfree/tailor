@@ -40,25 +40,25 @@ df = data.transform_datatypes(df)
 df = data.fill_missing_values(df)
 
 
-# In[ ]:
+# In[6]:
 
 
 df = features.build_features.weeks_on_sale(df)
 
 
-# In[ ]:
+# In[7]:
 
 
 df = features.build_features.accurate_season(df)
 
 
-# In[ ]:
+# In[8]:
 
 
 df = data.group_by.weeks_on_sale(df)
 
 
-# In[ ]:
+# In[9]:
 
 
 df.head(28)
