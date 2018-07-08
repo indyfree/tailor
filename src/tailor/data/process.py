@@ -19,12 +19,12 @@ def fill_missing_values(df):
     # Create MultiIndex with all article_ids and all 182 time on sale values
     ids = df.index.levels[0].tolist()
     tos = pd.RangeIndex(182).tolist()
-    idx = pd.MultiIndex.from_product([ids,tos], names=['article_id', 'time_on_sale'])
+    idx = pd.MultiIndex.from_product([ids, tos], names=['article_id', 'time_on_sale'])
 
     # Reindex and fill values for previously indefined time_on_sale rows with 0
     df = df.reindex(idx, fill_value=0).reset_index()
     df = df.select_dtypes(exclude=['category'])
-    df["article_id"] = df["article_id"].astype('category')
+    df['article_id'] = df['article_id'].astype('category')
 
     return df.merge(article_cats, on='article_id', how='inner')
 
