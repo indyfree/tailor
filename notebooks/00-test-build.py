@@ -4,6 +4,17 @@
 # In[1]:
 
 
+# Display plots inline
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+# Autoreload all package before excecuting a call
+get_ipython().run_line_magic('load_ext', 'autoreload')
+get_ipython().run_line_magic('autoreload', '2')
+
+
+# In[2]:
+
+
 import numpy as np
 import pandas as pd
 import tailor
@@ -11,16 +22,10 @@ from tailor import data
 from tailor import features
 
 
-# In[2]:
-
-
-df = data.load_csv()
-
-
 # In[3]:
 
 
-# df = df.head()
+df = data.load_csv()
 
 
 # In[4]:
@@ -32,41 +37,29 @@ df = data.transform_datatypes(df)
 # In[5]:
 
 
-# df
+df = data.fill_missing_values(df)
 
 
-# In[6]:
+# In[ ]:
 
 
 df = features.build_features.weeks_on_sale(df)
 
 
-# In[7]:
-
-
-df = features.build_features.date_info(df)
-
-
-# In[8]:
-
-
-df.head()
-
-
-# In[9]:
+# In[ ]:
 
 
 df = features.build_features.accurate_season(df)
 
 
-# In[10]:
+# In[ ]:
 
 
-df = features.build(df)
+df = data.group_by.weeks_on_sale(df)
 
 
-# In[11]:
+# In[ ]:
 
 
-df.head()
+df.head(28)
 
