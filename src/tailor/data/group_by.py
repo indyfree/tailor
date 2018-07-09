@@ -1,3 +1,4 @@
+import numpy as np
 from pandas.core.groupby import DataFrameGroupBy
 
 
@@ -11,11 +12,20 @@ def weeks_on_sale(df):
     groupers = df.select_dtypes(['category']).columns.tolist()
     groupers.append('weeks_on_sale')
 
-    # Group dataframe and aggreagate with mean
-    df = df.groupby(by=groupers, as_index=False, sort=False, observed=True).mean()
+    # Group dataframe and aggreagate with respective measures
+    grouped = df.groupby(by=groupers, as_index=False, sort=False, observed=True)
+    df = grouped.agg({'original_price': np.max,
+                      # TODO: calculate discount price, data is inconsistent now
+                      'discount': np.max,
+                      'markdown': np.max,
+                      'sells_price': lambda x: np.min(x[x > 0]),
+                      'stock_total': np.max,
+                      'article_count': np.sum,
+                      'revenue': np.sum,
+                      'avq': lambda x: np.mean(x[x > 0])})
 
     # Weeks_on_sale is the new time_on_sale
-    df = df.drop('time_on_sale', axis=1).rename({'weeks_on_sale': 'time_on_sale'}, axis=1)
+    df = df.rename({'weeks_on_sale': 'time_on_sale'}, axis=1)
 
     return df
 
