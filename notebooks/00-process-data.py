@@ -25,41 +25,43 @@ from tailor import features
 # In[3]:
 
 
-df = data.load_csv()
+df_raw = data.load_csv()
 
 
 # In[4]:
 
 
-df = data.transform_datatypes(df)
+print(df_raw.shape)
+df_raw = data.drop_invalid_rows(df_raw)
+df_raw.shape
 
 
 # In[5]:
 
 
-df = data.fill_missing_values(df)
+df = data.transform_datatypes(df_raw)
 
 
 # In[6]:
 
 
-df = features.build_features.weeks_on_sale(df)
+df = features.build(df_raw)
 
 
 # In[7]:
 
 
-df = features.build_features.accurate_season(df)
+df = data.group_by.weeks_on_sale(df)
 
 
 # In[8]:
 
 
-df = data.group_by.weeks_on_sale(df)
+df = data.fill_missing_values(df)
 
 
 # In[9]:
 
 
-df.head(28)
+df.head(60)
 
