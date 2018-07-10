@@ -15,17 +15,32 @@ def weeks_on_sale(df):
     # Group dataframe and aggreagate with respective measures
     grouped = df.groupby(by=groupers, as_index=False, sort=False, observed=True)
     df = grouped.agg({'original_price': np.max,
-                      # TODO: calculate discount price, data is inconsistent now
-                      'discount': np.max,
-                      'markdown': np.max,
-                      'sells_price': lambda x: np.min(x[x > 0]),
+                      'discount': lambda x: np.mean(x[x > 0]),
+                      'markdown': lambda x: np.mean(x[x > 0]),
                       'stock_total': np.max,
                       'article_count': np.sum,
                       'revenue': np.sum,
+                      # avq is the mean of all (non-added, zero) values
                       'avq': lambda x: np.mean(x[x > 0])})
+
+    # Recalculate the sales price according to formular to eliminate negative sales prices and establish data consistency
+    df['sells_price'] = df.apply(lambda row: (row['original_price'] - row['discount'] - row['markdown']), axis=1)
 
     # Weeks_on_sale is the new time_on_sale
     df = df.rename({'weeks_on_sale': 'time_on_sale'}, axis=1)
+
+    #
+    # Aesthetics
+    #
+
+    # Reorder columns
+    columns = ['article_id', 'time_on_sale', 'original_price', 'discount', 'markdown', 'sells_price', 'stock_total', 'avq',
+               'article_count', 'revenue', 'brand', 'color', 'Abteilung', 'WHG', 'WUG', 'month', 'season']
+    df = df[columns]
+
+    # Round values
+    df['avq'] = df.avq.round(decimals=2)
+    df['revenue'] = df.revenue.round(decimals=0)
 
     return df
 
