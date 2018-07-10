@@ -1,5 +1,12 @@
 import pandas as pd
 
+def drop_invalid_rows(df):
+    print("Drop invalid rows")
+
+    # Negative sells price does not make sense
+    df.drop(df[df.sells_price < 0].index, inplace=True)
+    return df
+
 
 def fill_missing_values(df):
     '''
