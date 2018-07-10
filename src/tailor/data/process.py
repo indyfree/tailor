@@ -1,10 +1,14 @@
 import pandas as pd
 
-def drop_invalid_rows(df):
-    print("Drop invalid rows")
 
-    # Negative sells price does not make sense
-    df.drop(df[df.sells_price < 0].index, inplace=True)
+def drop_invalid_rows(df):
+
+    # Negative sells price does not make sense, drop them
+    invalid = df[df.sells_price < 0].index
+    df.drop(invalid, inplace=True)
+
+    print("Dropped", len(invalid), "invalid rows")
+
     return df
 
 
@@ -25,7 +29,7 @@ def fill_missing_values(df):
 
     # Create MultiIndex with all article_ids and all 26 time on sale values
     ids = df.index.levels[0].tolist()
-    tos = pd.RangeIndex(26).tolist() # Week 0 - Week 25
+    tos = pd.RangeIndex(26).tolist()  # Week 0 - Week 25
     idx = pd.MultiIndex.from_product([ids, tos], names=['article_id', 'time_on_sale'])
 
     # Reindex and fill values for previously indefined time_on_sale rows with 0
