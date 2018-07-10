@@ -10,7 +10,7 @@ def drop_invalid_rows(df):
 
 def fill_missing_values(df):
     '''
-    Not all articels have values defines for the whole time_on_sale range.
+    Not all articles have values defined for the whole time_on_sale range.
     Fill the missing values with 0 values.
     '''
 
@@ -23,9 +23,9 @@ def fill_missing_values(df):
 
     df.set_index(['article_id', 'time_on_sale'], inplace=True)
 
-    # Create MultiIndex with all article_ids and all 182 time on sale values
+    # Create MultiIndex with all article_ids and all 26 time on sale values
     ids = df.index.levels[0].tolist()
-    tos = pd.RangeIndex(182).tolist()
+    tos = pd.RangeIndex(26).tolist() # Week 0 - Week 25
     idx = pd.MultiIndex.from_product([ids, tos], names=['article_id', 'time_on_sale'])
 
     # Reindex and fill values for previously indefined time_on_sale rows with 0
