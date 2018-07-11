@@ -59,20 +59,27 @@ feat = 'Abteilung'
 # In[6]:
 
 
-df = build_clusters(data, feat, distance.euclidean, 'article_count')
+df = build_clusters(data, feat, distance.euclidean, 'article_count', 50)
+cluster_characteristics(df, feat)
+
+
+# In[7]:
+
+
+df = build_clusters(data, feat, distance.euclidean, 'article_count', 0)
 cluster_characteristics(df, feat)
 
 
 # ### Plot the article-count curves before and after the clustering
 
-# In[7]:
+# In[8]:
 
 
 print("Number Characteristics: ", len(df[feat].unique()))
 plot_feature_characteristics(df, feat, 'article_count', legend=True);
 
 
-# In[8]:
+# In[9]:
 
 
 print("Number of Clusters: ", len(df['cluster'].unique()))
@@ -81,7 +88,7 @@ plot_feature_characteristics(df, 'cluster', 'article_count');
 
 # ### Plot characteristics that are included in a specific Cluster
 
-# In[9]:
+# In[10]:
 
 
 plot_cluster_characteristics(df, 1, feat, 'article_count', legend=True);
@@ -89,7 +96,7 @@ plot_cluster_characteristics(df, 1, feat, 'article_count', legend=True);
 
 # ### Plot all articles that are included in a Cluster
 
-# In[10]:
+# In[11]:
 
 
 plot_cluster_articles(df, 0, 'article_count', legend=False);
