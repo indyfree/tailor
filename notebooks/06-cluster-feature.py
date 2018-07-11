@@ -94,6 +94,3 @@ plot_cluster_characteristics(df, 1, feat, 'article_count', legend=True);
 
 plot_cluster_articles(df, 0, 'article_count', legend=False);
 
-
-# ## Todo: 
-# - Cluster/Characteristics that are not defined for the full time on sale values
