@@ -3,6 +3,7 @@ from .load import load_data # noqa
 from .load import load_csv # noqa
 from .make_dataset import process_data # noqa
 from .make_dataset import download_data # noqa
+from .process import drop_invalid_rows # noqa
 from .process import fill_missing_values # noqa
 from .process import transform_datatypes # noqa
 
