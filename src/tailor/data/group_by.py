@@ -36,11 +36,6 @@ def weeks_on_sale(df):
     # Weeks_on_sale is the new time_on_sale
     df = df.rename({'weeks_on_sale': 'time_on_sale'}, axis=1)
 
-    # Bring columns in correct order again
-    columns = ['article_id', 'time_on_sale', 'original_price', 'discount', 'markdown', 'sells_price', 'stock_total', 'avq',
-               'article_count', 'revenue', 'brand', 'color', 'Abteilung', 'WHG', 'WUG', 'month', 'season']
-    df = df[columns]
-
     return df
 
 

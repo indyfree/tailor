@@ -63,5 +63,23 @@ df = data.fill_missing_values(df)
 # In[9]:
 
 
-df.head(60)
+test = df
+
+
+# In[10]:
+
+
+df = data.normalize(test)
+
+
+# In[11]:
+
+
+df = data.order_columns(df)
+
+
+# In[12]:
+
+
+df.head(20)
 
