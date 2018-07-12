@@ -39,6 +39,7 @@ def fill_missing_values(df):
 
     return df.merge(article_cats, on='article_id', how='inner')
 
+
 def normalize(df):
     '''
     Normalize the target features by using the standardized moment, that is by
@@ -49,11 +50,12 @@ def normalize(df):
     print("Normalize data with standard deviation")
 
     for a in df['article_id'].unique():
-        df.loc[df.article_id == a,'norm_article_count'] = df.loc[df.article_id == a,'article_count'] / df.loc[df.article_id == a,'article_count'].std()
-        df.loc[df.article_id == a,'norm_avq'] = df.loc[df.article_id == a,'avq'] / df.loc[df.article_id == a,'avq'].std()
-        df.loc[df.article_id == a,'norm_revenue'] = df.loc[df.article_id == a,'revenue'] / df.loc[df.article_id == a,'revenue'].std()
+        df.loc[df.article_id == a, 'norm_article_count'] = df.loc[df.article_id == a, 'article_count'] / df.loc[df.article_id == a, 'article_count'].std()
+        df.loc[df.article_id == a, 'norm_avq'] = df.loc[df.article_id == a, 'avq'] / df.loc[df.article_id == a, 'avq'].std()
+        df.loc[df.article_id == a, 'norm_revenue'] = df.loc[df.article_id == a, 'revenue'] / df.loc[df.article_id == a, 'revenue'].std()
 
     return df
+
 
 def order_columns(df):
     # Bring columns in senseful order
