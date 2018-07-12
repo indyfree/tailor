@@ -40,6 +40,32 @@ def fill_missing_values(df):
     return df.merge(article_cats, on='article_id', how='inner')
 
 
+def normalize(df):
+    '''
+    Normalize the target features by using the standardized moment, that is by
+    diving by the standard deviation. This is particulary useful at comparing
+    different time series, as e.g. the sells of different articles over time.
+    '''
+
+    print("Normalize data with standard deviation")
+
+    for a in df['article_id'].unique():
+        df.loc[df.article_id == a, 'norm_article_count'] = df.loc[df.article_id == a, 'article_count'] / df.loc[df.article_id == a, 'article_count'].std()
+        df.loc[df.article_id == a, 'norm_avq'] = df.loc[df.article_id == a, 'avq'] / df.loc[df.article_id == a, 'avq'].std()
+        df.loc[df.article_id == a, 'norm_revenue'] = df.loc[df.article_id == a, 'revenue'] / df.loc[df.article_id == a, 'revenue'].std()
+
+    return df
+
+
+def order_columns(df):
+    # Bring columns in senseful order
+    columns = ['article_id', 'time_on_sale', 'original_price', 'discount', 'markdown', 'sells_price', 'stock_total', 'avq',
+               'norm_avq', 'article_count', 'norm_article_count', 'revenue', 'norm_revenue', 'brand', 'color', 'Abteilung',
+               'WHG', 'WUG', 'month', 'season']
+    df = df[columns]
+    return df
+
+
 def transform_datatypes(df):
     '''Transform the raw data and returns a dataframe with correct dataypes'''
 
