@@ -48,9 +48,10 @@ def normalize(df):
 
     print("Normalize data with standard deviation")
 
-    df['norm_article_count'] = df.article_count / df.article_count.std()
-    df['norm_avq'] = df.avq / df.avq.std()
-    df['norm_revenue'] = df.revenue / df.revenue.std()
+    for a in df['article_id'].unique():
+        df.loc[df.article_id == a,'norm_article_count'] = df.loc[df.article_id == a,'article_count'] / df.loc[df.article_id == a,'article_count'].std()
+        df.loc[df.article_id == a,'norm_avq'] = df.loc[df.article_id == a,'avq'] / df.loc[df.article_id == a,'avq'].std()
+        df.loc[df.article_id == a,'norm_revenue'] = df.loc[df.article_id == a,'revenue'] / df.loc[df.article_id == a,'revenue'].std()
 
     return df
 
