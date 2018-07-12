@@ -51,7 +51,8 @@ ranking.rank_features(data, distance.euclidean, feats, 'article_count')
 # In[5]:
 
 
-feat = 'Abteilung'
+feat = 'color'
+target_value = 'norm_revenue'
 
 
 # ### Run the Clustering Algorithm
@@ -59,7 +60,7 @@ feat = 'Abteilung'
 # In[6]:
 
 
-df = build_clusters(data, feat, distance.euclidean, 'article_count')
+df = build_clusters(data, feat, distance.euclidean, target_value)
 cluster_characteristics(df, feat)
 
 
@@ -69,14 +70,14 @@ cluster_characteristics(df, feat)
 
 
 print("Number Characteristics: ", len(df[feat].unique()))
-plot_feature_characteristics(df, feat, 'article_count', legend=True);
+plot_feature_characteristics(df, feat, target_value, legend=True);
 
 
 # In[8]:
 
 
 print("Number of Clusters: ", len(df['cluster'].unique()))
-plot_feature_characteristics(df, 'cluster', 'article_count');
+plot_feature_characteristics(df, 'cluster', target_value);
 
 
 # ### Plot characteristics that are included in a specific Cluster
@@ -84,7 +85,7 @@ plot_feature_characteristics(df, 'cluster', 'article_count');
 # In[9]:
 
 
-plot_cluster_characteristics(df, 1, feat, 'article_count', legend=True);
+plot_cluster_characteristics(df, 1, feat, target_value, legend=True);
 
 
 # ### Plot all articles that are included in a Cluster
@@ -92,5 +93,5 @@ plot_cluster_characteristics(df, 1, feat, 'article_count', legend=True);
 # In[10]:
 
 
-plot_cluster_articles(df, 0, 'article_count', legend=False);
+plot_cluster_articles(df, 1, target_value, legend=False);
 
