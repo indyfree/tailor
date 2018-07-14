@@ -1,9 +1,8 @@
-
 import pandas as pd
 import scipy.interpolate as spi
 
 
-def euclidean(a, b):
+def absolute(a, b):
     '''returns the mean absolute difference'''
     return abs(a - b).mean()
 
@@ -23,7 +22,7 @@ def derivative_euclidean(a, b, degree=1, smooth=1):
     # this way only y for existing x are calculated
     a_new = pd.Series(data=da(a.index), index=a.index)
     b_new = pd.Series(data=db(b.index), index=b.index)
-    return euclidean(a_new, b_new)
+    return absolute(a_new, b_new)
 
 
 def dynamic_time_warp(a, b):
