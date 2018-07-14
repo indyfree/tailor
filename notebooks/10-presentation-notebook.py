@@ -30,7 +30,7 @@
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[1]:
+# In[2]:
 
 
 # Needed imports for the rest of the notebook
@@ -46,7 +46,7 @@ from tailor.visualization import *
 
 # ## Example of the Raw Data
 
-# In[2]:
+# In[3]:
 
 
 raw_data = data.load_csv()
@@ -63,7 +63,7 @@ raw_data.head(10)
 #   * *discount* = *original_price* - *markdown* - *sells_price*
 #   * *avq* is the current stock divided by *stock_total*
 
-# In[3]:
+# In[4]:
 
 
 pd.options.display.float_format = "{:.2f}".format
@@ -74,7 +74,7 @@ raw_data.describe(include=np.number)
 
 # __Check if the dataset contains null values__
 
-# In[4]:
+# In[5]:
 
 
 raw_data.isna().values.any()
@@ -84,7 +84,7 @@ raw_data.isna().values.any()
 
 # __Detect how many articles are contained in the dataset__
 
-# In[5]:
+# In[6]:
 
 
 len(raw_data['article_id'].unique())
@@ -92,7 +92,7 @@ len(raw_data['article_id'].unique())
 
 # __Get the maximum timespan the articles have been on sale __
 
-# In[6]:
+# In[7]:
 
 
 raw_data['time_on_sale'].max()
@@ -103,7 +103,7 @@ raw_data['time_on_sale'].max()
 
 # __Check how many articles don't have values defined for each of the 182 days__
 
-# In[7]:
+# In[8]:
 
 
 tos = raw_data.groupby('article_id').apply(lambda x: x.time_on_sale.nunique())
@@ -114,7 +114,7 @@ len(tos[tos == 182])
 
 # ## Visualization of the Raw Data
 
-# In[8]:
+# In[9]:
 
 
 plot_articles(raw_data, [900001, 900002, 900030], 'article_count');
@@ -159,14 +159,14 @@ plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 
 # ## Example of the Processed Data
 
-# In[9]:
+# In[10]:
 
 
 processed_data = data.load_data()
-processed_data.head(26)
+processed_data.head(10)
 
 
-# In[10]:
+# In[11]:
 
 
 processed_data.dtypes
@@ -174,7 +174,7 @@ processed_data.dtypes
 
 # ## Visualization of the Processed Data
 
-# In[11]:
+# In[12]:
 
 
 plot_articles(processed_data, [900001, 900002, 900030], 'article_count');
@@ -195,18 +195,18 @@ plot_articles(processed_data, [900001, 900002, 900030], 'avq');
 # We want to create such a population by grouping articles with similar characteristics together (== build clusters).
 # 
 # 
-# Therefore, we want to split the feature with the highest variance between the individual characteristics and group the individual characteristics for a first segmentation. As from now, we will call the variation between the individual characteristics _inter-feat-variance_. **-->Unclear**
+# Therefore, we want to split the feature with the highest variance between the individual characteristics and group the individual characteristics into multiple (sub-)populations for a first segmentation. The idea here is to divide the whole population into multiple pieces with a lower variance. As from now, we will call the variation between the individual characteristics of a feature _inter-feat-variance_. **-->Unclear**
 # 
 # 
 # Thus, we next have a look at the graphs of the individual characteristics of a feature to get an idea, how different or similar they are.
 
-# In[12]:
+# In[13]:
 
 
 plot_feature_characteristics(processed_data, 'Abteilung', 'article_count');
 
 
-# In[13]:
+# In[14]:
 
 
 plot_feature_characteristics(processed_data, 'color', 'article_count', legend=False);
@@ -215,3 +215,33 @@ plot_feature_characteristics(processed_data, 'color', 'article_count', legend=Fa
 # The first graph visualize the _inter-feat-variance_ of the feature _Abteilung_, the second one the _inter-feat-variance_ of the feature _color_.
 # These plots give a valuable representation on how the _inter-feat-variance_ of the different features could looks like.
 # In this example, the feature _Abteilung_ is more likely to have a high variance between the individual characteristics then the feature _color_.
+# 
+# 
+# However, it is not sufficient to identify the _inter-feat-variances_ of the individual features by guessing.
+# Therefore, we have developed a ranking algorithm, which identify the variances of the features of a given population and sort them descending. This ranking feature is a part of the cluster algorithm, which we will explain in detail in the following chapter.
+
+# ## The Cluster-Algorithm
+
+# ### General
+
+# In general, the overall goal of the algorithm is to assign every existing article of the dataset to a cluster, based on the historical data of its revenue, article_count or sales quota.
+# The cluster will be formed through the combination of characteristics of the articles. 
+# 
+# __Example:__
+# 
+# __Cluster 1__:  
+# * _Abteilung_ = [Abteilung1, Abteilung3]
+# * _Color_ = [blau, himmelgrau]  
+# * _Season_ = [Sommer]
+# * ...
+# 
+# __Cluster 2__:  
+# 
+# * _Abteilung_ = [Abteilung2] 
+# * _Color_ = [khaki]  
+# * _Season_ = [Herbst, Winter]
+# * ...
+# 
+# Moreover, the variance within the cluster should be as low as possible, while the clusters themselves should be as big as possible to form a valid and representative population for further analysis. 
+
+# ### Outline of the Algorithm
