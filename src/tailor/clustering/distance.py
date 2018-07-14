@@ -12,7 +12,7 @@ def interpolate_function(a, degree=1, smooth=1):
     return spi.UnivariateSpline(a.index, a.values, s=smooth, k=degree)
 
 
-def derivative_euclidean(a, b, degree=1, smooth=1):
+def derivative(a, b, degree=1, smooth=1):
     '''returns the mean absolute difference between the interpolation derivatives'''
     # creating the interpolated derivatives
     da = interpolate_function(a, degree, smooth).derivative()
