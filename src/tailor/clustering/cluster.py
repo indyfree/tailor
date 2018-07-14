@@ -1,19 +1,18 @@
 import itertools
-import multiprocessing as mp
 import numpy as np
 import pandas as pd
 from tailor import data
 from tailor.clustering import ranking
 
 
-def get_cluster_names(clusters, reversed_sort = False):
+def get_cluster_names(clusters, reversed_sort=False):
     '''retrieves all names of the given clusters'''
     names = list()
     for cluster in clusters:
         name = cluster['Name']
         names.append(name)
     # sort by underscore count
-    names.sort(key = lambda s: s.count("_"), reverse=reversed_sort)
+    names.sort(key=lambda s: s.count("_"), reverse=reversed_sort)
     return names
 
 
@@ -58,7 +57,6 @@ def multi_feature_merge(data, split_results, distance_measure, clustering_featur
             name = name[:-1]
         return name
 
-
     def get_leaves(split_results):
         '''retrieves all the unsplit clusters / the leaves of the split tree'''
         leaves = list()
@@ -77,18 +75,17 @@ def multi_feature_merge(data, split_results, distance_measure, clustering_featur
                 leaves.append(add_cluster)
         return leaves
 
-
     def get_distance_matrix(targets):
         # calculate distance matrix
         length = len(targets)
-        distances = pd.DataFrame(index=range(length),columns=range(length))
+        distances = pd.DataFrame(index=range(length), columns=range(length))
         for i, a in enumerate(targets):
             for k, b in enumerate(reversed(targets)):
                 j = length - 1 - k
                 if j <= i:
                     break
                 else:
-                    d = distance_measure(a.values,b.values)
+                    d = distance_measure(a.values, b.values)
                     distances[i][j] = d
                     distances[j][i] = d
         return distances
@@ -125,28 +122,24 @@ def multi_feature_merge(data, split_results, distance_measure, clustering_featur
                     target = group[0]
                     # rest of the values are pointers added by dependent groups
                     pointers = group[1:]
-                    try:
-                        # check whether this is a dependent group without a pointer loop
-                        if (target not in pointers):
-                            # still dependent groups left, we need to iterate at least one more time
-                            finished = False
-                            # add own index to target
-                            cluster_groups[target].append(i)
-                            # sanity check whether looping is required
-                            if (type(pointers) is list):
-                                # multiple entries we can loop
-                                for x in pointers:
-                                    if (x not in cluster_groups[target]):
-                                        cluster_groups[target].append(x)
-                            else:
-                                print(pointers)
-                                cluster_groups[target].append(pointers[0])
-                            # dependent group is spent, create loner
-                            cluster_groups[i] = list()
-                            cluster_groups[i].append(target)
-                    except:
-                        print("shit's on fire, yo")
-                        print(str(i) + " " + str(group) + " " + str(target) + " " + str(pointers))
+                    # check whether this is a dependent group without a pointer loop
+                    if (target not in pointers):
+                        # still dependent groups left, we need to iterate at least one more time
+                        finished = False
+                        # add own index to target
+                        cluster_groups[target].append(i)
+                        # sanity check whether looping is required
+                        if (type(pointers) is list):
+                            # multiple entries we can loop
+                            for x in pointers:
+                                if (x not in cluster_groups[target]):
+                                    cluster_groups[target].append(x)
+                        else:
+                            print(pointers)
+                            cluster_groups[target].append(pointers[0])
+                        # dependent group is spent, create loner
+                        cluster_groups[i] = list()
+                        cluster_groups[i].append(target)
 
         # clear loners
         for i, group in cluster_groups.iteritems():
@@ -311,28 +304,24 @@ def multi_feature_merge(data, split_results, distance_measure, clustering_featur
                         if target in relevant_groups.index:
                             # rest of the values are pointers added by dependent groups
                             pointers = group[1:]
-                            try:
-                                # check whether this is a dependent group without a pointer loop
-                                if (target not in pointers):
-                                    # still dependent groups left, we need to iterate at least one more time
-                                    finished = False
-                                    # add own index to target
-                                    relevant_groups[target].append(i)
-                                    # sanity check whether looping is required
-                                    if type(pointers) is list:
-                                        # multiple entries we can loop
-                                        for x in pointers:
-                                            if (x not in relevant_groups[target]):
-                                                relevant_groups[target].append(x)
-                                    else:
-                                        print(pointers)
-                                        relevant_groups[target].append(pointers[0])
-                                    # dependent group is spent, create loner
-                                    relevant_groups[i] = list()
-                                    relevant_groups[i].append(target)
-                            except:
-                                print("shit's on fire, yo")
-                                print(str(i) + " " + str(group) + " " + str(target) + " " + str(pointers))
+                            # check whether this is a dependent group without a pointer loop
+                            if (target not in pointers):
+                                # still dependent groups left, we need to iterate at least one more time
+                                finished = False
+                                # add own index to target
+                                relevant_groups[target].append(i)
+                                # sanity check whether looping is required
+                                if type(pointers) is list:
+                                    # multiple entries we can loop
+                                    for x in pointers:
+                                        if (x not in relevant_groups[target]):
+                                            relevant_groups[target].append(x)
+                                else:
+                                    print(pointers)
+                                    relevant_groups[target].append(pointers[0])
+                                # dependent group is spent, create loner
+                                relevant_groups[i] = list()
+                                relevant_groups[i].append(target)
 
             # clear loners
             for i, group in relevant_groups.iteritems():
@@ -385,17 +374,12 @@ def multi_feature_merge(data, split_results, distance_measure, clustering_featur
                     if x not in too_small:
                         # found target group that already was big enough
                         found = True
-                        try:
-                            # merge groups
-                            temp = list()
-                            temp.extend(group)
-                            temp.extend(new_groups[x])
-                            temp = sorted(list(set(temp)))
-                            new_groups[x] = temp
-                        except:
-                            print(x)
-                            print(new_groups[x])
-                            print(group)
+                        # merge groups
+                        temp = list()
+                        temp.extend(group)
+                        temp.extend(new_groups[x])
+                        temp = sorted(list(set(temp)))
+                        new_groups[x] = temp
                         break
                 if not found:
                     # add new group only made of merged too_small groups
@@ -419,9 +403,9 @@ def multi_feature_merge(data, split_results, distance_measure, clustering_featur
                 group = list()
                 dfs = list()
                 for pointer in pointers:
-                    df_temp = merge_results['DataFrames'][str(merge_number-1)][pointer]
+                    df_temp = merge_results['DataFrames'][str(merge_number - 1)][pointer]
                     dfs.append(df_temp)
-                    for cluster in merge_results['Groups'][str(merge_number-1)][pointer]:
+                    for cluster in merge_results['Groups'][str(merge_number - 1)][pointer]:
                         group.append(cluster)
                 merge_results['Groups'][str(merge_number)].append(group)
                 # merge the clusters' dataframes to one and add it
@@ -452,9 +436,9 @@ def multi_feature_merge(data, split_results, distance_measure, clustering_featur
             group = list()
             dfs = list()
             for pointer in pointers:
-                df_temp = merge_results['DataFrames'][str(merge_number-1)][pointer]
+                df_temp = merge_results['DataFrames'][str(merge_number - 1)][pointer]
                 dfs.append(df_temp)
-                for cluster in merge_results['Groups'][str(merge_number-1)][pointer]:
+                for cluster in merge_results['Groups'][str(merge_number - 1)][pointer]:
                     group.append(cluster)
             merge_results['Groups'][str(merge_number)].append(group)
             # merge the clusters' dataframes to one and add it

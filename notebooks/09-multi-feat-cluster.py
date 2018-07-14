@@ -68,25 +68,25 @@ split_results['Clusters'].index
 split_results['Clusters']['5'][0]['Features']
 
 
-# In[11]:
+# In[9]:
 
 
 cluster.show_cluster_characteristics(data, merge_results, 4)
 
 
-# In[12]:
+# In[10]:
 
 
 cluster.show_cluster_characteristics(data, merge_results, 4, 0.75)
 
 
-# In[13]:
+# In[11]:
 
 
 cluster.show_cluster_characteristics(data, merge_results, 3, 0.75)
 
 
-# In[14]:
+# In[12]:
 
 
 cluster.show_cluster_characteristics(data, merge_results, 3)
