@@ -606,16 +606,41 @@ print(count)
 print(len(merge_results['Groups']['3']))
 
 
-# In[92]:
+# In[ ]:
 
 
-for i, df in enumerate(merge_results['DataFrames']['4']):
-    for col in df.select_dtypes(include=['category']):
-        # print(str(i) + ": " + str(col) + ": " + str(df[col].unique()))
-        if "article_id" not in col:
-            for characteristic in df[col].unique():
-                query_string = str(col) + " == " + '"' + str(characteristic) + '"'
-                temp_df = df.query(query_string)
-                print(str(i) + ": " + str(characteristic) + ": " + str(temp_df['article_id'].nunique()))
-    print("")
+def show_cluster_characteristics(layer, threshold=0.0):
+    for i, df in enumerate(merge_results['DataFrames'][str(layer)]):
+        found_something = False
+        for col in df.select_dtypes(include=['category']):
+            if "article_id" not in col:
+                for characteristic in df[col].unique():
+                    query_string = str(col) + " == " + '"' + str(characteristic) + '"'
+                    temp_df = df.query(query_string)
+                    temp_nunique = temp_df['article_id'].nunique()
+                    temp_percentage = temp_nunique / data.query(query_string)['article_id'].nunique()
+                    if temp_percentage > threshold:
+                        found_something = True
+                        print(str(i) + ": " + str(characteristic) + ": " + str(temp_nunique) + " " + "{0:.0%}".format(temp_percentage))
+        if not found_something:
+            print(str(i) + ": " + "outlier collection cluster")
+        print("")
+
+
+# In[100]:
+
+
+show_cluster_characteristics(4)
+
+
+# In[101]:
+
+
+show_cluster_characteristics(4, 0.75)
+
+
+# In[107]:
+
+
+show_cluster_characteristics(3, 0.51)
 
