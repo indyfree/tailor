@@ -60,9 +60,12 @@ def process_data():
 
     print('Processing data...')
     df = data.load_csv()
+    df = data.drop_invalid_rows(df)
     df = data.transform_datatypes(df)
     df = features.build(df)
     df = data.group_by.weeks_on_sale(df)
+    df = data.fill_missing_values(df)
+    df = data.normalize(df)
 
     if not os.path.exists(data.PROCESSED_DATA_PATH):
         os.makedirs(data.PROCESSED_DATA_PATH)
