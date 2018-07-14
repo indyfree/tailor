@@ -83,13 +83,13 @@ plt.legend(handles=[pod, pif, pdf])
 # In[9]:
 
 
-get_ipython().run_cell_magic('time', '', 'cl.euclidean(series_a,series_b)')
+get_ipython().run_cell_magic('time', '', 'cl.absolute(series_a,series_b)')
 
 
 # In[10]:
 
 
-get_ipython().run_cell_magic('time', '', 'cl.derivative_euclidean(series_a,series_b, degree=1, smooth=2)')
+get_ipython().run_cell_magic('time', '', 'cl.derivative(series_a,series_b, degree=1, smooth=2)')
 
 
 # ## Distance and curve comparison
@@ -98,14 +98,14 @@ get_ipython().run_cell_magic('time', '', 'cl.derivative_euclidean(series_a,serie
 
 
 print("Base: ")
-print("Euclidean distance: " + np.str(cl.euclidean(series_a, series_b)))
+print("Absolute distance: " + np.str(cl.absolute(series_a, series_b)))
 print(" ")
 print("Interpolation and derivation: ")
-print("Degree 1 distance: " + np.str(cl.derivative_euclidean(series_a,series_b, degree=1, smooth=2)))
-print("Degree 2 distance: " + np.str(cl.derivative_euclidean(series_a,series_b, degree=2, smooth=2)))
-print("Degree 3 distance: " + np.str(cl.derivative_euclidean(series_a,series_b, degree=3, smooth=2)))
-print("Degree 4 distance: " + np.str(cl.derivative_euclidean(series_a,series_b, degree=4, smooth=2)))
-print("Degree 5 distance: " + np.str(cl.derivative_euclidean(series_a,series_b, degree=5, smooth=2)))
+print("Degree 1 distance: " + np.str(cl.derivative(series_a,series_b, degree=1, smooth=2)))
+print("Degree 2 distance: " + np.str(cl.derivative(series_a,series_b, degree=2, smooth=2)))
+print("Degree 3 distance: " + np.str(cl.derivative(series_a,series_b, degree=3, smooth=2)))
+print("Degree 4 distance: " + np.str(cl.derivative(series_a,series_b, degree=4, smooth=2)))
+print("Degree 5 distance: " + np.str(cl.derivative(series_a,series_b, degree=5, smooth=2)))
 
 
 # The derivate of the interpolation with degree=1 gives the best results and is better than the base distance measurement. Interpolation with higher degrees results in distorted curves and performs worse than the base measure. In the following subsections each degree can be viewed in detail.
@@ -193,7 +193,7 @@ pif2, = plt.plot(xf, yf2, label='interpolation b')
 plt.legend(handles=[pif1, pif2])
 
 
-# In[19]:
+# In[ ]:
 
 
 # plot derivative function
@@ -204,13 +204,13 @@ plt.legend(handles=[pdf1, pdf2])
 
 # ### Degree 3
 
-# In[20]:
+# In[ ]:
 
 
 get_ipython().run_cell_magic('time', '', '\n# generate the functions\nf1 = cl.interpolate_function(series_a, degree=3, smooth=2)\nf2 = cl.interpolate_function(series_b, degree=3, smooth=2)')
 
 
-# In[21]:
+# In[ ]:
 
 
 # generate fine resolution x axis
@@ -230,7 +230,7 @@ pod2, = plt.plot(series_b.index, series_b.values, '.-', label='original data b')
 plt.legend(handles=[pod1, pod2])
 
 
-# In[22]:
+# In[ ]:
 
 
 # plot interpolated function
@@ -239,7 +239,7 @@ pif2, = plt.plot(xf, yf2, label='interpolation b')
 plt.legend(handles=[pif1, pif2])
 
 
-# In[23]:
+# In[ ]:
 
 
 # plot derivative function
@@ -250,13 +250,13 @@ plt.legend(handles=[pdf1, pdf2])
 
 # ### Degree 4
 
-# In[24]:
+# In[ ]:
 
 
 get_ipython().run_cell_magic('time', '', '\n# generate the functions\nf1 = cl.interpolate_function(series_a, degree=4, smooth=2)\nf2 = cl.interpolate_function(series_b, degree=4, smooth=2)')
 
 
-# In[25]:
+# In[ ]:
 
 
 # generate fine resolution x axis
@@ -276,7 +276,7 @@ pod2, = plt.plot(series_b.index, series_b.values, '.-', label='original data b')
 plt.legend(handles=[pod1, pod2])
 
 
-# In[26]:
+# In[ ]:
 
 
 # plot interpolated function
@@ -285,7 +285,7 @@ pif2, = plt.plot(xf, yf2, label='interpolation b')
 plt.legend(handles=[pif1, pif2])
 
 
-# In[27]:
+# In[ ]:
 
 
 # plot derivative function
@@ -296,13 +296,13 @@ plt.legend(handles=[pdf1, pdf2])
 
 # ### Degree 5
 
-# In[28]:
+# In[ ]:
 
 
 get_ipython().run_cell_magic('time', '', '\n# generate the functions\nf1 = cl.interpolate_function(series_a, degree=5, smooth=2)\nf2 = cl.interpolate_function(series_b, degree=5, smooth=2)')
 
 
-# In[29]:
+# In[ ]:
 
 
 # generate fine resolution x axis
@@ -322,7 +322,7 @@ pod2, = plt.plot(series_b.index, series_b.values, '.-', label='original data b')
 plt.legend(handles=[pod1, pod2])
 
 
-# In[30]:
+# In[ ]:
 
 
 # plot interpolated function
@@ -331,7 +331,7 @@ pif2, = plt.plot(xf, yf2, label='interpolation b')
 plt.legend(handles=[pif1, pif2])
 
 
-# In[31]:
+# In[ ]:
 
 
 # plot derivative function
