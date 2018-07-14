@@ -606,7 +606,7 @@ print(count)
 print(len(merge_results['Groups']['3']))
 
 
-# In[ ]:
+# In[108]:
 
 
 def show_cluster_characteristics(layer, threshold=0.0):
@@ -639,8 +639,8 @@ show_cluster_characteristics(4)
 show_cluster_characteristics(4, 0.75)
 
 
-# In[107]:
+# In[109]:
 
 
-show_cluster_characteristics(3, 0.51)
+show_cluster_characteristics(3, 0.75)
 
