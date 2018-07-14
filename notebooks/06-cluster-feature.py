@@ -41,7 +41,7 @@ data = tailor.load_data()
 
 
 feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
-ranking.rank_features(data, distance.euclidean, feats, 'article_count')
+ranking.rank_features(data, distance.absolute, feats, 'article_count')
 
 
 # A high score indicates feature characteristics are far apart, and thus better for clustering.
@@ -60,7 +60,7 @@ target_value = 'norm_revenue'
 # In[6]:
 
 
-df = build_clusters(data, feat, distance.euclidean, target_value)
+df = build_clusters(data, feat, distance.absolute, target_value)
 cluster_characteristics(df, feat)
 
 
@@ -70,7 +70,7 @@ cluster_characteristics(df, feat)
 
 
 print("Number Characteristics: ", len(df[feat].unique()))
-plot_feature_characteristics(df, feat, target_value, legend=True);
+plot_feature_characteristics(df, feat, target_value, legend=False);
 
 
 # In[8]:
