@@ -30,7 +30,7 @@
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[2]:
+# In[1]:
 
 
 # Needed imports for the rest of the notebook
@@ -46,7 +46,7 @@ from tailor.visualization import *
 
 # ## Example of the Raw Data
 
-# In[3]:
+# In[2]:
 
 
 raw_data = data.load_csv()
@@ -63,7 +63,7 @@ raw_data.head(10)
 #   * *discount* = *original_price* - *markdown* - *sells_price*
 #   * *avq* is the current stock divided by *stock_total*
 
-# In[4]:
+# In[3]:
 
 
 pd.options.display.float_format = "{:.2f}".format
@@ -74,7 +74,7 @@ raw_data.describe(include=np.number)
 
 # __Check if the dataset contains null values__
 
-# In[5]:
+# In[4]:
 
 
 raw_data.isna().values.any()
@@ -84,7 +84,7 @@ raw_data.isna().values.any()
 
 # __Detect how many articles are contained in the dataset__
 
-# In[6]:
+# In[5]:
 
 
 len(raw_data['article_id'].unique())
@@ -92,7 +92,7 @@ len(raw_data['article_id'].unique())
 
 # __Get the maximum timespan the articles have been on sale __
 
-# In[7]:
+# In[6]:
 
 
 raw_data['time_on_sale'].max()
@@ -103,7 +103,7 @@ raw_data['time_on_sale'].max()
 
 # __Check how many articles don't have values defined for each of the 182 days__
 
-# In[8]:
+# In[7]:
 
 
 tos = raw_data.groupby('article_id').apply(lambda x: x.time_on_sale.nunique())
@@ -114,7 +114,7 @@ len(tos[tos == 182])
 
 # ## Visualization of the Raw Data
 
-# In[9]:
+# In[8]:
 
 
 plot_articles(raw_data, [900001, 900002, 900030], 'article_count');
@@ -148,7 +148,7 @@ plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 #   
 #   
 # 5. __Fill missing values__
-#   * As we found out before, not all articles have sales on each day for the consecutive 182 days. Therefore, we add extra rows with zero values for the missing time_on_sales values
+#   * As we found out before, not all articles have sales on each day for the consecutive 182 days. Therefore, we add extra rows with zero values for the missing *time_on_sales* values
 #   
 # 6. __Data normalization__
 #   * Come up with it here are in a later paragraph?
@@ -159,14 +159,14 @@ plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 
 # ## Example of the Processed Data
 
-# In[10]:
+# In[9]:
 
 
 processed_data = data.load_data()
 processed_data.head(10)
 
 
-# In[11]:
+# In[10]:
 
 
 processed_data.dtypes
@@ -174,51 +174,64 @@ processed_data.dtypes
 
 # ## Visualization of the Processed Data
 
-# In[12]:
+# In[11]:
 
 
 plot_articles(processed_data, [900001, 900002, 900030], 'article_count');
 plot_articles(processed_data, [900001, 900002, 900030], 'avq');
 
 
-# In comparison to the raw data, you can see that the graphs no longer looks that messy. It is easier to identify which graphs are similar. Moreover we see that we removed seasonal/temporal effects by grouping on weeks.
+# In comparison to the raw data, you can see that the graphs no longer looks that messy. It is easier to identify which graphs are similar. Moreover we see that we removed seasonal effects by grouping the daily sales to weeks.
 
 # ## Inter-Feature Variance
 
-# For the development of the clustering algorithm, we have to think about a criterion on which we divide the dataset into multiple pieces (clusters).
+# Remember that we want to identify a (sub-)population of articles that we can use for prediction or further analysis. 
 # 
-# Remember that for an optimal prediction quality, we need to identify a (sub-)population that:
+# For an optimal prediction quality this group has to be:
 # 
-# 1. is as big as possible (Large sample size)
-# 2. has a small variance (Similar sample)
+# - As similar as possible (Small variance)
+# - As big as possible (Large sample size)
 # 
-# We want to create such a population by grouping articles with similar characteristics together (== build clusters).
+# We want to create such a group by:
 # 
+# 1. Splitting the population into groups where the the (article-)characteristics of a feature behave differently. (E.g. blue articles are different from red articles)
+# 2. Grouping (article-)characteristics together that behave similarly. (E.g. blue and grey articles are similar to each other)
 # 
-# Therefore, we want to split the feature with the highest variance between the individual characteristics and group the individual characteristics into multiple (sub-)populations for a first segmentation. The idea here is to divide the whole population into multiple pieces with a lower variance. As from now, we will call the variation between the individual characteristics of a feature _inter-feat-variance_. **-->Unclear**
+# Here the **feature** is *color*, and the **characteristics** are *blue*, *grey* and *red*.
 # 
+# To find features, where this is easily possible, we will look at the **inter-feature variance**. The **inter-feature variance** measures the variance of the characteristics within a feature. A high **inter-feature variance** indicates differently behaving characteristics.
 # 
-# Thus, we next have a look at the graphs of the individual characteristics of a feature to get an idea, how different or similar they are.
+# Next, we will look at the graphs some features to get an idea, how the different characteristics are distributed.
+
+# In[12]:
+
+
+plot_feature_characteristics(processed_data, 'Abteilung', 'norm_article_count');
+
+
+# This graph visualizes the inter-feat variance of the feature 'Abteilung'. We can see that all curves are quite different from each other. That indicates that the individual characteristics should be treated individually. (Form an own cluster) 
 
 # In[13]:
 
 
-plot_feature_characteristics(processed_data, 'Abteilung', 'article_count');
+plot_feature_characteristics(processed_data, 'color', 'norm_article_count', legend=False);
 
 
-# In[14]:
+# This graph visualizes the inter-feat variance of the feature 'color'. Each curve represents the averaged sells of articles with the same color. We can see that quite a few curves in the middle look very similar, while at the top and bottom are 'far away' from the others. We can assume that the similar colors-curves in the middle should be treated the same (form a cluster together) and the curves which look different should be treated individually.
+
+# Indeed the values clearly show that ....
+
+# In[16]:
 
 
-plot_feature_characteristics(processed_data, 'color', 'article_count', legend=False);
+clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'Abteilung', 'article_count')
 
 
-# The first graph visualize the _inter-feat-variance_ of the feature _Abteilung_, the second one the _inter-feat-variance_ of the feature _color_.
-# These plots give a valuable representation on how the _inter-feat-variance_ of the different features could looks like.
-# In this example, the feature _Abteilung_ is more likely to have a high variance between the individual characteristics then the feature _color_.
-# 
-# 
-# However, it is not sufficient to identify the _inter-feat-variances_ of the individual features by guessing.
-# Therefore, we have developed a ranking algorithm, which identify the variances of the features of a given population and sort them descending. This ranking feature is a part of the cluster algorithm, which we will explain in detail in the following chapter.
+# In[20]:
+
+
+clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'color', 'article_count')
+
 
 # ## The Cluster-Algorithm
 
@@ -245,3 +258,9 @@ plot_feature_characteristics(processed_data, 'color', 'article_count', legend=Fa
 # Moreover, the variance within the cluster should be as low as possible, while the clusters themselves should be as big as possible to form a valid and representative population for further analysis. 
 
 # ### Outline of the Algorithm
+
+# (rework...)
+# Therefore, we want to split the feature with the highest variance between the individual characteristics and group the individual characteristics into multiple (sub-)populations for a first segmentation. 
+# 
+# The idea here is to divide the whole population into multiple pieces with a lower variance. As from now, we will call the variation between the individual characteristics of a feature _inter-feat-variance_. **-->Unclear**
+# 
