@@ -15,7 +15,8 @@
 #   * Optimal price determination of new articles on market launch
 #   * Inventory calculation 
 #   * General predictions and strategic decision making
-#   
+# 
+# 
 # Such predictions need a population, which serves as a basis for statistical calculations.
 # Predicting the sales of a specific article on basis of the whole assortment would be too imprecise.
 # The mean variation is too high, hence the quality of the prediction would be very low.
@@ -25,12 +26,11 @@
 
 # ## The Goal
 
-# The overall goal of the project is to develop a clustering algorithm, that provide meaningful article clusters. The algorithm should provide reasonable results and build on statistically verified methods.
-# 
-# The special challenge of the clustering algorithm is:
-# 1. Clusters should be characterized by article attributes (e.g. brand, color, ..)
-# 2. Clusters should be formed according to similar behavior in number of articles sold, revenue or sales-quotas over time
-# 
+# The overall goal of the project is to develop a clustering algorithm, that provide meaningful article clusters. The algorithm should provide reasonable results and build on statistically verified methods. The special challenge of the clustering algorithm is:
+
+# - Clusters should be characterized by article attributes (e.g. brand, color, ..)
+# - Clusters should be formed according to similar behavior in number of articles sold, revenue or sales-quotas over time
+
 # In clustering the distance (similarity) and the characterizing attributes build on the same features. This is not the case here. Thus, we can not use existing packages for categorical-, nor time-series clustering, because each would contradict one of the constraints above. A further requirement is, that each article has to be assigned to a cluster.
 
 # # Data Introduction
@@ -38,7 +38,7 @@
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[30]:
+# In[1]:
 
 
 # Needed imports for the rest of the notebook
@@ -81,7 +81,7 @@ raw_data.describe(include=np.number)
 
 # ## Consistency Checks
 
-# __Check if the dataset contains null values__
+# #### Check if the dataset contains null values
 
 # In[4]:
 
@@ -91,7 +91,7 @@ raw_data.isna().values.any()
 
 # We are lucky, there are no null values in the dataset!
 
-# __Detect how many articles are contained in the dataset__
+# #### Detect how many articles are contained in the dataset
 
 # In[5]:
 
@@ -99,7 +99,7 @@ raw_data.isna().values.any()
 len(raw_data['article_id'].unique())
 
 
-# __Get the maximum timespan the articles have been on sale __
+# #### Get the maximum timespan the articles have been on sale
 
 # In[6]:
 
@@ -110,7 +110,7 @@ raw_data['time_on_sale'].max()
 # This means we will be comparing sales of articles over a course of 182 consecutive days. Counting starts at day 0.
 # 
 
-# __Check how many articles don't have values defined for each of the 182 days__
+# #### Check how many articles don't have values defined for each of the 182 days
 
 # In[7]:
 
@@ -230,22 +230,25 @@ plot_feature_characteristics(processed_data, 'color', 'norm_article_count', lege
 
 # Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to look at while clustering.
 
-# In[28]:
+# In[14]:
 
 
 clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'Abteilung', 'norm_article_count')
 
 
-# In[29]:
+# In[ ]:
 
 
 clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'color', 'norm_article_count')
 
 
-# ## The Cluster-Algorithm
+# # The Clustering Algorithm
 
-# ### General
+# ## General
 
+# The general idea of the clustering algorithm is to split 
+# 
+# 
 # In general, the overall goal of the algorithm is to assign every existing article of the dataset to a cluster, based on the historical data of its revenue, article_count or sales quota.
 # The cluster will be formed through the combination of characteristics of the articles. 
 # 
@@ -266,10 +269,18 @@ clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'co
 # 
 # Moreover, the variance within the cluster should be as low as possible, while the clusters themselves should be as big as possible to form a valid and representative population for further analysis. 
 
-# ### Outline of the Algorithm
+# ## Similarity Measure
+
+# ## Outline of the Algorithm
 
 # (rework...)
 # Therefore, we want to split the feature with the highest variance between the individual characteristics and group the individual characteristics into multiple (sub-)populations for a first segmentation. 
 # 
 # The idea here is to divide the whole population into multiple pieces with a lower variance. As from now, we will call the variation between the individual characteristics of a feature _inter-feat-variance_. **-->Unclear**
 # 
+
+# ## Hierarchical Component
+
+# # Results
+
+# # Outlook and Discussion
