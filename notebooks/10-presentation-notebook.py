@@ -38,7 +38,7 @@
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[1]:
+# In[24]:
 
 
 # Needed imports for the rest of the notebook
@@ -49,7 +49,7 @@ import pandas as pd
 # Our developed package 'tailor'
 import tailor
 from tailor import data
-from tailor import clustering
+from tailor.clustering import *
 from tailor.visualization import *
 
 
@@ -203,7 +203,7 @@ plot_articles(df, [900001, 900002, 900030], 'avq');
 # 
 # We want to create such a group by:
 # 
-# 1. Splitting the population into groups where the the (article-)characteristics of a feature behave differently. (E.g. blue articles are different from red articles)
+# 1. Splitting the population into groups where the (article-) characteristics of a feature behave differently. (E.g. blue articles are different from red articles)
 # 2. Grouping (article-)characteristics together that behave similarly. (E.g. blue and grey articles are similar to each other)
 # 
 # Here the **feature** is *color*, and the **characteristics** are *blue*, *grey* and *red*.
@@ -329,18 +329,22 @@ print("distance: ", clustering.distance.absolute(a,b))
 # 
 # 
 # ```python
-# # 1. Get a list of ranked features (color, brand, etc..) according to their inter_feature score
+# # 1. Get a list of ranked features (color, brand, etc..) 
+# #    according to their inter_feature score
 # features =  rank_features()
 # 
 # # Repeat until all features considered
 # for f in features:
 #     # 2. Split feature characteristics into separate clusters
 #     split_features()
+#    
 #     # 3. Merge similar characteristics together into a cluster. Merge when the distance
 #     #    between two cluster is less then a 'similarity_threshold' 
 #     merge_close_clusters()
+#     
 #     # 4. Merge clusters that are below the min_cluster_size into the closest cluster
 #     merge_min_clusters()
+#     
 #     # 5. When no new clusters resulted from the considered feature finish the clustering
 #     #    (e.g. all new clusters were too small)
 #     if no_new_clusters:
@@ -351,6 +355,31 @@ print("distance: ", clustering.distance.absolute(a,b))
 
 # ## Hierarchical Component
 
+# (Here some kind of visualization of the clustering process would be cool)
+
 # # Results and Evaluation
+
+# To discuss the results we will pick out an potential use-case of a customer and go through the whole clustering process. 
+# 
+# Assuming we are a fashion retailer and want to introduce a new special edition shoe into our shops. Beforehand, we want to know how much **revenue** this article is likely going to generate and how the **revenue curve** will likley look like over the course of the 26 weeks this special shoe is available in our shops. In order to let our data science team do all the prediction work, we have to give them a reference population of shoes that are similar to our new special edition shoe. Luckily we have paid the smart guys from tailorit to find this reference population, by using a **cluster analysis**. The smart guys from tailorit have developed a clustering package called **tailor** which they going to use for the analysis.
+
+# #### Define The Use Case
+
+# In[19]:
+
+
+# Use standardized revenue as measure for clustering
+target_value = 'norm_revenue'
+# We want to observe all features available
+features = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
+# Use absolute distance between the curves as similarity measure
+distance_measure = clustering.distance.absolute
+
+
+# In[25]:
+
+
+ranking.rank_features(df, distance_measure, features, target_value)
+
 
 # # Outlook and Discussion
