@@ -110,7 +110,7 @@ raw_data['time_on_sale'].max()
 # This means we will be comparing sales of articles over a course of 182 consecutive days. Counting starts at day 0.
 # 
 
-# #### Check how many articles don't have values defined for each of the 182 days
+# #### Check how many articles don't have values defined for the full range of the 182 days
 
 # In[7]:
 
@@ -119,7 +119,7 @@ tos = raw_data.groupby('article_id').apply(lambda x: x.time_on_sale.nunique())
 len(tos[tos == 182])
 
 
-# After all there are a lot of missing data, but they are hidden! We see not a single article has data for each of the 182 days they have been on sale! This problem has to be addressed in a later step.
+# After all there are a lot of missing data, but they were hidden. We do not see a single article has data for each of the 182 days they have been on sale! This problem has to be addressed in a later step.
 
 # ## Visualization of the Raw Data
 
@@ -236,7 +236,7 @@ plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
 clustering.inter_feat_variance(df, clustering.distance.absolute, 'Abteilung', 'norm_article_count')
 
 
-# In[ ]:
+# In[15]:
 
 
 clustering.inter_feat_variance(df, clustering.distance.absolute, 'color', 'norm_article_count')
@@ -287,7 +287,7 @@ clustering.inter_feat_variance(df, clustering.distance.absolute, 'color', 'norm_
 
 # #### When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
 
-# In[81]:
+# In[16]:
 
 
 plot_articles(df, [900001, 900080], 'article_count');
@@ -296,7 +296,7 @@ b = df.loc[df.article_id == 900080].set_index('time_on_sale')['article_count']
 print("distance: ", clustering.distance.absolute(a,b))
 
 
-# In[78]:
+# In[17]:
 
 
 plot_articles(df, [900001, 900050], 'article_count');
@@ -314,7 +314,7 @@ print("distance: ", clustering.distance.absolute(a,b))
 # If we look at the same articles, but plot and calculate the distance with the normalized values we can see that the 
 # two articles are now much closer.The distance measure is now implicitly taking the *shape* into account, when calculating the absolute distance between the normalized values.
 
-# In[83]:
+# In[18]:
 
 
 plot_articles(df, [900001, 900050], 'norm_article_count');
