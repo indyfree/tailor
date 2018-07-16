@@ -171,14 +171,14 @@ plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 # In[9]:
 
 
-processed_data = data.load_data()
-processed_data.head(10)
+df = data.load_data()
+df.head(10)
 
 
 # In[10]:
 
 
-processed_data.dtypes
+df.dtypes
 
 
 # ## Visualization of the Processed Data
@@ -186,8 +186,8 @@ processed_data.dtypes
 # In[11]:
 
 
-plot_articles(processed_data, [900001, 900002, 900030], 'article_count');
-plot_articles(processed_data, [900001, 900002, 900030], 'avq');
+plot_articles(df, [900001, 900002, 900030], 'article_count');
+plot_articles(df, [900001, 900002, 900030], 'avq');
 
 
 # In comparison to the raw data, you can see that the graphs no longer looks that messy. It is easier to identify which graphs are similar. Moreover we see that we removed seasonal effects by grouping the daily sales to weeks.
@@ -215,7 +215,7 @@ plot_articles(processed_data, [900001, 900002, 900030], 'avq');
 # In[12]:
 
 
-plot_feature_characteristics(processed_data, 'Abteilung', 'norm_article_count');
+plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
 
 
 # This graph visualizes the inter-feat variance of the feature 'Abteilung'. We can see that all curves are quite different from each other. That indicates that the individual characteristics should be treated individually. (Form an own cluster) 
@@ -223,53 +223,105 @@ plot_feature_characteristics(processed_data, 'Abteilung', 'norm_article_count');
 # In[13]:
 
 
-plot_feature_characteristics(processed_data, 'color', 'norm_article_count', legend=False);
+plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
 
 
 # This graph visualizes the inter-feat variance of the feature 'color'. Each curve represents the averaged sells of articles with the same color. We can see that quite a few curves in the middle look very similar, while at the top and bottom are "far away" from the others. We can assume that the similar colors-curves in the middle should be treated the same (form a cluster together) and the curves which look different should be treated individually.
 
-# Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to look at while clustering.
+# Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to consider for clustering.
 
 # In[14]:
 
 
-clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'Abteilung', 'norm_article_count')
+clustering.inter_feat_variance(df, clustering.distance.absolute, 'Abteilung', 'norm_article_count')
 
 
 # In[ ]:
 
 
-clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'color', 'norm_article_count')
+clustering.inter_feat_variance(df, clustering.distance.absolute, 'color', 'norm_article_count')
 
 
 # # The Clustering Algorithm
 
 # ## General
 
-# The general idea of the clustering algorithm is to split 
+# The general idea of the clustering algorithm is to recursively split the article population into the characteristics of each feature. After every step, merge "similar" characteristics together to clusters. This is a way of hierarchical clustering: With each considered feature the number of clusters increases and the size of the clusters grows smaller.
 # 
 # 
-# In general, the overall goal of the algorithm is to assign every existing article of the dataset to a cluster, based on the historical data of its revenue, article_count or sales quota.
-# The cluster will be formed through the combination of characteristics of the articles. 
+# In the end we will have clusters that look like this:
 # 
-# __Example:__
+# * Level 1
+#     * __Cluster 1__:  
+#         * _Brand_: Adidas
 # 
-# __Cluster 1__:  
-# * _Abteilung_ = [Abteilung1, Abteilung3]
-# * _Color_ = [blau, himmelgrau]  
-# * _Season_ = [Sommer]
-# * ...
+#     * __Cluster 2__:  
+#         * _Brand_: Nike, Rebook 
+# * Level 2
+#     * __Cluster 1.1__:  
+#         * _Brand_: Adidas
+#         * _Color_: blue, red 
+#     * __Cluster 1.2__:  
+#         * _Brand_: Adidas
+#         * _Color_: green
+#     * __Cluster 2.1__:
+#         * _Brand_: Nike, Rebook
+#         * _Color_: red
+#     * __Cluster 2.2__:  
+#         * _Brand_: Nike, Rebook
+#         * _Color_: blue, green
+# * Level 3:
+#     * __Cluster 1.1.1__:  
+#         * _Brand_: Adidas
+#         * _Color_: blue, red
+#         * _Season_: autumn 
+#     * ...
+#     
+# Note: The features don't have to be split the same way across all cluster. See e.g. _Cluster 1.1_ vs. _Cluster 2.1_.  The feature color has been split differently. E.g. "Red and blue Adidas shoes are similar, but red Nikes and Rebooks and not similar to blue Nikes and Rebooks"
 # 
-# __Cluster 2__:  
-# 
-# * _Abteilung_ = [Abteilung2] 
-# * _Color_ = [khaki]  
-# * _Season_ = [Herbst, Winter]
-# * ...
-# 
-# Moreover, the variance within the cluster should be as low as possible, while the clusters themselves should be as big as possible to form a valid and representative population for further analysis. 
+# The challenge is a) to rank the features in the best order we want to consider them (e.g. first _Brand_ then _Color_) and b) find similar behaving characteristics (e.g. blue and red Adidas are similar).
 
 # ## Similarity Measure
+
+# Each clustering algorithm needs to define a similarity measure, also called "distance", to cluster similar items together. In our case "similar" articles are articles, that showed similar selling behavior while being on sale in the shops of the customer. The dataset yields measures for the number of articles sold over time (*article count*) the generated *revenue* and the sales quota in comparison to the stock (_avq_, _Abverkaufsquote_). So in the use-case of our customer similar articles are the ones that have a similar curve of *revenue*, *article_count* or *avq* over time.
+
+# #### When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
+
+# In[81]:
+
+
+plot_articles(df, [900001, 900080], 'article_count');
+a = df.loc[df.article_id == 900001].set_index('time_on_sale')['article_count']
+b = df.loc[df.article_id == 900080].set_index('time_on_sale')['article_count']
+print("distance: ", clustering.distance.absolute(a,b))
+
+
+# In[78]:
+
+
+plot_articles(df, [900001, 900050], 'article_count');
+a = df.loc[df.article_id == 900001].set_index('time_on_sale')['article_count']
+b = df.loc[df.article_id == 900050].set_index('time_on_sale')['article_count']
+print("distance: ", clustering.distance.absolute(a,b))
+
+
+# ### Normalization
+
+# One problem remains: If we look at the at the upper graph we can see that the two curves are far apart, but they have a somehow similar shape. Here it is crucial that we __normalize__ the curves. Normalized values allow the comparison of corresponding normalized values for different observations.
+# 
+# We chose to normalize the article curves with the **Standardized Moment**, the process is also called **standardization**. This kind of normalization is typically a division by the *standard deviation*. This has the advantage that such normalized moments differ only in other properties than variability, which facilitates e.g. comparison of shape.
+
+# If we look at the same articles, but plot and calculate the distance with the normalized values we can see that the 
+# two articles are now much closer.The distance measure is now implicitly taking the *shape* into account, when calculating the absolute distance between the normalized values.
+
+# In[83]:
+
+
+plot_articles(df, [900001, 900050], 'norm_article_count');
+a = df.loc[df.article_id == 900001].set_index('time_on_sale')['norm_article_count']
+b = df.loc[df.article_id == 900050].set_index('time_on_sale')['norm_article_count']
+print("distance: ", clustering.distance.absolute(a,b))
+
 
 # ## Outline of the Algorithm
 
