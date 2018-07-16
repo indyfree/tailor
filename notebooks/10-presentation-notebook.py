@@ -38,7 +38,7 @@
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[18]:
+# In[1]:
 
 
 # Needed imports for the rest of the notebook
@@ -55,7 +55,7 @@ from tailor.visualization import *
 
 # ## Example of the Raw Data
 
-# In[19]:
+# In[2]:
 
 
 raw_data = data.load_csv()
@@ -230,13 +230,13 @@ plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
 
 # Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to consider for clustering.
 
-# In[22]:
+# In[14]:
 
 
 inter_feat_variance(df, distance.absolute, 'Abteilung', 'norm_article_count')
 
 
-# In[23]:
+# In[15]:
 
 
 inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
@@ -287,7 +287,7 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 
 # #### When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
 
-# In[25]:
+# In[16]:
 
 
 plot_articles(df, [900001, 900080], 'article_count');
@@ -296,7 +296,7 @@ b = df.loc[df.article_id == 900080].set_index('time_on_sale')['article_count']
 print("distance: ", distance.absolute(a,b))
 
 
-# In[26]:
+# In[17]:
 
 
 plot_articles(df, [900001, 900050], 'article_count');
@@ -314,7 +314,7 @@ print("distance: ", distance.absolute(a,b))
 # If we look at the same articles, but plot and calculate the distance with the normalized values we can see that the 
 # two articles are now much closer.The distance measure is now implicitly taking the *shape* into account, when calculating the absolute distance between the normalized values.
 
-# In[28]:
+# In[18]:
 
 
 plot_articles(df, [900001, 900050], 'norm_article_count');
@@ -365,7 +365,7 @@ print("distance: ", distance.absolute(a,b))
 
 # #### Define The Use Case
 
-# In[30]:
+# In[19]:
 
 
 # Use standardized revenue as measure for clustering
@@ -379,7 +379,7 @@ distance_measure = distance.absolute
 
 # #### Rank the features
 
-# In[31]:
+# In[20]:
 
 
 feats = ranking.rank_features(df, distance_measure, features, target_value)
@@ -390,7 +390,7 @@ feats
 
 # #### Start building clusters from the first feature
 
-# In[36]:
+# In[21]:
 
 
 feat =  feats.iloc[1].feature
@@ -400,7 +400,7 @@ cluster_characteristics(c, feat)
 
 # After first clustering step, we can see that two big clusters and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
 
-# In[37]:
+# In[22]:
 
 
 c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
@@ -413,10 +413,27 @@ cluster_characteristics(c, feat)
 
 # Visualizing the results we can see that the mean curves of the 4 clusters are very different. Even though cluster 0 and 1 both incorporate a big share of the articles the mean curves didn't converge to each other.
 
-# In[38]:
+# In[23]:
+
+
+# Display plots inline
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+# Autoreload all package before excecuting a call
+get_ipython().run_line_magic('load_ext', 'autoreload')
+get_ipython().run_line_magic('autoreload', '2')
+
+
+# In[ ]:
 
 
 plot_feature_characteristics(c, 'cluster', target_value);
+
+
+# In[56]:
+
+
+plot_cluster_pca(c, [13, 37, 17], target_value);
 
 
 # # Outlook and Discussion
