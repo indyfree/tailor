@@ -601,13 +601,16 @@ def build_clusters(df, feature, distance_measure, distance_target):
 
 def merge_min_clusters(df, feature, min_cluster_size, distance_measure, distance_target):
 
-    min_size = df.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique())).min()
-    while min_size <= min_cluster_size:
-        c = pd.DataFrame()
-        c['num_articles'] = df.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique()))
+    c = pd.DataFrame()
+    c['num_articles'] = df.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique()))
+
+    while c['num_articles'].min() < min_cluster_size:
         c.sort_values(by=['num_articles'], ascending=True, inplace=True)
         min_cluster = c.index[0]
         df = merge_closest_cluster(df, feature, min_cluster, distance_measure, distance_target)
+
+        c = pd.DataFrame()
+        c['num_articles'] = df.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique()))
 
     return df
 
@@ -634,7 +637,6 @@ def merge_closest_cluster(df, feature, cluster, distance_measure, distance_targe
 
     if target_cluster is not cluster:
         # Merge the two clusters together
-        print("Merging cluster", cluster, "into cluster", target_cluster)
         df.loc[df.cluster == cluster, 'cluster'] = target_cluster
 
     return df
