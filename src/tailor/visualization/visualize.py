@@ -45,6 +45,7 @@ def plot_feature_characteristics(df, feature, measure, legend=True):
 
     return plt
 
+
 def plot_cluster_pca(df, clusters, distance_target, legend=True):
     pca = PCA(n_components=2)
     X = _pivot_dataset(df, distance_target)
@@ -52,13 +53,13 @@ def plot_cluster_pca(df, clusters, distance_target, legend=True):
     print('explained variance ratio (first two components): %s' % str(pca.explained_variance_ratio_))
 
     F = pd.DataFrame(X_r)
-    F['cluster'] = df.loc[:,['article_id', 'cluster']].groupby('article_id').first().reset_index().cluster
+    F['cluster'] = df.loc[:, ['article_id', 'cluster']].groupby('article_id').first().reset_index().cluster
 
     plt.figure()
     ax = plt.axes()
 
     for i in clusters:
-        plt.scatter(x = F.loc[F.cluster == i, 1], y = F.loc[F.cluster == i, 0], alpha=.4, lw=0.5,
+        plt.scatter(x=F.loc[F.cluster == i, 1], y=F.loc[F.cluster == i, 0], alpha=.4, lw=0.5,
                     label=F.loc[F.cluster == i, 'cluster'].unique())
 
     if legend is True:
@@ -71,12 +72,14 @@ def plot_cluster_pca(df, clusters, distance_target, legend=True):
 
     return plt
 
+
 def _setup_plot(xlabel, ylabel):
     plt.figure()
     ax = plt.axes()
     ax.set_xlabel(xlabel.replace("_", " "), fontsize=12)
     ax.set_ylabel(ylabel.replace("_", " "), fontsize=12)
     return plt
+
 
 def _pivot_dataset(df, distance_target):
     X = df.pivot(index='article_id', columns='time_on_sale', values=distance_target).reset_index()
