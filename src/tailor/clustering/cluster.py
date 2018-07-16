@@ -635,7 +635,7 @@ def closest_clusters(distances, threshold):
 
 
 def cluster_characteristics(df, feat):
-    ''' Returns a series with with a list of the feature characteristics assigned to a cluster '''
+    ''' Returns cluster information in a dataframe '''
     c = pd.DataFrame()
     c['num_articles'] = df.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique()))
     c['num_characteristics'] = df.groupby(['cluster']).apply(lambda x: len(x[feat].unique()))
