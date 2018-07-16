@@ -38,8 +38,15 @@
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[1]:
+# In[30]:
 
+
+# Display plots inline
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+# Autoreload all package before excecuting a call
+get_ipython().run_line_magic('load_ext', 'autoreload')
+get_ipython().run_line_magic('autoreload', '2')
 
 # Needed imports for the rest of the notebook
 import matplotlib.pyplot as plt
@@ -413,27 +420,16 @@ cluster_characteristics(c, feat)
 
 # Visualizing the results we can see that the mean curves of the 4 clusters are very different. Even though cluster 0 and 1 both incorporate a big share of the articles the mean curves didn't converge to each other.
 
-# In[23]:
-
-
-# Display plots inline
-get_ipython().run_line_magic('matplotlib', 'inline')
-
-# Autoreload all package before excecuting a call
-get_ipython().run_line_magic('load_ext', 'autoreload')
-get_ipython().run_line_magic('autoreload', '2')
-
-
-# In[ ]:
+# In[24]:
 
 
 plot_feature_characteristics(c, 'cluster', target_value);
 
 
-# In[56]:
+# In[29]:
 
 
-plot_cluster_pca(c, [13, 37, 17], target_value);
+plot_cluster_pca(c, [0, 37], target_value);
 
 
 # # Outlook and Discussion
