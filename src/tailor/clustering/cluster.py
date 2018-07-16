@@ -495,7 +495,7 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
     split_results['Clusters'][str(split_number)] = list()
     split_results['Clusters'][str(split_number)].append(first_cluster)
     # determining the feature the cluster should be split by
-    split_feature = ranking.rank_features(df, distance_measure, usable_features, 'article_count').index[0]
+    split_feature = ranking.rank_features(df, distance_measure, usable_features, 'article_count').loc[0].feature
     # the split_feature is saved
     split_results['Features'][str(split_number)] = list()
     split_results['Features'][str(split_number)].append(split_feature)
@@ -536,7 +536,7 @@ def multi_feature_split(df, distance_measure, min_cluster_size):
                         usable_features = new_cluster['DataFrame'].select_dtypes(include=['category']).drop(columns=['article_id']).columns.values
                         if len(usable_features) > 0:
                             # determine the feature the new cluster will be split by
-                            new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure, usable_features, 'article_count').index[0]
+                            new_split_feature = ranking.rank_features(new_cluster['DataFrame'], distance_measure, usable_features, 'article_count').loc[0].feature
                             # add the cluster to the split_results
                             split_results['Clusters'][str(new_layer)].append(new_cluster)
                             split_results['Features'][str(new_layer)].append(new_split_feature)
@@ -560,7 +560,7 @@ def single_feature(df, distance_measure, distance_target):
 
     feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
     ranked_features = ranking.rank_features(df, distance_measure, feats, distance_target)
-    first_feat = ranked_features.index[0]
+    first_feat = ranked_features.loc[0].feature
     df = build_clusters(df, first_feat, distance_measure, distance_target)
 
     return df

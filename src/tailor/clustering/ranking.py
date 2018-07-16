@@ -6,33 +6,41 @@ from tailor import data
 def rank_features(df, distance_measure, feats, distance_target):
     '''Returns a list of features, sorted by their variance score'''
 
-    weighted_feature_variances = pd.Series()
+    variances = pd.DataFrame(columns=['feature', 'variance', 'num_characteristics'])
 
     for f in feats:
-        feature_variance = inter_feat_variance(df, distance_measure, f, distance_target).mean()
-        num_characteristics = len(df[f].unique())
-        weighted_feature_variances[f] = feature_variance / num_characteristics
+        v = inter_feat_variance(df, distance_measure, f, distance_target)
+        variances = variances.append({'feature': f, 'variance': v, 'num_characteristics': len(df[f].unique())}, ignore_index=True)
 
-    ranked_features = weighted_feature_variances.sort_values(ascending=False)
+    ranked_features = variances.sort_values(by=['variance'], ascending=False)
 
     return ranked_features
 
 
 def inter_feat_variance(df, distance_measure, feat, distance_target):
-    '''Determines the variance of the given feature in respect to the grouped characteristics'''
+    '''
+    Determines the variance of the given feature in respect to the grouped characteristics
 
-    inter_feat_variance = pd.Series()
+    Formular variance with discret variables: https://en.wikipedia.org/wiki/Variance#Discrete_random_variable
+
+    SUM_i( (x_i - u)^2 * p_i )
+
+    '''
+    inter_feat_variance = 0.0
+    num_articles = len(df['article_id'].unique())
+
     df_f = data.group_by.feature(df, feat)
-
-    # NOTE: grouped on mean of characteristics not all articles
-    # Is is different because of missing values at some ToS values
     mean_curve = df_f.groupby('time_on_sale').mean()[distance_target]
 
     characteristics = df_f[feat].unique()
     for c in characteristics:
+        num_c_articles = len(df[df[feat] == c].article_id.unique())
+
         characteristic_curve = df_f[df_f[feat] == c].set_index('time_on_sale')[distance_target]
         distance = distance_measure(mean_curve, characteristic_curve)
-        inter_feat_variance[c] = distance**2
+
+        probability = num_c_articles / num_articles
+        inter_feat_variance += (distance**2) * probability
 
     return inter_feat_variance
 
