@@ -1,4 +1,6 @@
+import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 
 import tailor
 from tailor.data import group_by
