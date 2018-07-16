@@ -50,8 +50,6 @@ def plot_cluster_pca(df, clusters, distance_target, legend=True):
     pca = PCA(n_components=2)
     X = _pivot_dataset(df, distance_target)
     X_r = pca.fit(X).transform(X)
-    print('explained variance ratio (first two components): %s' % str(pca.explained_variance_ratio_))
-
     F = pd.DataFrame(X_r)
     F['cluster'] = df.loc[:, ['article_id', 'cluster']].groupby('article_id').first().reset_index().cluster
 
