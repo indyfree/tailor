@@ -38,7 +38,7 @@
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[24]:
+# In[18]:
 
 
 # Needed imports for the rest of the notebook
@@ -55,7 +55,7 @@ from tailor.visualization import *
 
 # ## Example of the Raw Data
 
-# In[2]:
+# In[19]:
 
 
 raw_data = data.load_csv()
@@ -230,16 +230,16 @@ plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
 
 # Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to consider for clustering.
 
-# In[14]:
+# In[22]:
 
 
-clustering.inter_feat_variance(df, clustering.distance.absolute, 'Abteilung', 'norm_article_count')
+inter_feat_variance(df, distance.absolute, 'Abteilung', 'norm_article_count')
 
 
-# In[15]:
+# In[23]:
 
 
-clustering.inter_feat_variance(df, clustering.distance.absolute, 'color', 'norm_article_count')
+inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 
 
 # # The Clustering Algorithm
@@ -287,22 +287,22 @@ clustering.inter_feat_variance(df, clustering.distance.absolute, 'color', 'norm_
 
 # #### When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
 
-# In[16]:
+# In[25]:
 
 
 plot_articles(df, [900001, 900080], 'article_count');
 a = df.loc[df.article_id == 900001].set_index('time_on_sale')['article_count']
 b = df.loc[df.article_id == 900080].set_index('time_on_sale')['article_count']
-print("distance: ", clustering.distance.absolute(a,b))
+print("distance: ", distance.absolute(a,b))
 
 
-# In[17]:
+# In[26]:
 
 
 plot_articles(df, [900001, 900050], 'article_count');
 a = df.loc[df.article_id == 900001].set_index('time_on_sale')['article_count']
 b = df.loc[df.article_id == 900050].set_index('time_on_sale')['article_count']
-print("distance: ", clustering.distance.absolute(a,b))
+print("distance: ", distance.absolute(a,b))
 
 
 # ### Normalization
@@ -314,13 +314,13 @@ print("distance: ", clustering.distance.absolute(a,b))
 # If we look at the same articles, but plot and calculate the distance with the normalized values we can see that the 
 # two articles are now much closer.The distance measure is now implicitly taking the *shape* into account, when calculating the absolute distance between the normalized values.
 
-# In[18]:
+# In[28]:
 
 
 plot_articles(df, [900001, 900050], 'norm_article_count');
 a = df.loc[df.article_id == 900001].set_index('time_on_sale')['norm_article_count']
 b = df.loc[df.article_id == 900050].set_index('time_on_sale')['norm_article_count']
-print("distance: ", clustering.distance.absolute(a,b))
+print("distance: ", distance.absolute(a,b))
 
 
 # ## Outline of the Algorithm
@@ -365,21 +365,58 @@ print("distance: ", clustering.distance.absolute(a,b))
 
 # #### Define The Use Case
 
-# In[19]:
+# In[30]:
 
 
 # Use standardized revenue as measure for clustering
 target_value = 'norm_revenue'
+min_cluster_size = 50
 # We want to observe all features available
 features = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
 # Use absolute distance between the curves as similarity measure
-distance_measure = clustering.distance.absolute
+distance_measure = distance.absolute
 
 
-# In[25]:
+# #### Rank the features
+
+# In[31]:
 
 
-ranking.rank_features(df, distance_measure, features, target_value)
+feats = ranking.rank_features(df, distance_measure, features, target_value)
+feats
+
+
+# We can see here that 'WUG' is the most informative feature for us. The **inner-feature variance** is the highest, which means that the single 'WUG's are far apart from each other, thus making good cluster candidates
+
+# #### Start building clusters from the first feature
+
+# In[36]:
+
+
+feat =  feats.iloc[1].feature
+c = build_clusters(df, feat, distance_measure, target_value)
+cluster_characteristics(c, feat)
+
+
+# After first clustering step, we can see that two big clusters and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
+
+# In[37]:
+
+
+c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
+cluster_characteristics(c, feat)
+
+
+# We can see now that 4 clusters remain: Clusters with a size < `min_cluster_size` have been merged with the respective closest cluster. E.g. we can see that cluster **13** now form a cluster together with cluster **17**.
+
+# #### Plotting the clusters
+
+# Visualizing the results we can see that the mean curves of the 4 clusters are very different. Even though cluster 0 and 1 both incorporate a big share of the articles the mean curves didn't converge to each other.
+
+# In[38]:
+
+
+plot_feature_characteristics(c, 'cluster', target_value);
 
 
 # # Outlook and Discussion
