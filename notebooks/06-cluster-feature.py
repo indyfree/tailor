@@ -41,18 +41,19 @@ data = tailor.load_data()
 
 
 feats = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
-ranking.rank_features(data, distance.absolute, feats, 'article_count')
+ranking.rank_features(data, distance.absolute, feats, 'norm_revenue')
 
 
 # A high score indicates feature characteristics are far apart, and thus better for clustering.
 
 # ### Select a feature to cluster by
 
-# In[5]:
+# In[9]:
 
 
-feat = 'color'
+feat = 'WUG'
 target_value = 'norm_revenue'
+min_cluster_size = 50
 
 
 # ### Run the Clustering Algorithm
@@ -64,16 +65,23 @@ df = build_clusters(data, feat, distance.absolute, target_value)
 cluster_characteristics(df, feat)
 
 
+# In[10]:
+
+
+df = merge_min_clusters(df, feat, min_cluster_size, distance.absolute, target_value)
+cluster_characteristics(df, feat)
+
+
 # ### Plot the article-count curves before and after the clustering
 
-# In[7]:
+# In[11]:
 
 
 print("Number Characteristics: ", len(df[feat].unique()))
 plot_feature_characteristics(df, feat, target_value, legend=False);
 
 
-# In[8]:
+# In[12]:
 
 
 print("Number of Clusters: ", len(df['cluster'].unique()))
@@ -82,16 +90,18 @@ plot_feature_characteristics(df, 'cluster', target_value);
 
 # ### Plot characteristics that are included in a specific Cluster
 
-# In[9]:
+# In[13]:
 
 
-plot_cluster_characteristics(df, 1, feat, target_value, legend=True);
+plot_cluster_characteristics(df, 0, feat, target_value, legend=False);
+plot_cluster_characteristics(df, 1, feat, target_value, legend=False);
 
 
 # ### Plot all articles that are included in a Cluster
 
-# In[10]:
+# In[14]:
 
 
+plot_cluster_articles(df, 0, target_value, legend=False);
 plot_cluster_articles(df, 1, target_value, legend=False);
 
