@@ -3,6 +3,8 @@
     "code_prettify/autopep8": true,
     "spellchecker/main": true,
     "table_beautifier/main": true,
-    "collapsible_headings/main": true
+    "collapsible_headings/main": true,
+    "hide_input_all/main": false,
+    "hide_input/main": true
   }
 }
