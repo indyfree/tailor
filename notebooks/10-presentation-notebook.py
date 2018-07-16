@@ -325,14 +325,32 @@ print("distance: ", clustering.distance.absolute(a,b))
 
 # ## Outline of the Algorithm
 
-# (rework...)
-# Therefore, we want to split the feature with the highest variance between the individual characteristics and group the individual characteristics into multiple (sub-)populations for a first segmentation. 
+# Remember we are searching article groups, characterized by their attributes (color, brand, etc..) that are similar to each other. We previously defined similarity, showed the structure of the resulting clusters, and discussed the categorical as well as the time-series part of the clustering. Now we will illustrate the top-level steps the clustering algorithm actually does.
 # 
-# The idea here is to divide the whole population into multiple pieces with a lower variance. As from now, we will call the variation between the individual characteristics of a feature _inter-feat-variance_. **-->Unclear**
 # 
+# ```python
+# # 1. Get a list of ranked features (color, brand, etc..) according to their inter_feature score
+# features =  rank_features()
+# 
+# # Repeat until all features considered
+# for f in features:
+#     # 2. Split feature characteristics into separate clusters
+#     split_features()
+#     # 3. Merge similar characteristics together into a cluster. Merge when the distance
+#     #    between two cluster is less then a 'similarity_threshold' 
+#     merge_close_clusters()
+#     # 4. Merge clusters that are below the min_cluster_size into the closest cluster
+#     merge_min_clusters()
+#     # 5. When no new clusters resulted from the considered feature finish the clustering
+#     #    (e.g. all new clusters were too small)
+#     if no_new_clusters:
+#         break
+# ```
+# 
+# In words, we are considering every feature, ranked by its variance score. The features characteristics form a cluster, which then get merged with similar characteristics (Remember we want the clusters to be as similar as possible). The merging is going to happen more frequently towards the end of the `ranked_feature list`, since the feature characteristics are closer to another (low variance). Furthermore we are looking at the size of the clusters, and merge clusters which are too small (Remember we want the clusters to be as big as possible). The `min_cluster_size` and the `similarity_threshold` are parameters and can be set according to the customers preferences. Of course there is always a trade-of between similarity and size of a cluster.
 
 # ## Hierarchical Component
 
-# # Results
+# # Results and Evaluation
 
 # # Outlook and Discussion
