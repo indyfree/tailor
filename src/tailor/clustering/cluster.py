@@ -596,28 +596,33 @@ def build_clusters(df, feature, distance_measure, distance_target):
 
     return df
 
-def merge_closest_cluster(df_cluster, cluster, distance_measure, distance_target):
+def merge_closest_cluster(df, feature, cluster, distance_measure, distance_target):
+    df_cluster = data.group_by.feature(df, feature)
+
     clusters = df_cluster.cluster.unique()
     distance = 100000
     target_cluster = cluster
+
 
     cluster_curve = df_cluster.loc[df_cluster.cluster == cluster].set_index('time_on_sale')
     # Loop over each cluster c and find out distance to the observed cluster
     for i, c in enumerate(clusters):
         # No need to compare to itself
-        if c == cluster_curve.cluster:
+        if cluster == c:
             continue
 
         c_curve = df_cluster.loc[df_cluster.cluster == c].set_index('time_on_sale')
         d = distance_measure(cluster_curve[distance_target], c_curve[distance_target])
         if d < distance:
             distance = d
-            target_cluster = c
+            target_cluster = int(c)
 
-    # Merge the two clusters together
-    df_cluster.loc[df_cluster.cluster == cluster, 'cluster'] = target_cluster
+    if target_cluster is not cluster:
+        # Merge the two clusters together
+        print("Merging cluster", cluster, "into cluster", target_cluster)
+        df.loc[df.cluster == cluster, 'cluster'] = target_cluster
 
-    return df_cluster
+    return df
 
 
 def cluster_distances(df_cluster, distance_measure, distance_target):
