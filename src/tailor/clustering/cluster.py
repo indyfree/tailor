@@ -600,7 +600,7 @@ def merge_closest_cluster(df, feature, cluster, distance_measure, distance_targe
     df_cluster = data.group_by.feature(df, feature)
 
     clusters = df_cluster.cluster.unique()
-    distance = 100000
+    distance = sys.maxint
     target_cluster = cluster
 
 
