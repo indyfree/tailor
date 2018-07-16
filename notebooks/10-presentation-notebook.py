@@ -5,32 +5,40 @@
 
 # ## The Customer
 
-# The customer is a fashion retailer with numerous stores across Germany. It collected data of articles that have been on sale over a period of time in the stores. (More info..)
+# The customer is a fashion retailer with numerous stores across Germany. It collected data of articles that have been on sale over a period of time and now wants to do some analysis on the basis of that data.
 
 # ## The Task
 
-# The fashion retailer want to use his data for:
+# The fashion retailer wants to use the data for:
 # 
-#   * sales volume predictions for articles 
-#   * optimal price determination of new articles on market launch
-#   * inventory calculation 
-#   * general predictions and strategic decision making
+#   * Sales volume predictions for articles 
+#   * Optimal price determination of new articles on market launch
+#   * Inventory calculation 
+#   * General predictions and strategic decision making
 #   
-# Such predictions needs a basic population, which serve as a basis for statistical calculations.
+# Such predictions need a population, which serves as a basis for statistical calculations.
 # Predicting the sales of a specific article on basis of the whole assortment would be too imprecise.
 # The mean variation is too high, hence the quality of the prediction would be very low.
-# The multiplicity of articles allows to refer on a more representative population. For an optimal prediction quality, the population should be as big as possible and his mean variation as small as possible. It is possible to create such a population, by grouping articles with similar characteristic attributes to one unit. This can be realized through a clustering algorithm.
+# The amount and variety of articles allows to refer to a more representative population. For an optimal prediction quality, the population should be as big as possible and its mean variation as small as possible.
+# 
+# It is possible to create such a population, by grouping articles with similar characteristic attributes together. This can be realized through a clustering algorithm.
 
 # ## The Goal
 
-# The overall goal of the project is to develop a clustering algorithm. This algorithm should be reasonable and statistically established. Further, the cluster building should be done on basis of revenue, article counts or sales quotas of the articles and every article has to be assigned to a cluster.
+# The overall goal of the project is to develop a clustering algorithm, that provide meaningful article clusters. The algorithm should provide reasonable results and build on statistically verified methods.
+# 
+# The special challenge of the clustering algorithm is:
+# 1. Clusters should be characterized by article attributes (e.g. brand, color, ..)
+# 2. Clusters should be formed according to similar behavior in number of articles sold, revenue or sales-quotas over time
+# 
+# In clustering the distance (similarity) and the characterizing attributes build on the same features. This is not the case here. Thus, we can not use existing packages for categorical-, nor time-series clustering, because each would contradict one of the constraints above. A further requirement is, that each article has to be assigned to a cluster.
 
 # # Data Introduction
 
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[1]:
+# In[30]:
 
 
 # Needed imports for the rest of the notebook
@@ -38,6 +46,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# Our developed package 'tailor'
 import tailor
 from tailor import data
 from tailor import clustering
@@ -185,7 +194,7 @@ plot_articles(processed_data, [900001, 900002, 900030], 'avq');
 
 # ## Inter-Feature Variance
 
-# Remember that we want to identify a (sub-)population of articles that we can use for prediction or further analysis. 
+# Remember that we want to identify a (sub-)population of similar articles that we can use for prediction or further analysis. 
 # 
 # For an optimal prediction quality this group has to be:
 # 
@@ -217,20 +226,20 @@ plot_feature_characteristics(processed_data, 'Abteilung', 'norm_article_count');
 plot_feature_characteristics(processed_data, 'color', 'norm_article_count', legend=False);
 
 
-# This graph visualizes the inter-feat variance of the feature 'color'. Each curve represents the averaged sells of articles with the same color. We can see that quite a few curves in the middle look very similar, while at the top and bottom are 'far away' from the others. We can assume that the similar colors-curves in the middle should be treated the same (form a cluster together) and the curves which look different should be treated individually.
+# This graph visualizes the inter-feat variance of the feature 'color'. Each curve represents the averaged sells of articles with the same color. We can see that quite a few curves in the middle look very similar, while at the top and bottom are "far away" from the others. We can assume that the similar colors-curves in the middle should be treated the same (form a cluster together) and the curves which look different should be treated individually.
 
-# Indeed the values clearly show that ....
+# Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to look at while clustering.
 
-# In[16]:
-
-
-clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'Abteilung', 'article_count')
+# In[28]:
 
 
-# In[20]:
+clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'Abteilung', 'norm_article_count')
 
 
-clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'color', 'article_count')
+# In[29]:
+
+
+clustering.inter_feat_variance(processed_data, clustering.distance.absolute, 'color', 'norm_article_count')
 
 
 # ## The Cluster-Algorithm
