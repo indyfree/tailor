@@ -38,15 +38,20 @@
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
 
-# In[30]:
+# In[1]:
 
 
+# TODO: Remove before export
 # Display plots inline
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 # Autoreload all package before excecuting a call
 get_ipython().run_line_magic('load_ext', 'autoreload')
 get_ipython().run_line_magic('autoreload', '2')
+
+
+# In[2]:
+
 
 # Needed imports for the rest of the notebook
 import matplotlib.pyplot as plt
@@ -62,7 +67,7 @@ from tailor.visualization import *
 
 # ## Example of the Raw Data
 
-# In[2]:
+# In[3]:
 
 
 raw_data = data.load_csv()
@@ -79,7 +84,7 @@ raw_data.head(10)
 #   * *discount* = *original_price* - *markdown* - *sells_price*
 #   * *avq* is the current stock divided by *stock_total*
 
-# In[3]:
+# In[4]:
 
 
 pd.options.display.float_format = "{:.2f}".format
@@ -90,7 +95,7 @@ raw_data.describe(include=np.number)
 
 # #### Check if the dataset contains null values
 
-# In[4]:
+# In[5]:
 
 
 raw_data.isna().values.any()
@@ -100,7 +105,7 @@ raw_data.isna().values.any()
 
 # #### Detect how many articles are contained in the dataset
 
-# In[5]:
+# In[6]:
 
 
 len(raw_data['article_id'].unique())
@@ -108,7 +113,7 @@ len(raw_data['article_id'].unique())
 
 # #### Get the maximum timespan the articles have been on sale
 
-# In[6]:
+# In[7]:
 
 
 raw_data['time_on_sale'].max()
@@ -119,7 +124,7 @@ raw_data['time_on_sale'].max()
 
 # #### Check how many articles don't have values defined for the full range of the 182 days
 
-# In[7]:
+# In[8]:
 
 
 tos = raw_data.groupby('article_id').apply(lambda x: x.time_on_sale.nunique())
@@ -130,7 +135,7 @@ len(tos[tos == 182])
 
 # ## Visualization of the Raw Data
 
-# In[8]:
+# In[9]:
 
 
 plot_articles(raw_data, [900001, 900002, 900030], 'article_count');
@@ -175,14 +180,14 @@ plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 
 # ## Example of the Processed Data
 
-# In[9]:
+# In[10]:
 
 
 df = data.load_data()
 df.head(10)
 
 
-# In[10]:
+# In[11]:
 
 
 df.dtypes
@@ -190,7 +195,7 @@ df.dtypes
 
 # ## Visualization of the Processed Data
 
-# In[11]:
+# In[12]:
 
 
 plot_articles(df, [900001, 900002, 900030], 'article_count');
@@ -219,7 +224,7 @@ plot_articles(df, [900001, 900002, 900030], 'avq');
 # 
 # Next, we will look at the graphs some features to get an idea, how the different characteristics are distributed.
 
-# In[12]:
+# In[13]:
 
 
 plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
@@ -227,7 +232,7 @@ plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
 
 # This graph visualizes the inter-feat variance of the feature 'Abteilung'. We can see that all curves are quite different from each other. That indicates that the individual characteristics should be treated individually. (Form an own cluster) 
 
-# In[13]:
+# In[14]:
 
 
 plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
@@ -237,13 +242,13 @@ plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
 
 # Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to consider for clustering.
 
-# In[14]:
+# In[15]:
 
 
 inter_feat_variance(df, distance.absolute, 'Abteilung', 'norm_article_count')
 
 
-# In[15]:
+# In[16]:
 
 
 inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
@@ -294,7 +299,7 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 
 # #### When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
 
-# In[16]:
+# In[17]:
 
 
 plot_articles(df, [900001, 900080], 'article_count');
@@ -303,7 +308,7 @@ b = df.loc[df.article_id == 900080].set_index('time_on_sale')['article_count']
 print("distance: ", distance.absolute(a,b))
 
 
-# In[17]:
+# In[18]:
 
 
 plot_articles(df, [900001, 900050], 'article_count');
@@ -321,7 +326,7 @@ print("distance: ", distance.absolute(a,b))
 # If we look at the same articles, but plot and calculate the distance with the normalized values we can see that the 
 # two articles are now much closer.The distance measure is now implicitly taking the *shape* into account, when calculating the absolute distance between the normalized values.
 
-# In[18]:
+# In[19]:
 
 
 plot_articles(df, [900001, 900050], 'norm_article_count');
@@ -372,7 +377,7 @@ print("distance: ", distance.absolute(a,b))
 
 # #### Define The Use Case
 
-# In[19]:
+# In[20]:
 
 
 # Use standardized revenue as measure for clustering
@@ -386,7 +391,7 @@ distance_measure = distance.absolute
 
 # #### Rank the features
 
-# In[20]:
+# In[21]:
 
 
 feats = ranking.rank_features(df, distance_measure, features, target_value)
@@ -395,9 +400,11 @@ feats
 
 # We can see here that 'WUG' is the most informative feature for us. The **inner-feature variance** is the highest, which means that the single 'WUG's are far apart from each other, thus making good cluster candidates
 
-# #### Start building clusters from the first feature
+# ## Building First Clusters (Level 1)
 
-# In[21]:
+# We start by building cluster using the most informative feature.
+
+# In[22]:
 
 
 feat =  feats.iloc[1].feature
@@ -407,7 +414,7 @@ cluster_characteristics(c, feat)
 
 # After first clustering step, we can see that two big clusters and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
 
-# In[22]:
+# In[23]:
 
 
 c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
@@ -426,10 +433,59 @@ cluster_characteristics(c, feat)
 plot_feature_characteristics(c, 'cluster', target_value);
 
 
-# In[29]:
+# #### Principal Component Analysis
+
+# Principal Component Analysis (PCA) is a common technique for feature reduction and visualization multi-dimensional data in 2D. PCA transform the data onto new "orthogonal" axis, along the axis where there is the largest variance in the original data (the revenue curve with the 26 dimensions, one for each day). Time-series data is not the main use-case for PCA, but nevertheless we can see more than 50% of the variance explained by the first two components. 
+# 
+# Using PCA for visualization, and plotting the individual articles in each cluster (colored) we can observe a good clustering result. 
+
+# In[25]:
 
 
 plot_cluster_pca(c, [0, 37], target_value);
+
+
+# ## Further Clustering (Level 2)
+
+# In[26]:
+
+
+# Look at Cluster 0
+c = c.loc[c.cluster == 0]
+
+
+# In[27]:
+
+
+feats = ranking.rank_features(c, distance_measure, features, target_value)
+print(feats)
+
+
+# In[28]:
+
+
+feat =  feats.iloc[0].feature
+c = build_clusters(df, feat, distance_measure, target_value)
+print(cluster_characteristics(c, feat))
+
+
+# In[29]:
+
+
+c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
+cluster_characteristics(c, feat)
+
+
+# In[30]:
+
+
+plot_feature_characteristics(c, 'cluster', target_value);
+
+
+# In[34]:
+
+
+plot_cluster_pca(c, [2, 4], target_value);
 
 
 # # Outlook and Discussion
