@@ -1,6 +1,8 @@
 import itertools
 import numpy as np
 import pandas as pd
+import sys
+
 from tailor import data
 from tailor.clustering import ranking
 
@@ -596,13 +598,26 @@ def build_clusters(df, feature, distance_measure, distance_target):
 
     return df
 
+
+def merge_min_clusters(df, feature, min_cluster_size, distance_measure, distance_target):
+
+    min_size = df.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique())).min()
+    while min_size <= min_cluster_size:
+        c = pd.DataFrame()
+        c['num_articles'] = df.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique()))
+        c.sort_values(by=['num_articles'], ascending=True, inplace=True)
+        min_cluster = c.index[0]
+        df = merge_closest_cluster(df, feature, min_cluster, distance_measure, distance_target)
+
+    return df
+
+
 def merge_closest_cluster(df, feature, cluster, distance_measure, distance_target):
     df_cluster = data.group_by.feature(df, feature)
 
     clusters = df_cluster.cluster.unique()
-    distance = sys.maxint
+    distance = sys.maxsize
     target_cluster = cluster
-
 
     cluster_curve = df_cluster.loc[df_cluster.cluster == cluster].set_index('time_on_sale')
     # Loop over each cluster c and find out distance to the observed cluster
