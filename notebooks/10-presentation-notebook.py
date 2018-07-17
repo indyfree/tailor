@@ -417,7 +417,7 @@ feats
 
 # We start by building cluster using the most informative feature.
 
-# In[61]:
+# In[22]:
 
 
 # Select important feature
@@ -430,7 +430,7 @@ cluster_characteristics(c1, feat)
 
 # After first clustering step, we can see that some big clusters (0, 1, 8, 12) and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
 
-# In[62]:
+# In[23]:
 
 
 c1 = merge_min_clusters(c1, feat, min_cluster_size, distance.absolute, target_value)
@@ -455,7 +455,7 @@ plot_feature_characteristics(c1, 'cluster', target_value);
 # 
 # Using PCA for visualization, and plotting the individual articles for some clusters (colored) we can observe a good clustering results.
 
-# In[98]:
+# In[25]:
 
 
 plot_cluster_pca(c1, [16, 17, 37], target_value);
@@ -468,7 +468,7 @@ plot_cluster_pca(c1, [16, 17, 37], target_value);
 # 
 # We further want to inspect the cluster size and variance of *Cluster 0*:
 
-# In[90]:
+# In[26]:
 
 
 print("Number of articles: %s" % cluster_characteristics(c1, feat).loc[0].num_articles)
@@ -479,7 +479,7 @@ print("Variance: %s" % cluster_variance(c1, 0, distance_measure, target_value))
 
 # ### Redefine the Article Population
 
-# In[71]:
+# In[27]:
 
 
 # We looking to Cluster 0
@@ -488,7 +488,7 @@ c2 = c1.loc[c1.cluster == 0]
 
 # ### Cluster with the Next Feature
 
-# In[72]:
+# In[28]:
 
 
 # For simplicity we define a function for a clustering step, that executes all of the above
@@ -501,21 +501,21 @@ def cluster_step(c):
     return (c, feat)
 
 
-# In[73]:
+# In[29]:
 
 
 c2, feat = cluster_step(c2)
 cluster_characteristics(c2, feat)
 
 
-# In[99]:
+# In[30]:
 
 
 print("Number of Articles: %s" % cluster_characteristics(c2, feat).loc[34].num_articles)
 print("Variance: %s" % cluster_variance(c2, 34, distance_measure, target_value))
 
 
-# In[108]:
+# In[31]:
 
 
 plot_feature_characteristics(c2, 'cluster', target_value);
