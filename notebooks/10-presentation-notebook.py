@@ -373,9 +373,22 @@ print("distance: ", distance.absolute(a,b))
 
 # To discuss the results we will pick out an potential use-case of a customer and go through the whole clustering process. 
 # 
-# Assuming we are a fashion retailer and want to introduce a new special edition shoe into our shops. Beforehand, we want to know how much **revenue** this article is likely going to generate and how the **revenue curve** will likley look like over the course of the 26 weeks this special shoe is available in our shops. In order to let our data science team do all the prediction work, we have to give them a reference population of shoes that are similar to our new special edition shoe. Luckily we have paid the smart guys from tailorit to find this reference population, by using a **cluster analysis**. The smart guys from tailorit have developed a clustering package called **tailor** which they going to use for the analysis.
+# Assuming we are a fashion retailer and want to introduce a new special edition shoe **Breeezy 5000** into our shops. Beforehand, we want to know how much **revenue** this article is likely going to generate and how the **revenue curve** will likley look like over the course of the 26 weeks this special shoe is available in our shops. In order to let our data science team do all the prediction work, we have to give them a reference population of shoes that are similar to our special edition shoe. Luckily we have paid the smart guys from tailorit to find this reference population, by using a **cluster analysis**. The smart guys from tailorit have developed a clustering package called **tailor** which they going to use for the analysis.
 
-# #### Define The Use Case
+# ## Define The Use Case
+
+# Our new shoes has a few attributes, like brand and color, is of a certain Type (WUG, WHG) and will be placed in a certain compartment (Abteilung) of our shops. Moreover we want to introduce it in August.
+# 
+# Consequently we assume the following attributes for our the **Breeezy 5000**:
+# - brand: **Forseti**
+# - color: **mittelbraun**
+# - Abteilung: **Abteilung005**
+# - WHG: **WHG014**
+# - WUG: **WUG073**
+# - month: **August**
+# - season: **Sommer**
+
+# ### Set Clustering Parameters
 
 # In[20]:
 
@@ -389,7 +402,7 @@ features = ['color', 'brand', 'Abteilung', 'WHG', 'WUG', 'season', 'month']
 distance_measure = distance.absolute
 
 
-# #### Rank the features
+# ### Rank the Features
 
 # In[21]:
 
@@ -407,14 +420,15 @@ feats
 # In[22]:
 
 
-c1 = df.copy()
-
+# Select important feature
 feat =  feats.iloc[1].feature
-c1 = build_clusters(c1, feat, distance_measure, target_value)
+
+# Build Cluster at Level 1
+c1 = build_clusters(df, feat, distance_measure, target_value)
 cluster_characteristics(c1, feat)
 
 
-# After first clustering step, we can see that two big clusters and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
+# After first clustering step, we can see that some big clusters (0, 1, 8, 12) and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
 
 # In[23]:
 
@@ -423,13 +437,13 @@ c1 = merge_min_clusters(c1, feat, min_cluster_size, distance.absolute, target_va
 cluster_characteristics(c1, feat)
 
 
-# We can see now that 4 clusters remain: Clusters with a size < `min_cluster_size` have been merged with the respective closest cluster. E.g. we can see that cluster **13** now form a cluster together with cluster **17**.
+# We can see now that only clusters above the `min_cluster_size` remain. All other clusters have been merged with neighbouring clusters.
 
-# #### Plotting the clusters
+# ### Plotting the Clusters
 
-# Visualizing the results we can see that the mean curves of the 4 clusters are very different. Even though cluster 0 and 1 both incorporate a big share of the articles the mean curves didn't converge to each other.
+# Visualizing the results we can see that the mean curves of the clusters are quite different. They follow a similar trend but have different course over time.
 
-# In[24]:
+# In[36]:
 
 
 plot_feature_characteristics(c1, 'cluster', target_value);
@@ -439,56 +453,59 @@ plot_feature_characteristics(c1, 'cluster', target_value);
 
 # Principal Component Analysis (PCA) is a common technique for feature reduction and visualization multi-dimensional data in 2D. PCA transform the data onto new "orthogonal" axis, along the axis where there is the largest variance in the original data (the revenue curve with the 26 dimensions, one for each day). Time-series data is not the main use-case for PCA, but nevertheless we can see more than 50% of the variance explained by the first two components. 
 # 
-# Using PCA for visualization, and plotting the individual articles in each cluster (colored) we can observe a good clustering result. 
+# Using PCA for visualization, and plotting the individual articles for some clusters (colored) we can observe a good clustering results.
 
-# In[25]:
+# In[42]:
 
 
-plot_cluster_pca(c1, [0, 37], target_value);
+plot_cluster_pca(c1, [16, 17, 37], target_value);
 
 
 # ## Further Clustering (Level 2)
 
-# In[26]:
+# The first clustering step produced clusters that are characterized by *WHG*. We could find a reference population for our new shoe, by finding the cluster, which groups articles that have the same *WHG* as the **Breeezy 5000**. That is *Cluster 0*, which includes WHG014.
+
+# In[43]:
 
 
-def cluster_eval(c):
+# For simplicity we define a function for a clustering step, that executes all of the above
+def cluster_step(c):
     feats = ranking.rank_features(c, distance_measure, features, target_value)
-    print(feats)
     feat =  feats.iloc[0].feature
-    
+    print("Splitting on feature '%s'." % feat)
     c = build_clusters(c, feat, distance_measure, target_value)
-    print("build successfully")
     c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
-    print(cluster_characteristics(c, feat))
-    plot_feature_characteristics(c, 'cluster', target_value)
-    plot_cluster_pca(c, [2, 4], target_value)
-    return c
+    return (c, feat)
 
+
+# ### Finding Our Cluster
+
+# The first clustering step produced clusters that are characterized by *WUG*.
+# Looking at our shoe **Breeezy 5000**
+# We can use the To further refine our reference population
 
 # In[27]:
 
 
-# Look at Cluster 0 at Level 2
+# At Level 2 we choose cluster 0
 c2 = c1.loc[c1.cluster == 0]
-c2.article_id.unique()
-c2 = cluster_eval(c2)
+c2, feat = cluster_step(c2)
+cluster_characteristics(c2, feat)
 
 
 # In[28]:
 
 
-# cluster_articles = c1.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique()))
-# cluster_articles.sort_values().index[0]
-# cluster_articles.min()
+plot_feature_characteristics(c2, 'cluster', target_value);
 
 
-# In[29]:
+# In[44]:
 
 
-# Look at Cluster 4
-# c = c.loc[c.cluster == 4]
-# c = cluster_eval(c)
+# At Level 2 we choose cluster 9
+c3 = c2.loc[c2.cluster == 0]
+c3, feat = cluster_step(c3)
+cluster_characteristics(c3, feat)
 
 
 # # Outlook and Discussion
