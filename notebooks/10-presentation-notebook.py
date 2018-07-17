@@ -407,9 +407,11 @@ feats
 # In[22]:
 
 
+c1 = df.copy()
+
 feat =  feats.iloc[1].feature
-c = build_clusters(df, feat, distance_measure, target_value)
-cluster_characteristics(c, feat)
+c1 = build_clusters(c1, feat, distance_measure, target_value)
+cluster_characteristics(c1, feat)
 
 
 # After first clustering step, we can see that two big clusters and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
@@ -417,8 +419,8 @@ cluster_characteristics(c, feat)
 # In[23]:
 
 
-c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
-cluster_characteristics(c, feat)
+c1 = merge_min_clusters(c1, feat, min_cluster_size, distance.absolute, target_value)
+cluster_characteristics(c1, feat)
 
 
 # We can see now that 4 clusters remain: Clusters with a size < `min_cluster_size` have been merged with the respective closest cluster. E.g. we can see that cluster **13** now form a cluster together with cluster **17**.
@@ -430,7 +432,7 @@ cluster_characteristics(c, feat)
 # In[24]:
 
 
-plot_feature_characteristics(c, 'cluster', target_value);
+plot_feature_characteristics(c1, 'cluster', target_value);
 
 
 # #### Principal Component Analysis
@@ -442,7 +444,7 @@ plot_feature_characteristics(c, 'cluster', target_value);
 # In[25]:
 
 
-plot_cluster_pca(c, [0, 37], target_value);
+plot_cluster_pca(c1, [0, 37], target_value);
 
 
 # ## Further Clustering (Level 2)
@@ -450,42 +452,43 @@ plot_cluster_pca(c, [0, 37], target_value);
 # In[26]:
 
 
-# Look at Cluster 0
-c = c.loc[c.cluster == 0]
+def cluster_eval(c):
+    feats = ranking.rank_features(c, distance_measure, features, target_value)
+    print(feats)
+    feat =  feats.iloc[0].feature
+    
+    c = build_clusters(c, feat, distance_measure, target_value)
+    print("build successfully")
+    c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
+    print(cluster_characteristics(c, feat))
+    plot_feature_characteristics(c, 'cluster', target_value)
+    plot_cluster_pca(c, [2, 4], target_value)
+    return c
 
 
 # In[27]:
 
 
-feats = ranking.rank_features(c, distance_measure, features, target_value)
-print(feats)
+# Look at Cluster 0 at Level 2
+c2 = c1.loc[c1.cluster == 0]
+c2.article_id.unique()
+c2 = cluster_eval(c2)
 
 
 # In[28]:
 
 
-feat =  feats.iloc[0].feature
-c = build_clusters(df, feat, distance_measure, target_value)
-print(cluster_characteristics(c, feat))
+# cluster_articles = c1.groupby(['cluster']).apply(lambda x: len(x['article_id'].unique()))
+# cluster_articles.sort_values().index[0]
+# cluster_articles.min()
 
 
 # In[29]:
 
 
-c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
-cluster_characteristics(c, feat)
-
-
-# In[30]:
-
-
-plot_feature_characteristics(c, 'cluster', target_value);
-
-
-# In[34]:
-
-
-plot_cluster_pca(c, [2, 4], target_value);
+# Look at Cluster 4
+# c = c.loc[c.cluster == 4]
+# c = cluster_eval(c)
 
 
 # # Outlook and Discussion
