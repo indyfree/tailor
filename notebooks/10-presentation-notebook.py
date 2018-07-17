@@ -380,7 +380,7 @@ print("distance: ", distance.absolute(a,b))
 # Our new shoes has a few attributes, like brand and color, is of a certain Type (WUG, WHG) and will be placed in a certain compartment (Abteilung) of our shops. Moreover we want to introduce it in August.
 # 
 # Consequently we assume the following attributes for our the **Breeezy 5000**:
-# - brand: **Forseti**
+# - brand: **Hödur**
 # - color: **mittelbraun**
 # - Abteilung: **Abteilung005**
 # - WHG: **WHG014**
@@ -411,13 +411,13 @@ feats = ranking.rank_features(df, distance_measure, features, target_value)
 feats
 
 
-# We can see here that 'WUG' is the most informative feature for us. The **inner-feature variance** is the highest, which means that the single 'WUG's are far apart from each other, thus making good cluster candidates
+# We can see here that 'WUG' is the most informative feature for us. The **inter-feature variance** is the highest, which means that the single 'WUG's are far apart from each other, thus making good cluster candidates
 
 # ## Building First Clusters (Level 1)
 
 # We start by building cluster using the most informative feature.
 
-# In[22]:
+# In[61]:
 
 
 # Select important feature
@@ -430,7 +430,7 @@ cluster_characteristics(c1, feat)
 
 # After first clustering step, we can see that some big clusters (0, 1, 8, 12) and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
 
-# In[23]:
+# In[62]:
 
 
 c1 = merge_min_clusters(c1, feat, min_cluster_size, distance.absolute, target_value)
@@ -443,7 +443,7 @@ cluster_characteristics(c1, feat)
 
 # Visualizing the results we can see that the mean curves of the clusters are quite different. They follow a similar trend but have different course over time.
 
-# In[36]:
+# In[24]:
 
 
 plot_feature_characteristics(c1, 'cluster', target_value);
@@ -455,7 +455,7 @@ plot_feature_characteristics(c1, 'cluster', target_value);
 # 
 # Using PCA for visualization, and plotting the individual articles for some clusters (colored) we can observe a good clustering results.
 
-# In[42]:
+# In[98]:
 
 
 plot_cluster_pca(c1, [16, 17, 37], target_value);
@@ -463,9 +463,32 @@ plot_cluster_pca(c1, [16, 17, 37], target_value);
 
 # ## Further Clustering (Level 2)
 
-# The first clustering step produced clusters that are characterized by *WHG*. We could find a reference population for our new shoe, by finding the cluster, which groups articles that have the same *WHG* as the **Breeezy 5000**. That is *Cluster 0*, which includes WHG014.
+# The first clustering step produced clusters that are characterized by *WHG*. We can use reference population for our new shoe, by finding the cluster, which groups articles that have the same *WHG* as the **Breeezy 5000**.
+# In this case its *Cluster 0*, which includes WHG014.
+# 
+# We further want to inspect the cluster size and variance of *Cluster 0*:
 
-# In[43]:
+# In[90]:
+
+
+print("Number of articles: %s" % cluster_characteristics(c1, feat).loc[0].num_articles)
+print("Variance: %s" % cluster_variance(c1, 0, distance_measure, target_value))
+
+
+# Our shoe is in quite a big cluster, where the variance is close to 1. We believe, we can find a better reference population by clustering further and looking at more features.
+
+# ### Redefine the Article Population
+
+# In[71]:
+
+
+# We looking to Cluster 0
+c2 = c1.loc[c1.cluster == 0]
+
+
+# ### Cluster with the Next Feature
+
+# In[72]:
 
 
 # For simplicity we define a function for a clustering step, that executes all of the above
@@ -478,34 +501,30 @@ def cluster_step(c):
     return (c, feat)
 
 
-# ### Finding Our Cluster
-
-# The first clustering step produced clusters that are characterized by *WUG*.
-# Looking at our shoe **Breeezy 5000**
-# We can use the To further refine our reference population
-
-# In[27]:
+# In[73]:
 
 
-# At Level 2 we choose cluster 0
-c2 = c1.loc[c1.cluster == 0]
 c2, feat = cluster_step(c2)
 cluster_characteristics(c2, feat)
 
 
-# In[28]:
+# In[99]:
+
+
+print("Number of Articles: %s" % cluster_characteristics(c2, feat).loc[34].num_articles)
+print("Variance: %s" % cluster_variance(c2, 34, distance_measure, target_value))
+
+
+# In[108]:
 
 
 plot_feature_characteristics(c2, 'cluster', target_value);
 
 
-# In[44]:
+# The second level clustering produced a cluster that has a lot less variance (0.66 in comparison to 0.99), while still having a decent cluster size (87). Looking at the visual output we can see that the **Cluster 34** has a distinct curve than the other clusters.
 
+# ### Evaluation
 
-# At Level 2 we choose cluster 9
-c3 = c2.loc[c2.cluster == 0]
-c3, feat = cluster_step(c3)
-cluster_characteristics(c3, feat)
-
+# Through clustering on two hierarchical levels we found an article population that is above the set `min_cluster_size` and has a low variance. The articles in that cluster are similar in their selling behavior and make a good basis for further predictions or analysis. Assuming a market introduction of the **Breezy 5000** we can use this population to determine strategies for a wanted 
 
 # # Outlook and Discussion
