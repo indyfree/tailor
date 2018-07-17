@@ -138,8 +138,8 @@ len(tos[tos == 182])
 # In[9]:
 
 
-plot_articles(raw_data, [900001, 900002, 900030], 'article_count');
-plot_articles(raw_data, [900001, 900002, 900030], 'avq');
+plot_articles(raw_data, [900001, 900002, 900030], 'article_count')
+plot_articles(raw_data, [900001, 900002, 900030], 'avq')
 
 
 # # Data Processing
@@ -198,8 +198,8 @@ df.dtypes
 # In[12]:
 
 
-plot_articles(df, [900001, 900002, 900030], 'article_count');
-plot_articles(df, [900001, 900002, 900030], 'avq');
+plot_articles(df, [900001, 900002, 900030], 'article_count')
+plot_articles(df, [900001, 900002, 900030], 'avq')
 
 
 # In comparison to the raw data, you can see that the graphs no longer looks that messy. It is easier to identify which graphs are similar. Moreover we see that we removed seasonal effects by grouping the daily sales to weeks.
@@ -227,7 +227,7 @@ plot_articles(df, [900001, 900002, 900030], 'avq');
 # In[13]:
 
 
-plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
+plot_feature_characteristics(df, 'Abteilung', 'norm_article_count')
 
 
 # This graph visualizes the inter-feat variance of the feature 'Abteilung'. We can see that all curves are quite different from each other. That indicates that the individual characteristics should be treated individually. (Form an own cluster) 
@@ -235,7 +235,7 @@ plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
 # In[14]:
 
 
-plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
+plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False)
 
 
 # This graph visualizes the inter-feat variance of the feature 'color'. Each curve represents the averaged sells of articles with the same color. We can see that quite a few curves in the middle look very similar, while at the top and bottom are "far away" from the others. We can assume that the similar colors-curves in the middle should be treated the same (form a cluster together) and the curves which look different should be treated individually.
@@ -302,19 +302,19 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 # In[17]:
 
 
-plot_articles(df, [900001, 900080], 'article_count');
+plot_articles(df, [900001, 900080], 'article_count')
 a = df.loc[df.article_id == 900001].set_index('time_on_sale')['article_count']
 b = df.loc[df.article_id == 900080].set_index('time_on_sale')['article_count']
-print("distance: ", distance.absolute(a,b))
+print("distance: ", distance.absolute(a, b))
 
 
 # In[18]:
 
 
-plot_articles(df, [900001, 900050], 'article_count');
+plot_articles(df, [900001, 900050], 'article_count')
 a = df.loc[df.article_id == 900001].set_index('time_on_sale')['article_count']
 b = df.loc[df.article_id == 900050].set_index('time_on_sale')['article_count']
-print("distance: ", distance.absolute(a,b))
+print("distance: ", distance.absolute(a, b))
 
 
 # ### Normalization
@@ -329,10 +329,12 @@ print("distance: ", distance.absolute(a,b))
 # In[19]:
 
 
-plot_articles(df, [900001, 900050], 'norm_article_count');
-a = df.loc[df.article_id == 900001].set_index('time_on_sale')['norm_article_count']
-b = df.loc[df.article_id == 900050].set_index('time_on_sale')['norm_article_count']
-print("distance: ", distance.absolute(a,b))
+plot_articles(df, [900001, 900050], 'norm_article_count')
+a = df.loc[df.article_id == 900001].set_index(
+    'time_on_sale')['norm_article_count']
+b = df.loc[df.article_id == 900050].set_index(
+    'time_on_sale')['norm_article_count']
+print("distance: ", distance.absolute(a, b))
 
 
 # ## Outline of the Algorithm
@@ -421,7 +423,7 @@ feats
 
 
 # Select important feature
-feat =  feats.iloc[1].feature
+feat = feats.iloc[1].feature
 
 # Build Cluster at Level 1
 c1 = build_clusters(df, feat, distance_measure, target_value)
@@ -433,7 +435,8 @@ cluster_characteristics(c1, feat)
 # In[23]:
 
 
-c1 = merge_min_clusters(c1, feat, min_cluster_size, distance.absolute, target_value)
+c1 = merge_min_clusters(c1, feat, min_cluster_size,
+                        distance.absolute, target_value)
 cluster_characteristics(c1, feat)
 
 
@@ -446,7 +449,7 @@ cluster_characteristics(c1, feat)
 # In[24]:
 
 
-plot_feature_characteristics(c1, 'cluster', target_value);
+plot_feature_characteristics(c1, 'cluster', target_value)
 
 
 # #### Principal Component Analysis
@@ -458,7 +461,7 @@ plot_feature_characteristics(c1, 'cluster', target_value);
 # In[25]:
 
 
-plot_cluster_pca(c1, [16, 17, 37], target_value);
+plot_cluster_pca(c1, [16, 17, 37], target_value)
 
 
 # ## Further Clustering (Level 2)
@@ -471,7 +474,8 @@ plot_cluster_pca(c1, [16, 17, 37], target_value);
 # In[26]:
 
 
-print("Number of articles: %s" % cluster_characteristics(c1, feat).loc[0].num_articles)
+print("Number of articles: %s" %
+      cluster_characteristics(c1, feat).loc[0].num_articles)
 print("Variance: %s" % cluster_variance(c1, 0, distance_measure, target_value))
 
 
@@ -491,13 +495,14 @@ c2 = c1.loc[c1.cluster == 0]
 # In[28]:
 
 
-# For simplicity we define a function for a clustering step, that executes all of the above
+# For simplicity we define a function for a clustering step
 def cluster_step(c):
     feats = ranking.rank_features(c, distance_measure, features, target_value)
-    feat =  feats.iloc[0].feature
+    feat = feats.iloc[0].feature
     print("Splitting on feature '%s'." % feat)
     c = build_clusters(c, feat, distance_measure, target_value)
-    c = merge_min_clusters(c, feat, min_cluster_size, distance.absolute, target_value)
+    c = merge_min_clusters(c, feat, min_cluster_size,
+                           distance.absolute, target_value)
     return (c, feat)
 
 
@@ -511,14 +516,16 @@ cluster_characteristics(c2, feat)
 # In[30]:
 
 
-print("Number of Articles: %s" % cluster_characteristics(c2, feat).loc[34].num_articles)
-print("Variance: %s" % cluster_variance(c2, 34, distance_measure, target_value))
+print("Number of Articles: %s" %
+      cluster_characteristics(c2, feat).loc[34].num_articles)
+print("Variance: %s" % cluster_variance(
+    c2, 34, distance_measure, target_value))
 
 
 # In[31]:
 
 
-plot_feature_characteristics(c2, 'cluster', target_value);
+plot_feature_characteristics(c2, 'cluster', target_value)
 
 
 # The second level clustering produced a cluster that has a lot less variance (0.66 in comparison to 0.99), while still having a decent cluster size (87). Looking at the visual output we can see that the **Cluster 34** has a distinct curve than the other clusters.
