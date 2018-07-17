@@ -171,8 +171,9 @@ plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 # 5. __Fill missing values__
 #   * As we found out before, not all articles have sales on each day for the consecutive 182 days. Therefore, we add extra rows with zero values for the missing *time_on_sales* values
 #   
+#   
 # 6. __Data normalization__
-#   * Come up with it here are in a later paragraph?
+#   * Since we want to be able to compare the shape of graphs as well as the values we need to add columns with normalized values. The exact procedure will be explained later on
 
 # # Data Exploration
 
@@ -258,17 +259,17 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 
 # ## General
 
-# The general idea of the clustering algorithm is to recursively split the article population into the characteristics of each feature. After every step, merge "similar" characteristics together to clusters. This is a way of hierarchical clustering: With each considered feature the number of clusters increases and the size of the clusters grows smaller.
+# The general idea of the clustering algorithm is to recursively split the article population into the characteristics of each feature. Afterwards "similar" characteristics are merged together to clusters. This is a way of hierarchical clustering: With each considered feature the number of clusters increases and the size of the clusters grows smaller.
 # 
 # 
-# In the end we will have clusters that look like this:
+# In the end we will have clusters that look similar to this:
 # 
 # * Level 1
 #     * __Cluster 1__:  
 #         * _Brand_: Adidas
-# 
 #     * __Cluster 2__:  
 #         * _Brand_: Nike, Rebook 
+#         
 # * Level 2
 #     * __Cluster 1.1__:  
 #         * _Brand_: Adidas
@@ -282,6 +283,7 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 #     * __Cluster 2.2__:  
 #         * _Brand_: Nike, Rebook
 #         * _Color_: blue, green
+#         
 # * Level 3:
 #     * __Cluster 1.1.1__:  
 #         * _Brand_: Adidas
@@ -289,7 +291,7 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 #         * _Season_: autumn 
 #     * ...
 #     
-# Note: The features don't have to be split the same way across all cluster. See e.g. _Cluster 1.1_ vs. _Cluster 2.1_.  The feature color has been split differently. E.g. "Red and blue Adidas shoes are similar, but red Nikes and Rebooks and not similar to blue Nikes and Rebooks"
+# Note: The features don't have to be split the same way across all cluster. See e.g. _Cluster 1.1_ vs. _Cluster 2.1_.  The feature color has been split differently. E.g. "Red and blue Adidas shoes are similar, but red Nikes and Rebooks are not similar to blue Nikes and Rebooks"
 # 
 # The challenge is a) to rank the features in the best order we want to consider them (e.g. first _Brand_ then _Color_) and b) find similar behaving characteristics (e.g. blue and red Adidas are similar).
 
@@ -379,9 +381,9 @@ print("distance: ", distance.absolute(a, b))
 
 # ## Define The Use Case
 
-# Our new shoes has a few attributes, like brand and color, is of a certain Type (WUG, WHG) and will be placed in a certain compartment (Abteilung) of our shops. Moreover we want to introduce it in August.
+# Our new shoes have a few attributes, like brand and color, are of a certain type (WUG, WHG) and will be placed in a certain compartment (Abteilung) of our shops. Moreover we want to introduce it in August.
 # 
-# Consequently we assume the following attributes for our the **Breeezy 5000**:
+# Consequently we assume the following attributes for our **Breeezy 5000**:
 # - brand: **Hödur**
 # - color: **mittelbraun**
 # - Abteilung: **Abteilung005**
@@ -454,14 +456,20 @@ plot_feature_characteristics(c1, 'cluster', target_value);
 
 # #### Principal Component Analysis
 
-# Principal Component Analysis (PCA) is a common technique for feature reduction and visualization multi-dimensional data in 2D. PCA transform the data onto new "orthogonal" axis, along the axis where there is the largest variance in the original data (the revenue curve with the 26 dimensions, one for each day). Time-series data is not the main use-case for PCA, but nevertheless we can see more than 50% of the variance explained by the first two components. 
+# Principal Component Analysis (PCA) is a common technique for feature reduction and visualization of multi-dimensional data in 2D. PCA transform the data onto new "orthogonal" axis, along the axis where there is the largest variance in the original data (the revenue curve with the 26 dimensions, one for each day). Time-series data is not the main use-case for PCA, but nevertheless we can see more than 50% of the variance explained by the first two components. 
 # 
-# Using PCA for visualization, and plotting the individual articles for some clusters (colored) we can observe a good clustering results.
+# Using PCA for visualization, and plotting the individual articles for the clusters we can see that the current split alone is not sufficient for a distinct difference between all clusters. However, when we select certain clusters a distinction can be made.
 
 # In[25]:
 
 
-plot_cluster_pca(c1, [16, 17, 37], target_value);
+plot_cluster_pca(c1, [0, 1, 3, 5, 6, 7, 12, 16, 17, 24, 37, 38], target_value);
+
+
+# In[59]:
+
+
+plot_cluster_pca(c1, [7, 17, 16, 37], target_value);
 
 
 # ## Further Clustering (Level 2)
@@ -479,7 +487,7 @@ print("Number of articles: %s" %
 print("Variance: %s" % cluster_variance(c1, 0, distance_measure, target_value))
 
 
-# Our shoe is in quite a big cluster, where the variance is close to 1. We believe, we can find a better reference population by clustering further and looking at more features.
+# Our shoe is in a relatively large cluster, where the variance is close to 1. We believe that we can find a better reference population by clustering further and looking at more features.
 
 # ### Redefine the Article Population
 
