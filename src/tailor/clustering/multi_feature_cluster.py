@@ -55,8 +55,8 @@ def evaluate_cluster(cluster_df, data):
 
     df_temp = cluster_df.copy().select_dtypes(include=['category']).drop_duplicates()
     df_temp = df_temp.reset_index(drop=True)
-    df_percentages = pd.DataFrame(index = range(len(df_temp.index)), columns=df_temp.columns)
-    
+    df_percentages = pd.DataFrame(index=range(len(df_temp.index)), columns=df_temp.columns)
+
     for i, article in df_temp.iterrows():
         for col in df_temp.columns:
             if "article_id" not in col:
