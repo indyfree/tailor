@@ -44,6 +44,21 @@ def inter_feat_variance(df, distance_measure, feat, distance_target):
 
     return inter_feat_variance
 
+def cluster_variance(df, cluster, distance_measure, distance_target):
+    cluster_variance = 0.0
+
+    df_c = df[df.cluster == cluster]
+    mean_curve = df_c.groupby('time_on_sale').mean()[distance_target]
+
+    articles = df_c['article_id'].unique()
+    for a in articles:
+        article_curve = df_c[df_c.article_id == a].set_index('time_on_sale')[distance_target]
+        distance = distance_measure(mean_curve, article_curve)
+        cluster_variance += (distance**2)
+
+    return (cluster_variance / len(df_c['article_id'].unique()))
+
+
 
 def intra_feat_variance(df, distance_measure, feat, distance_target):
     '''Determines the intra feature variances of all characteristics for the given feature'''
