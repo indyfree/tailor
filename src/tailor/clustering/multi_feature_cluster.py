@@ -63,7 +63,7 @@ def evaluate_cluster(cluster_df, data):
                 characteristic = df_temp[col][i]
                 df_percentages.at[i, col] = c_p[characteristic]
                 df_percentages.at[i, 'article_id'] = df_temp['article_id'][i]
-    
+
     percentage_matrix = df_percentages.drop(columns='article_id').values
     percentage_sum = 0.0
     for row in percentage_matrix:
@@ -76,7 +76,7 @@ def evaluate_clustering(merge_results, layer, data):
     c_e = pd.Series(index=range(len(merge_results['DataFrames'][str(layer)])))
     for i, df in enumerate(merge_results['DataFrames'][str(layer)]):
         c_e[i] = evaluate_cluster(df, data)
-        
+
     return c_e
 
 
