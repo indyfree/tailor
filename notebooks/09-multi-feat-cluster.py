@@ -71,23 +71,17 @@ split_results['Clusters']['5'][0]['Features']
 # In[9]:
 
 
-cluster.show_cluster_characteristics(data, merge_results, 4)
+multi_feature_cluster.show_cluster_characteristics(data, merge_results, 4)
 
 
 # In[10]:
 
 
-cluster.show_cluster_characteristics(data, merge_results, 4, 0.75)
+multi_feature_cluster.show_cluster_characteristics(data, merge_results, 4, 0.75)
 
 
 # In[11]:
 
 
-cluster.show_cluster_characteristics(data, merge_results, 3, 0.75)
-
-
-# In[12]:
-
-
-cluster.show_cluster_characteristics(data, merge_results, 3)
+multi_feature_cluster.show_cluster_characteristics(data, merge_results, 3, 0.75)
 
