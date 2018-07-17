@@ -44,6 +44,7 @@ def inter_feat_variance(df, distance_measure, feat, distance_target):
 
     return inter_feat_variance
 
+
 def cluster_variance(df, cluster, distance_measure, distance_target):
     cluster_variance = 0.0
 
@@ -57,7 +58,6 @@ def cluster_variance(df, cluster, distance_measure, distance_target):
         cluster_variance += (distance**2)
 
     return (cluster_variance / len(df_c['article_id'].unique()))
-
 
 
 def intra_feat_variance(df, distance_measure, feat, distance_target):
