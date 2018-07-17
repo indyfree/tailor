@@ -107,7 +107,7 @@ def get_distance_matrix(clusters, distance_measure):
     return distances
 
 
-def get_distance_targets(merge_results, merge_number):
+def get_distance_targets(merge_results, merge_number, clustering_feature):
     '''generates the optimized targets for the distance matrix calculation'''
 
     length = len(merge_results['Groups'][str(merge_number - 1)])
@@ -198,7 +198,7 @@ def merge_all(distances):
             target = group[0]
             # sanity check
             if target in cluster_groups.index:
-                if len(cluster_groups[target]) > 1
+                if len(cluster_groups[target]) > 1:
                     # loner points to pointer loop group
                     # push own index to target
                     cluster_groups[target].append(i)
@@ -255,7 +255,7 @@ def merge_too_small(distances, too_small):
     '''
     # get the closest group for each group that is too small
     # generates a Series with pointer lists
-    closest_groups = pd.Series(index=range(length), dtype='object')
+    closest_groups = pd.Series(index=range(len(distances)), dtype='object')
     for i in too_small:
         target_index = np.nanargmin(distances[i]).item()
         # only one value now, but we will add values later
@@ -318,7 +318,7 @@ def merge_too_small(distances, too_small):
         if (len(group) <= 1):
             target = group[0]
             if target in relevant_groups.index:
-                if len(relevant_groups[target]) > 1
+                if len(relevant_groups[target]) > 1:
                     # loner points to pointer loop group
                     # push own index to target
                     relevant_groups[target].append(i)
@@ -355,7 +355,7 @@ def merge_too_small(distances, too_small):
     print("new clusters: " + str(len(list(set(list(itertools.chain.from_iterable(clean)))))))
 
     # merge the newly generated groups with the groups excluded by too_small
-    new_groups = pd.Series(index=range(length), dtype='object')
+    new_groups = pd.Series(index=range(len(distances)), dtype='object')
 
     # initialize with own index
     for i in new_groups.index:
@@ -435,7 +435,6 @@ def merge(data, split_results, distance_measure, clustering_feature, min_cluster
 
     '''
 
-    print("merge layer 0")
     # initialize layer 0
     merge_results = pd.Series()
     merge_results['Groups'] = pd.Series()
@@ -444,6 +443,8 @@ def merge(data, split_results, distance_measure, clustering_feature, min_cluster
 
     clusters = get_leaves(split_results)
     length = len(clusters)
+    print("total clusters: " + str(length))
+    print("merging")
     targets = list()
     # dress the clusters for better distance performance
     for i, cluster in enumerate(clusters):
@@ -455,7 +456,7 @@ def merge(data, split_results, distance_measure, clustering_feature, min_cluster
             target = target.reindex(pd.RangeIndex(26)).fillna(0)
         targets.append(target)
 
-    distances = get_distance_matrix(targets)
+    distances = get_distance_matrix(targets, distance_measure)
     grouped_clusters = merge_all(distances)
 
     merge_results['Indexes']['0'] = grouped_clusters
@@ -503,8 +504,8 @@ def merge(data, split_results, distance_measure, clustering_feature, min_cluster
         print("number of clusters below min size: " + str(len(too_small)))
 
         if not above_min_size:
-            targets = get_distance_targets(merge_results, merge_number)
-            distances = get_distance_matrix(targets)
+            targets = get_distance_targets(merge_results, merge_number, clustering_feature)
+            distances = get_distance_matrix(targets, distance_measure)
             new_groups = merge_too_small(distances, too_small)
             add_merge_layer(merge_results, merge_number, new_groups)
             merge_number += 1
@@ -513,8 +514,8 @@ def merge(data, split_results, distance_measure, clustering_feature, min_cluster
     # merge until below max_cluster_count
     while len(merge_results['Groups'][str(merge_number - 1)]) > max_cluster_count:
 
-        targets = get_distance_targets(merge_results, merge_number)
-        distances = get_distance_matrix(targets)
+        targets = get_distance_targets(merge_results, merge_number, clustering_feature)
+        distances = get_distance_matrix(targets, distance_measure)
         new_groups = merge_all(distances)
         add_merge_layer(merge_results, merge_number, new_groups)
         merge_number += 1
@@ -543,7 +544,7 @@ def split(df, distance_measure, min_cluster_size):
     cluster['Name']
     e.g. 0_3_1_7 means that the cluster is the 7th split of the 1st split of the 3rd split of the starting cluster
     '''
-
+    print("splitting")
     # retrieve the features relevant for clustering
     usable_features = df.select_dtypes(include=['category']).drop(columns=['article_id']).columns.values
     split_number = 0
@@ -576,6 +577,7 @@ def split(df, distance_measure, min_cluster_size):
     split_results['Features'][str(split_number)].append(split_feature)
 
     while (split_possible):
+        print("split number: " + str(split_number + 1))
         split_possible = False
         # iterate through all split target clusters
         for position, cluster in enumerate(split_results['Clusters'][str(split_number)]):
