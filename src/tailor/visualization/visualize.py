@@ -53,7 +53,8 @@ def plot_cluster_pca(df, clusters, distance_target, legend=True):
     F = pd.DataFrame(X_r)
     F['cluster'] = df.loc[:, ['article_id', 'cluster']].groupby('article_id').first().reset_index().cluster
 
-    plt.figure()
+
+    plt.figure(num=None, figsize=(6, 4), dpi=600, facecolor='w', edgecolor='k')
     ax = plt.axes()
 
     for i in clusters:
@@ -72,7 +73,7 @@ def plot_cluster_pca(df, clusters, distance_target, legend=True):
 
 
 def _setup_plot(xlabel, ylabel):
-    plt.figure()
+    plt.figure(num=None, figsize=(10, 4), dpi=600, facecolor='w', edgecolor='k')
     ax = plt.axes()
     ax.set_xlabel(xlabel.replace("_", " "), fontsize=12)
     ax.set_ylabel(ylabel.replace("_", " "), fontsize=12)
