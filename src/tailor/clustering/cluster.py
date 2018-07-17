@@ -1,4 +1,3 @@
-import pandas as pd
 from tailor.clustering import ranking
 from tailor.clustering import multi_feature_cluster
 from tailor.clustering import single_feature_cluster
