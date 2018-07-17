@@ -110,7 +110,6 @@ def get_distance_matrix(clusters, distance_measure):
 def get_distance_targets(merge_results, merge_number, clustering_feature):
     '''generates the optimized targets for the distance matrix calculation'''
 
-    length = len(merge_results['Groups'][str(merge_number - 1)])
     targets = list()
     # dress the clusters for better distance performance
     for i, group in enumerate(merge_results['Groups'][str(merge_number - 1)]):
@@ -624,4 +623,3 @@ def split(df, distance_measure, min_cluster_size):
         split_number += 1
 
     return split_results
-
