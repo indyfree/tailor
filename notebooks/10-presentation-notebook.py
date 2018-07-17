@@ -139,7 +139,7 @@ len(tos[tos == 182])
 
 
 plot_articles(raw_data, [900001, 900002, 900030], 'article_count')
-plot_articles(raw_data, [900001, 900002, 900030], 'avq')
+plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 
 
 # # Data Processing
@@ -199,7 +199,7 @@ df.dtypes
 
 
 plot_articles(df, [900001, 900002, 900030], 'article_count')
-plot_articles(df, [900001, 900002, 900030], 'avq')
+plot_articles(df, [900001, 900002, 900030], 'avq');
 
 
 # In comparison to the raw data, you can see that the graphs no longer looks that messy. It is easier to identify which graphs are similar. Moreover we see that we removed seasonal effects by grouping the daily sales to weeks.
@@ -227,7 +227,7 @@ plot_articles(df, [900001, 900002, 900030], 'avq')
 # In[13]:
 
 
-plot_feature_characteristics(df, 'Abteilung', 'norm_article_count')
+plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
 
 
 # This graph visualizes the inter-feat variance of the feature 'Abteilung'. We can see that all curves are quite different from each other. That indicates that the individual characteristics should be treated individually. (Form an own cluster) 
@@ -235,7 +235,7 @@ plot_feature_characteristics(df, 'Abteilung', 'norm_article_count')
 # In[14]:
 
 
-plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False)
+plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
 
 
 # This graph visualizes the inter-feat variance of the feature 'color'. Each curve represents the averaged sells of articles with the same color. We can see that quite a few curves in the middle look very similar, while at the top and bottom are "far away" from the others. We can assume that the similar colors-curves in the middle should be treated the same (form a cluster together) and the curves which look different should be treated individually.
@@ -449,7 +449,7 @@ cluster_characteristics(c1, feat)
 # In[24]:
 
 
-plot_feature_characteristics(c1, 'cluster', target_value)
+plot_feature_characteristics(c1, 'cluster', target_value);
 
 
 # #### Principal Component Analysis
@@ -461,7 +461,7 @@ plot_feature_characteristics(c1, 'cluster', target_value)
 # In[25]:
 
 
-plot_cluster_pca(c1, [16, 17, 37], target_value)
+plot_cluster_pca(c1, [16, 17, 37], target_value);
 
 
 # ## Further Clustering (Level 2)
@@ -525,7 +525,7 @@ print("Variance: %s" % cluster_variance(
 # In[31]:
 
 
-plot_feature_characteristics(c2, 'cluster', target_value)
+plot_feature_characteristics(c2, 'cluster', target_value);
 
 
 # The second level clustering produced a cluster that has a lot less variance (0.66 in comparison to 0.99), while still having a decent cluster size (87). Looking at the visual output we can see that the **Cluster 34** has a distinct curve than the other clusters.
