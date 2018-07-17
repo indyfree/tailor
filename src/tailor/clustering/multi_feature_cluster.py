@@ -40,6 +40,46 @@ def show_cluster_characteristics(data, merge_results, layer, threshold=0.0):
         print("")
 
 
+def evaluate_cluster(cluster_df, data):
+    # characteristic - percentage dictionary
+    c_p = pd.Series()
+
+    for col in cluster_df.select_dtypes(include=['category']):
+        if "article_id" not in col:
+            for characteristic in cluster_df[col].unique():
+                query_string = str(col) + " == " + '"' + str(characteristic) + '"'
+                temp_df = cluster_df.query(query_string)
+                temp_nunique = temp_df['article_id'].nunique()
+                temp_percentage = temp_nunique / data.query(query_string)['article_id'].nunique()
+                c_p[characteristic] = temp_percentage
+
+    df_temp = cluster_df.copy().select_dtypes(include=['category']).drop_duplicates()
+    df_temp = df_temp.reset_index(drop=True)
+    df_percentages = pd.DataFrame(index = range(len(df_temp.index)), columns=df_temp.columns)
+    
+    for i, article in df_temp.iterrows():
+        for col in df_temp.columns:
+            if "article_id" not in col:
+                characteristic = df_temp[col][i]
+                df_percentages.at[i, col] = c_p[characteristic]
+                df_percentages.at[i, 'article_id'] = df_temp['article_id'][i]
+    
+    percentage_matrix = df_percentages.drop(columns='article_id').values
+    percentage_sum = 0.0
+    for row in percentage_matrix:
+        percentage_sum += row.max()
+    return percentage_sum / len(percentage_matrix)
+
+
+def evaluate_clustering(merge_results, layer, data):
+    # cluster - evaluation dictionary
+    c_e = pd.Series(index=range(len(merge_results['DataFrames'][str(layer)])))
+    for i, df in enumerate(merge_results['DataFrames'][str(layer)]):
+        c_e[i] = evaluate_cluster(df, data)
+        
+    return c_e
+
+
 def get_cluster_parent_name(cluster):
     '''generates the name of the parent cluster'''
 
