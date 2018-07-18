@@ -530,9 +530,80 @@ plot_feature_characteristics(c2, 'cluster', 'article_count');
 # 
 # Besides the efficiency improvement, small subgroups (e.g. from split level 4 and 6) of e.g. split level 1 cluster 0 and cluster 2 can be merged, taking a step away from pure hierarchical clustering, which could be seen as a less restrictive approach and therefore considered beneficial for cluster quality. However, this also dilutes the feature specificity of the clusters, the first approach results in clusters that are 100% identified by a certain feature characteristic combination.
 
+# In[58]:
+
+
+# Use standardized article count as measure for clustering
+target_value = 'norm_article_count'
+min_cluster_size = 50
+max_cluster_count = 10
+# Use absolute distance between the curves as similarity measure
+distance_measure = distance.absolute
+
+
+# Note that this approach automatically uses all categorical features available, therefore there is no need to specify the features.
+
+# In[61]:
+
+
+get_ipython().run_cell_magic('time', '', '# suppress the print output\n%%capture\n# all steps of both the splitting and the merging are returned\nsplit_results, merge_results = cluster.multi_feature(df, distance_measure, target_value, min_cluster_size, max_cluster_count);')
+
+
+# The second approach is much faster!
+
+# In[62]:
+
+
+# show the available layers of the merging process
+print(merge_results['Groups'].index)
+
+
+# In[69]:
+
+
+assigned_df = multi_feature_cluster.get_cluster_dataframe(merge_results, 4, df)
+plot_feature_characteristics(assigned_df, 'cluster', target_value);
+
+
+# However, with max_cluster_count = 10 the algorithm merges until only two clusters are left, so let's see what the merge layer above looks like:
+
+# In[70]:
+
+
+assigned_df2 = multi_feature_cluster.get_cluster_dataframe(merge_results, 3, df)
+plot_feature_characteristics(assigned_df2, 'cluster', target_value);
+
+
+# The 13 resulting cluster should be better suited for practice, however, we still need to find out which cluster we want to put our **Breeezy 5000** in:
+
+# In[71]:
+
+
+multi_feature_cluster.show_cluster_characteristics(df, merge_results, 3, 0.90)
+
+
+# **Breeezy 5000**:
+# - brand: **Skuld**
+# - color: **mittelbraun**
+# - Abteilung: **Abteilung005**
+# - WHG: **WHG014**
+# - WUG: **WUG073**
+# - month: **August**
+# - season: **Sommer**
+# 
+# We can see that cluster 11 has 97% of all **Skuld** articles and since no other feature of our **Breeezy 5000** has a higher percentage in any of the clusters we would choose cluster 11 as a reference point.
+
+# An interesting feature of this approach is the identification of relevant clustering features, apparently **WUG** and **brand** can be excellent identifiers for article behavior. Since not all characteristics of WUG and brand are shown in the list, the approach also identifies WUGs and brands that **without a characteristic combination** are not defining article behavior (e.g. WUG073).
+# 
+# This also shows the weakness of the second approach, as a new article might not be easy to put in a cluster, in the worst case the article feature characteristics are all represented in multiple clusters with relatively low percentages. We also see that cluster 10 and 12 have no characteristic that is represented more than 90% (the parameter used) within those clusters, which could mean that these clusters are bad reference points.
+# 
+# Cluster 10 and 12 might have characteristic combinations that are only represented in these clusters. Due to time constraints it is currently not possible to check for these combinations.
+
 # # Outlook
 
 # While both approaches work, have their validity and provide usable results, each of them has certain strengths and weaknesses. Due to the project's constraints in time and environment, the algorithms have not been tested in practice, especially against experienced human retailer's decisions. Therefore, the next step would be to test these algorithms in-depth with statistical measures and against real-life practices, possibly resulting in further optimization.
+# 
+# Both algorithms could be expanded in their functionality, the first one is not fully automated, the second one is missing identification of cluster-defining characteristic combinations.
 # 
 # The provided data has been sufficient to serve as a basis for creating an algorithm, however, the restriction to 26 weeks for each article limits the results, since the clustering is only based upon a fraction of an article's lifetime. This restriction also affects the usability of the algorithms, as the full dataset will result in longer run-times. If the run-times in a real-world-setting prove to be impractically long the algorithms need to be revised.
 # 
