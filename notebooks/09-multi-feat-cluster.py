@@ -14,7 +14,7 @@ get_ipython().run_line_magic('load_ext', 'autoreload')
 get_ipython().run_line_magic('autoreload', '2')
 
 
-# In[2]:
+# In[51]:
 
 
 import pandas as pd
@@ -24,6 +24,7 @@ import itertools
 
 import tailor
 from tailor.clustering import *
+from tailor.visualization import *
 
 
 # In[3]:
@@ -68,78 +69,82 @@ split_results['Clusters'].index
 split_results['Clusters']['5'][0]['Features']
 
 
-# In[237]:
-
-
-multi_feature_cluster.show_cluster_characteristics(data, merge_results, 4, 0.75)
-
-
 # In[10]:
 
 
 multi_feature_cluster.show_cluster_characteristics(data, merge_results, 3, 0.75)
 
 
-# In[243]:
+# In[9]:
 
 
-def evaluate_cluster(df):
-    # characteristic - percentage dictionary
-    c_p = pd.Series()
-
-    for col in df.select_dtypes(include=['category']):
-        if "article_id" not in col:
-            for characteristic in df[col].unique():
-                query_string = str(col) + " == " + '"' + str(characteristic) + '"'
-                temp_df = df.query(query_string)
-                temp_nunique = temp_df['article_id'].nunique()
-                temp_percentage = temp_nunique / data.query(query_string)['article_id'].nunique()
-                c_p[characteristic] = temp_percentage
-
-    df_temp = df.copy().select_dtypes(include=['category']).drop_duplicates()
-    df_temp = df_temp.reset_index(drop=True)
-    df_percentages = pd.DataFrame(index = range(len(df_temp.index)), columns=df_temp.columns)
-    
-    for i, article in df_temp.iterrows():
-        for col in df_temp.columns:
-            if "article_id" not in col:
-                characteristic = df_temp[col][i]
-                df_percentages.at[i, col] = c_p[characteristic]
-                df_percentages.at[i, 'article_id'] = df_temp['article_id'][i]
-    
-    percentage_matrix = df_percentages.drop(columns='article_id').values
-    percentage_sum = 0.0
-    for row in percentage_matrix:
-        percentage_sum += row.max()
-    return percentage_sum / len(percentage_matrix)
+multi_feature_cluster.show_cluster_characteristics(data, merge_results, 4, 0.75)
 
 
-# In[244]:
+# In[57]:
 
 
-evaluate_cluster(merge_results['DataFrames']['2'][1])
+multi_feature_cluster.evaluate_clustering(merge_results, 2, data)
 
 
-# In[247]:
+# In[19]:
 
 
-def evaluate_clustering(merge_results, layer):
-    # cluster - evaluation dictionary
-    c_e = pd.Series(index=range(len(merge_results['DataFrames'][str(layer)])))
-    for i, df in enumerate(merge_results['DataFrames'][str(layer)]):
-        c_e[i] = evaluate_cluster(df)
-        
-    return c_e
+assigned_df = multi_feature_cluster.get_cluster_dataframe(merge_results, 3, data)
 
 
-# In[249]:
+# In[55]:
 
 
-evaluate_clustering(merge_results, 3)
+multi_feature_cluster.evaluate_clustering(merge_results, 3, data)
 
 
-# In[250]:
+# In[60]:
 
 
-evaluate_clustering(merge_results, 4)
+plot_cluster_articles(assigned_df, 1, clustering_feature, legend=False);
+plot_cluster_articles(assigned_df, 10, clustering_feature, legend=False);
+
+
+# In[30]:
+
+
+assigned_df2 = multi_feature_cluster.get_cluster_dataframe(merge_results, 4, data)
+
+
+# In[56]:
+
+
+multi_feature_cluster.evaluate_clustering(merge_results, 4, data)
+
+
+# In[61]:
+
+
+plot_cluster_articles(assigned_df, 0, clustering_feature, legend=False);
+plot_cluster_articles(assigned_df, 1, clustering_feature, legend=False);
+
+
+# In[22]:
+
+
+plot_feature_characteristics(assigned_df, 'cluster', clustering_feature);
+
+
+# In[49]:
+
+
+plot_feature_characteristics(assigned_df, 'cluster', 'article_count');
+
+
+# In[32]:
+
+
+plot_feature_characteristics(assigned_df2, 'cluster', clustering_feature);
+
+
+# In[50]:
+
+
+plot_feature_characteristics(assigned_df2, 'cluster', 'article_count');
 
