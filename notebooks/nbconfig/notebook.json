@@ -5,6 +5,12 @@
     "table_beautifier/main": true,
     "collapsible_headings/main": true,
     "hide_input_all/main": false,
-    "hide_input/main": true
+    "hide_input/main": true,
+    "toc2/main": true
+  },
+  "toc2": {
+    "toc_cell": true,
+    "threshold": "3",
+    "title_cell": "Table of Contents <br></br>"
   }
 }

@@ -1,6 +1,9 @@
 
 # coding: utf-8
 
+# <h1>Table of Contents<span class="tocSkip"></span></h1>
+# <div class="toc"><ul class="toc-item"><li><span><a href="#About-the-Project" data-toc-modified-id="About-the-Project-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>About the Project</a></span><ul class="toc-item"><li><span><a href="#The-Customer" data-toc-modified-id="The-Customer-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>The Customer</a></span></li><li><span><a href="#The-Task" data-toc-modified-id="The-Task-1.2"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>The Task</a></span></li><li><span><a href="#The-Goal" data-toc-modified-id="The-Goal-1.3"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>The Goal</a></span></li></ul></li><li><span><a href="#Data-Introduction" data-toc-modified-id="Data-Introduction-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Data Introduction</a></span><ul class="toc-item"><li><span><a href="#Example-of-the-Raw-Data" data-toc-modified-id="Example-of-the-Raw-Data-2.1"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>Example of the Raw Data</a></span></li><li><span><a href="#Feature-Overview" data-toc-modified-id="Feature-Overview-2.2"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Feature Overview</a></span></li><li><span><a href="#Consistency-Checks" data-toc-modified-id="Consistency-Checks-2.3"><span class="toc-item-num">2.3&nbsp;&nbsp;</span>Consistency Checks</a></span></li><li><span><a href="#Visualization-of-the-Raw-Data" data-toc-modified-id="Visualization-of-the-Raw-Data-2.4"><span class="toc-item-num">2.4&nbsp;&nbsp;</span>Visualization of the Raw Data</a></span></li></ul></li><li><span><a href="#Data-Processing" data-toc-modified-id="Data-Processing-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Data Processing</a></span></li><li><span><a href="#Data-Exploration" data-toc-modified-id="Data-Exploration-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Data Exploration</a></span><ul class="toc-item"><li><span><a href="#Example-of-the-Processed-Data" data-toc-modified-id="Example-of-the-Processed-Data-4.1"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Example of the Processed Data</a></span></li><li><span><a href="#Visualization-of-the-Processed-Data" data-toc-modified-id="Visualization-of-the-Processed-Data-4.2"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Visualization of the Processed Data</a></span></li></ul></li><li><span><a href="#The-Clustering-Algorithm" data-toc-modified-id="The-Clustering-Algorithm-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>The Clustering Algorithm</a></span><ul class="toc-item"><li><span><a href="#Inter-Feature-Variance" data-toc-modified-id="Inter-Feature-Variance-5.1"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Inter-Feature Variance</a></span></li><li><span><a href="#Similarity-Measure" data-toc-modified-id="Similarity-Measure-5.2"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Similarity Measure</a></span><ul class="toc-item"><li><span><a href="#Normalization" data-toc-modified-id="Normalization-5.2.1"><span class="toc-item-num">5.2.1&nbsp;&nbsp;</span>Normalization</a></span></li></ul></li><li><span><a href="#The-First-Idea" data-toc-modified-id="The-First-Idea-5.3"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>The First Idea</a></span><ul class="toc-item"><li><span><a href="#Outline-of-the-Algorithm" data-toc-modified-id="Outline-of-the-Algorithm-5.3.1"><span class="toc-item-num">5.3.1&nbsp;&nbsp;</span>Outline of the Algorithm</a></span></li><li><span><a href="#Plotting-the-Clusters" data-toc-modified-id="Plotting-the-Clusters-5.3.2"><span class="toc-item-num">5.3.2&nbsp;&nbsp;</span>Plotting the Clusters</a></span></li></ul></li><li><span><a href="#The-Second-Approach" data-toc-modified-id="The-Second-Approach-5.4"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>The Second Approach</a></span></li></ul></li><li><span><a href="#Outlook" data-toc-modified-id="Outlook-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>Outlook</a></span></li></ul></div>
+
 # # About the Project
 
 # ## The Customer
@@ -259,9 +262,9 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 
 # ## Similarity Measure
 
-# Each clustering algorithm needs to define a similarity measure, also called "distance", to cluster similar items together. In our case "similar" articles are articles, that showed similar selling behavior while being on sale in the shops of the customer. The dataset yields measures for the number of articles sold over time (*article count*) the generated *revenue* and the sales quota in comparison to the stock (_avq_, _Abverkaufsquote_). So in the use-case of our customer similar articles are the ones that have a similar curve of *revenue*, *article_count* or *avq* over time.
+# Each clustering algorithm needs to define a similarity measure, also called "distance", to cluster similar items together. In our case "similar" articles are articles, that showed similar selling behavior while being on sale in the shops of the customer. The dataset yields measures for the number of articles sold over time (*article count*) the generated *revenue* and the sales quota in comparison to the stock (_avq_, _Abverkaufsquote_). So in the use-case of our customer similar articles are the ones that have a similar curve of *revenue*, *article_count* or *avq* over time.  
 
-# #### When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
+# When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
 
 # In[17]:
 
@@ -583,13 +586,14 @@ multi_feature_cluster.show_cluster_characteristics(df, merge_results, 3, 0.90)
 
 
 # **Breeezy 5000**:
+# 
 # - brand: **Skuld**
 # - color: **mittelbraun**
 # - Abteilung: **Abteilung005**
 # - WHG: **WHG014**
 # - WUG: **WUG073**
 # - month: **August**
-# - season: **Sommer**
+# - season: **Sommer**  
 # 
 # We can see that cluster 11 has 97% of all **Skuld** articles and since no other feature of our **Breeezy 5000** has a higher percentage in any of the clusters we would choose cluster 11 as a reference point.
 
@@ -601,10 +605,10 @@ multi_feature_cluster.show_cluster_characteristics(df, merge_results, 3, 0.90)
 
 # # Outlook
 
-# While both approaches work, have their validity and provide usable results, each of them has certain strengths and weaknesses. Due to the project's constraints in time and environment, the algorithms have not been tested in practice, especially against experienced human retailer's decisions. Therefore, the next step would be to test these algorithms in-depth with statistical measures and against real-life practices, possibly resulting in further optimization.
-# 
-# Both algorithms could be expanded in their functionality, the first one is not fully automated, the second one is missing identification of cluster-defining characteristic combinations.
-# 
-# The provided data has been sufficient to serve as a basis for creating an algorithm, however, the restriction to 26 weeks for each article limits the results, since the clustering is only based upon a fraction of an article's lifetime. This restriction also affects the usability of the algorithms, as the full dataset will result in longer run-times. If the run-times in a real-world-setting prove to be impractically long the algorithms need to be revised.
-# 
+# While both approaches work, have their validity and provide usable results, each of them has certain strengths and weaknesses. Due to the project's constraints in time and environment, the algorithms have not been tested in practice, especially against experienced human retailer's decisions. Therefore, the next step would be to test these algorithms in-depth with statistical measures and against real-life practices, possibly resulting in further optimization.  
+
+# Both algorithms could be expanded in their functionality, the first one is not fully automated, the second one is missing identification of cluster-defining characteristic combinations. <br>
+
+# The provided data has been sufficient to serve as a basis for creating an algorithm, however, the restriction to 26 weeks for each article limits the results, since the clustering is only based upon a fraction of an article's lifetime. This restriction also affects the usability of the algorithms, as the full dataset will result in longer run-times. If the run-times in a real-world-setting prove to be impractically long the algorithms need to be revised. <br><br>
+
 # Overall, we consider variance as the determining factor for splitting time-series-clusters and absolute distance in combination with standardization for merging time-series-clusters a success.
