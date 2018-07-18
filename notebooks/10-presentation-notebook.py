@@ -530,4 +530,10 @@ plot_feature_characteristics(c2, 'cluster', 'article_count');
 # 
 # Besides the efficiency improvement, small subgroups (e.g. from split level 4 and 6) of e.g. split level 1 cluster 0 and cluster 2 can be merged, taking a step away from pure hierarchical clustering, which could be seen as a less restrictive approach and therefore considered beneficial for cluster quality. However, this also dilutes the feature specificity of the clusters, the first approach results in clusters that are 100% identified by a certain feature characteristic combination.
 
-# # Outlook and Discussion
+# # Outlook
+
+# While both approaches work, have their validity and provide usable results, each of them has certain strengths and weaknesses. Due to the project's constraints in time and environment, the algorithms have not been tested in practice, especially against experienced human retailer's decisions. Therefore, the next step would be to test these algorithms in-depth with statistical measures and against real-life practices, possibly resulting in further optimization.
+# 
+# The provided data has been sufficient to serve as a basis for creating an algorithm, however, the restriction to 26 weeks for each article limits the results, since the clustering is only based upon a fraction of an article's lifetime. This restriction also affects the usability of the algorithms, as the full dataset will result in longer run-times. If the run-times in a real-world-setting prove to be impractically long the algorithms need to be revised.
+# 
+# Overall, we consider variance as the determining factor for splitting time-series-clusters and absolute distance in combination with standardization for merging time-series-clusters a success.
