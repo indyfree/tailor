@@ -2,17 +2,15 @@
 # coding: utf-8
 
 # <h1>Table of Contents<span class="tocSkip"></span></h1>
-# <div class="toc"><ul class="toc-item"><li><span><a href="#About-the-Project" data-toc-modified-id="About-the-Project-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>About the Project</a></span><ul class="toc-item"><li><span><a href="#The-Customer" data-toc-modified-id="The-Customer-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>The Customer</a></span></li><li><span><a href="#The-Task" data-toc-modified-id="The-Task-1.2"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>The Task</a></span></li><li><span><a href="#The-Goal" data-toc-modified-id="The-Goal-1.3"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>The Goal</a></span></li></ul></li><li><span><a href="#Data-Introduction" data-toc-modified-id="Data-Introduction-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Data Introduction</a></span><ul class="toc-item"><li><span><a href="#Example-of-the-Raw-Data" data-toc-modified-id="Example-of-the-Raw-Data-2.1"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>Example of the Raw Data</a></span></li><li><span><a href="#Feature-Overview" data-toc-modified-id="Feature-Overview-2.2"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Feature Overview</a></span></li><li><span><a href="#Consistency-Checks" data-toc-modified-id="Consistency-Checks-2.3"><span class="toc-item-num">2.3&nbsp;&nbsp;</span>Consistency Checks</a></span></li><li><span><a href="#Visualization-of-the-Raw-Data" data-toc-modified-id="Visualization-of-the-Raw-Data-2.4"><span class="toc-item-num">2.4&nbsp;&nbsp;</span>Visualization of the Raw Data</a></span></li></ul></li><li><span><a href="#Data-Processing" data-toc-modified-id="Data-Processing-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Data Processing</a></span></li><li><span><a href="#Data-Exploration" data-toc-modified-id="Data-Exploration-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Data Exploration</a></span><ul class="toc-item"><li><span><a href="#Example-of-the-Processed-Data" data-toc-modified-id="Example-of-the-Processed-Data-4.1"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Example of the Processed Data</a></span></li><li><span><a href="#Visualization-of-the-Processed-Data" data-toc-modified-id="Visualization-of-the-Processed-Data-4.2"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Visualization of the Processed Data</a></span></li></ul></li><li><span><a href="#The-Clustering-Algorithm" data-toc-modified-id="The-Clustering-Algorithm-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>The Clustering Algorithm</a></span><ul class="toc-item"><li><span><a href="#Inter-Feature-Variance" data-toc-modified-id="Inter-Feature-Variance-5.1"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Inter-Feature Variance</a></span></li><li><span><a href="#Similarity-Measure" data-toc-modified-id="Similarity-Measure-5.2"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Similarity Measure</a></span><ul class="toc-item"><li><span><a href="#Normalization" data-toc-modified-id="Normalization-5.2.1"><span class="toc-item-num">5.2.1&nbsp;&nbsp;</span>Normalization</a></span></li></ul></li><li><span><a href="#The-First-Idea" data-toc-modified-id="The-First-Idea-5.3"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>The First Idea</a></span><ul class="toc-item"><li><span><a href="#Outline-of-the-Algorithm" data-toc-modified-id="Outline-of-the-Algorithm-5.3.1"><span class="toc-item-num">5.3.1&nbsp;&nbsp;</span>Outline of the Algorithm</a></span></li><li><span><a href="#Plotting-the-Clusters" data-toc-modified-id="Plotting-the-Clusters-5.3.2"><span class="toc-item-num">5.3.2&nbsp;&nbsp;</span>Plotting the Clusters</a></span></li></ul></li><li><span><a href="#The-Second-Approach" data-toc-modified-id="The-Second-Approach-5.4"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>The Second Approach</a></span></li></ul></li><li><span><a href="#Outlook" data-toc-modified-id="Outlook-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>Outlook</a></span></li></ul></div>
+# <div class="toc"><ul class="toc-item"><li><span><a href="#About-the-Project" data-toc-modified-id="About-the-Project-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>About the Project</a></span><ul class="toc-item"><li><span><a href="#The-Customer" data-toc-modified-id="The-Customer-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>The Customer</a></span></li><li><span><a href="#The-Goal" data-toc-modified-id="The-Goal-1.2"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>The Goal</a></span></li></ul></li><li><span><a href="#Data-Introduction" data-toc-modified-id="Data-Introduction-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Data Introduction</a></span><ul class="toc-item"><li><span><a href="#Example-of-the-Raw-Data" data-toc-modified-id="Example-of-the-Raw-Data-2.1"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>Example of the Raw Data</a></span></li><li><span><a href="#Feature-Overview" data-toc-modified-id="Feature-Overview-2.2"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Feature Overview</a></span></li><li><span><a href="#Consistency-Checks" data-toc-modified-id="Consistency-Checks-2.3"><span class="toc-item-num">2.3&nbsp;&nbsp;</span>Consistency Checks</a></span></li><li><span><a href="#Visualization-of-the-Raw-Data" data-toc-modified-id="Visualization-of-the-Raw-Data-2.4"><span class="toc-item-num">2.4&nbsp;&nbsp;</span>Visualization of the Raw Data</a></span></li></ul></li><li><span><a href="#Data-Processing" data-toc-modified-id="Data-Processing-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Data Processing</a></span></li><li><span><a href="#Data-Exploration" data-toc-modified-id="Data-Exploration-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Data Exploration</a></span><ul class="toc-item"><li><span><a href="#Example-of-the-Processed-Data" data-toc-modified-id="Example-of-the-Processed-Data-4.1"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Example of the Processed Data</a></span></li><li><span><a href="#Visualization-of-the-Processed-Data" data-toc-modified-id="Visualization-of-the-Processed-Data-4.2"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Visualization of the Processed Data</a></span></li></ul></li><li><span><a href="#The-Clustering-Algorithm" data-toc-modified-id="The-Clustering-Algorithm-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>The Clustering Algorithm</a></span><ul class="toc-item"><li><span><a href="#Inter-Feature-Variance" data-toc-modified-id="Inter-Feature-Variance-5.1"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Inter-Feature Variance</a></span></li><li><span><a href="#Similarity-Measure" data-toc-modified-id="Similarity-Measure-5.2"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Similarity Measure</a></span><ul class="toc-item"><li><span><a href="#Normalization" data-toc-modified-id="Normalization-5.2.1"><span class="toc-item-num">5.2.1&nbsp;&nbsp;</span>Normalization</a></span></li></ul></li><li><span><a href="#Overview-of-The-Algorithm" data-toc-modified-id="Overview-of-The-Algorithm-5.3"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Overview of The Algorithm</a></span><ul class="toc-item"><li><span><a href="#Outline-of-the-Algorithm" data-toc-modified-id="Outline-of-the-Algorithm-5.3.1"><span class="toc-item-num">5.3.1&nbsp;&nbsp;</span>Outline of the Algorithm</a></span></li><li><span><a href="#Plotting-the-Clusters" data-toc-modified-id="Plotting-the-Clusters-5.3.2"><span class="toc-item-num">5.3.2&nbsp;&nbsp;</span>Plotting the Clusters</a></span></li></ul></li><li><span><a href="#The-Second-Approach" data-toc-modified-id="The-Second-Approach-5.4"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>The Second Approach</a></span></li></ul></li><li><span><a href="#Outlook" data-toc-modified-id="Outlook-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>Outlook</a></span></li></ul></div>
 
 # # About the Project
 
 # ## The Customer
 
-# The customer is a fashion retailer with numerous stores across Germany. It collected data of articles that have been on sale over a period of time and now wants to do some analysis on the basis of that data.
-
-# ## The Task
-
-# The fashion retailer wants to use the data for:
+# The customer is a fashion retailer with numerous stores across Germany. It collected data of articles that have been on sale over a period of time.
+# The customer wants to use the data for further analysis.  
+# For example:
 # 
 #   * Sales volume predictions for articles 
 #   * Optimal price determination of new articles on market launch
@@ -25,33 +23,21 @@
 # The mean variation is too high, hence the quality of the prediction would be very low.
 # The amount and variety of articles allows to refer to a more representative population. For an optimal prediction quality, the population should be as big as possible and its mean variation as small as possible.
 # 
-# It is possible to create such a population, by grouping articles with similar characteristic attributes together. This can be realized through a clustering algorithm.
+# It is possible to create such a population, by grouping articles with similar characteristic attributes together. Those populations can be generated through a clustering algorithm.
 
 # ## The Goal
 
-# The overall goal of the project is to develop a clustering algorithm, that provide meaningful article clusters. The algorithm should provide reasonable results and build on statistically verified methods. The special challenge of the clustering algorithm is:
+# The overall goal of the project is to develop a clustering algorithm, that builds meaningful article clusters. The algorithm should provide reasonable results and build on statistically verified methods. The challenges of the clustering algorithm are:
 
 # - Clusters should be characterized by article attributes (e.g. brand, color, ..)
 # - Clusters should be formed according to similar behavior in number of articles sold, revenue or sales-quotas over time
 
-# In clustering the distance (similarity) and the characterizing attributes build on the same features. This is not the case here. Thus, we can not use existing packages for categorical-, nor time-series clustering, because each would contradict one of the constraints above. A further requirement is, that each article has to be assigned to a cluster.
+# These requirements combines the tasks of categorical and time-series clustering. Thus, we can not use existing packages for categorical-, nor time-series clustering, because each would contradict one of the constraints above. A further requirement is, that each article has to be assigned to a cluster.
 
 # # Data Introduction
 
 # First, we want to give an overview of the provided data. Therefore, we have a look at the raw dataset and 
 # do some visualization for a better understanding of the data.
-
-# In[1]:
-
-
-# TODO: Remove before export
-# Display plots inline
-get_ipython().run_line_magic('matplotlib', 'inline')
-
-# Autoreload all package before excecuting a call
-get_ipython().run_line_magic('load_ext', 'autoreload')
-get_ipython().run_line_magic('autoreload', '2')
-
 
 # In[2]:
 
@@ -70,6 +56,20 @@ from tailor.visualization import *
 
 # ## Example of the Raw Data
 
+# In[7]:
+
+
+import pandas as pd
+import numpy as np
+import multiprocessing as mp
+import itertools
+
+import tailor
+from tailor import data
+from tailor.clustering import *
+from tailor.visualization import *
+
+
 # In[3]:
 
 
@@ -78,6 +78,8 @@ raw_data.head(10)
 
 
 # ## Feature Overview
+
+# The dataset contains the following features:
 
 #   * *markdown* is constant for *article_id* and *transaction_date* between *markdown_start_date* and *markdown_end_date*
 #   * *original_price* is constant for *article_id*
@@ -104,7 +106,7 @@ raw_data.describe(include=np.number)
 raw_data.isna().values.any()
 
 
-# We are lucky, there are no null values in the dataset!
+# We can observe that there are no null values in the dataset.
 
 # #### Detect how many articles are contained in the dataset
 
@@ -122,7 +124,7 @@ len(raw_data['article_id'].unique())
 raw_data['time_on_sale'].max()
 
 
-# This means we will be comparing sales of articles over a course of 182 consecutive days. Counting starts at day 0.
+# This means we will be comparing sales of articles over a course of 182 consecutive days (counting starts at day 0). 
 # 
 
 # #### Check how many articles don't have values defined for the full range of the 182 days
@@ -134,7 +136,7 @@ tos = raw_data.groupby('article_id').apply(lambda x: x.time_on_sale.nunique())
 len(tos[tos == 182])
 
 
-# After all there are a lot of missing data, but they were hidden. We do not see a single article has data for each of the 182 days they have been on sale! This problem has to be addressed in a later step.
+# After all there are a lot of missing data points, but they were hidden. We do not see a single article has data for each of the 182 days they have been on sale! This problem has to be addressed in a later step.
 
 # ## Visualization of the Raw Data
 
@@ -184,7 +186,7 @@ plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 
 # ## Example of the Processed Data
 
-# In[10]:
+# In[9]:
 
 
 df = data.load_data()
@@ -216,19 +218,19 @@ plot_articles(df, [900001, 900002, 900030], 'avq');
 # 
 # For an optimal prediction quality this group has to be:
 # 
-# - As similar as possible (Small variance)
-# - As big as possible (Large sample size)
+# - As similar as possible (small variance)
+# - As big as possible (large sample size)
 # 
 # We want to create such a group by:
 # 
-# 1. Splitting the population into groups where the (article-) characteristics of a feature behave differently. (E.g. blue articles are different from red articles)
-# 2. Grouping (article-)characteristics together that behave similarly. (E.g. blue and grey articles are similar to each other)
+# 1. Splitting the population into groups where the (article-) characteristics of a feature behave differently. (e.g. blue articles are different from red articles)
+# 2. Grouping (article-)characteristics together that behave similarly. (e.g. blue and grey articles are similar to each other)
 # 
 # Here the **feature** is *color*, and the **characteristics** are *blue*, *grey* and *red*.
 # 
 # To find features, where this is easily possible, we will look at the **inter-feature variance**. The **inter-feature variance** measures the variance of the characteristics within a feature. A high **inter-feature variance** indicates differently behaving characteristics.
 # 
-# Next, we will look at the graphs some features to get an idea, how the different characteristics are distributed.
+# Next, we will look at the graphs of some features to get an idea, how the different characteristics are distributed.
 
 # In[13]:
 
@@ -236,7 +238,7 @@ plot_articles(df, [900001, 900002, 900030], 'avq');
 plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
 
 
-# This graph visualizes the inter-feat variance of the feature 'Abteilung'. We can see that all curves are quite different from each other. That indicates that the individual characteristics should be treated individually. (Form an own cluster) 
+# This graph visualizes the inter-feat variance of the feature 'Abteilung'. We can see that all curves are quite different from each other. That indicates that the characteristics should be treated individually. Therefore, building cluster out of these characteristics produces better populations.
 
 # In[14]:
 
@@ -244,7 +246,7 @@ plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
 plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
 
 
-# This graph visualizes the inter-feat variance of the feature 'color'. Each curve represents the averaged sells of articles with the same color. We can see that quite a few curves in the middle look very similar, while at the top and bottom are "far away" from the others. We can assume that the similar colors-curves in the middle should be treated the same (form a cluster together) and the curves which look different should be treated individually.
+# This graph visualizes the inter-feat variance of the feature 'color'. Each curve represents the averaged sells of articles with the same color. The curves in the middle look very similar, while the ones at the top and bottom are "far away" from the others. We can assume that the similar colors-curves in the middle should be treated the same (form a cluster together) and the curves which look different should be treated individually.
 
 # Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to consider for clustering.
 
@@ -262,7 +264,7 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 
 # ## Similarity Measure
 
-# Each clustering algorithm needs to define a similarity measure, also called "distance", to cluster similar items together. In our case "similar" articles are articles, that showed similar selling behavior while being on sale in the shops of the customer. The dataset yields measures for the number of articles sold over time (*article count*) the generated *revenue* and the sales quota in comparison to the stock (_avq_, _Abverkaufsquote_). So in the use-case of our customer similar articles are the ones that have a similar curve of *revenue*, *article_count* or *avq* over time.  
+# Each clustering algorithm needs to define a similarity measure, also called "distance", to cluster similar items together. In our case "similar" articles are articles, that showed similar selling behavior. The dataset yields measures for the number of articles sold over time (*article count*) the generated *revenue* and the sales quota in comparison to the stock (_avq_, _Abverkaufsquote_). So in the use-case of our customer similar articles are the ones that have a similar curve of *revenue*, *article_count* or *avq* over time.  
 
 # When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
 
@@ -286,12 +288,11 @@ print("distance: ", distance.absolute(a, b))
 
 # ### Normalization
 
-# One problem remains: If we look at the at the upper graph we can see that the two curves are far apart, but they have a somehow similar shape. Here it is crucial that we __normalize__ the curves. Normalized values allow the comparison of corresponding normalized values for different observations.
+# One problem remains: If we look at the at the upper graph we can see that the two curves are far apart, but they have a similar shape. Here it is crucial that we __normalize__ the curves. Normalized values allow the comparison of corresponding normalized values for different observations.
 # 
-# We chose to normalize the article curves with the **Standardized Moment**, the process is also called **standardization**. This kind of normalization is typically a division by the *standard deviation*. This has the advantage that such normalized moments differ only in other properties than variability, which facilitates e.g. comparison of shape.
+# We chose to normalize the article curves by **standardization**. This kind of normalization is typically a division by the *standard deviation*. This has the advantage that standardized values differ only in other properties than variability, which facilitates the comparisons of curve shapes.
 
-# If we look at the same articles, but plot and calculate the distance with the normalized values we can see that the 
-# two articles are now much closer.The distance measure is now implicitly taking the *shape* into account, when calculating the absolute distance between the normalized values.
+# If we plot and calculate the distance with the normalized values the two articles are now much closer. The distance measure is now implicitly taking the *shape* into account, when calculating the absolute distance between the normalized values.
 
 # In[19]:
 
@@ -304,12 +305,12 @@ b = df.loc[df.article_id == 900050].set_index(
 print("distance: ", distance.absolute(a, b))
 
 
-# ## The First Idea
+# ## Overview of The Algorithm
 
-# The general idea of the clustering algorithm is to split the article population into the characteristics of each feature. Afterwards "similar" characteristics are merged together to clusters. These clusters can then be split by a different feature. This is a way of hierarchical clustering: With each considered feature the number of clusters increases and the size of the clusters diminishes.
+# The general idea of the clustering algorithm is to split the article population into the characteristics of each feature. Afterwards "similar" characteristics are merged together to clusters. These clusters can then be split by a different feature. This is hierarchical clustering: With each considered feature the number of clusters increases and the size of the clusters decreases.
 # 
 # 
-# In the end we will have clusters that look similar to this:
+# The resulting clusters will look like this:
 # 
 # * Level 1
 #     * __Cluster 1__:  
@@ -338,7 +339,7 @@ print("distance: ", distance.absolute(a, b))
 #         * _Season_: autumn 
 #     * ...
 #     
-# Note: The features don't have to be split the same way across all cluster. See e.g. _Cluster 1.1_ vs. _Cluster 2.1_.  The feature color has been split differently. E.g. "Red and blue Adidas shoes are similar, but red Nikes and Rebooks are not similar to blue Nikes and Rebooks"
+# **Note:** The features don't have to be split the same way across all cluster. See e.g. _Cluster 1.1_ vs. _Cluster 2.1_.  The feature color has been split differently. E.g. "Red and blue Adidas shoes are similar, but red Nikes and Rebooks are not similar to blue Nikes and Rebooks"
 # 
 # The challenge is a) to rank the features in the best order we want to consider them (e.g. first _Brand_ then _Color_) and b) find similar behaving characteristics (e.g. blue and red Adidas are similar).
 
@@ -346,7 +347,7 @@ print("distance: ", distance.absolute(a, b))
 
 # #### Set Clustering Parameters
 
-# In[20]:
+# In[4]:
 
 
 # Use standardized article count as measure for clustering
@@ -360,23 +361,27 @@ distance_measure = distance.absolute
 
 # #### Rank the Features
 
-# In[21]:
+# In[10]:
 
 
 feats = ranking.rank_features(df, distance_measure, features, target_value)
 feats
 
 
-# We can see here that 'WUG' is the most informative feature for us. The **inter-feature variance** is the highest, which means that the single 'WUG's are far apart from each other, thus making good cluster candidates
+# We can see here that 'WUG' is the most informative feature for us. The **inter-feature variance** is the highest, which means that the single WUG's are far apart from each other, thus making good cluster candidates
 
 # #### Building First Clusters (Level 1)
 
 # We start building clusters using the most informative feature.
 
-# In[23]:
+# In[2]:
 
 
-get_ipython().run_cell_magic('time', '', '\n# Select important feature\nfeat = feats.iloc[0].feature\n\n# Build Cluster at Level 1\nc1 = build_clusters(df, feat, distance_measure, target_value)')
+# Select important feature
+feat = feats.iloc[0].feature
+
+# Build Cluster at Level 1
+c1 = build_clusters(df, feat, distance_measure, target_value)
 
 
 # In[24]:
@@ -388,10 +393,11 @@ cluster_characteristics(c1, feat)
 # After first clustering step, we can see that some big clusters (0, 1, 3) and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
 # We also see that the first clustering step has taken 18 minutes, which should be improvable.
 
-# In[26]:
+# In[11]:
 
 
-get_ipython().run_cell_magic('time', '', '\nc1 = merge_min_clusters(c1, feat, min_cluster_size,\n                        distance.absolute, target_value)')
+c1 = merge_min_clusters(c1, feat, min_cluster_size,
+                        distance.absolute, target_value)
 
 
 # In[27]:
@@ -416,7 +422,7 @@ plot_feature_characteristics(c1, 'cluster', target_value);
 
 # Principal Component Analysis (PCA) is a common technique for feature reduction and visualization of multi-dimensional data in 2D. PCA transform the data onto new "orthogonal" axis, along the axis where there is the largest variance in the original data (the revenue curve with the 26 dimensions, one for each day). Time-series data is not the main use-case for PCA, but nevertheless we can see more than 50% of the variance explained by the first two components. 
 # 
-# Using PCA for visualization, and plotting the individual articles for the clusters we can see that PCA does not seem to be suitable for our data. However, when we select certain clusters a distinction can be made, which should provide some validation to our methods.
+# Using PCA for visualization, and plotting the individual articles for the clusters we can see that some of the clusters are overlapping. However, when we select certain clusters a distinction can be made, which should provide some validation to our methods.
 
 # In[31]:
 
@@ -432,7 +438,10 @@ plot_cluster_pca(c1, [5, 14, 64], target_value);
 
 # #### Applied to a Use Case
 
-# To make the clustering process more tangible we assume that we are a fashion retailer and want to introduce a new special edition shoe **Breeezy 5000** into our shops. Beforehand, we want to know how many shoes need to be produced how quickly. To satisfy this need we use the **norm_article_count** clustering to find a suitable target set for initial inventory prediction. By looking at the **article count curve** of a shoe within the cluster a decent starting point should be made.
+# To make the clustering process more tangible, we assume that we are a fashion retailer, that wants to introduce a new special edition shoe, the **Breeezy 5000**.
+# Before the introduction, we want to analyze possible sales behavior and determine a successful market introduction strategy.
+# 
+# To satisfy this need we use the **norm_article_count** clustering to find a suitable target set for initial inventory prediction. By looking at the **article count curve** of a shoe within the cluster a decent starting point should be made.
 # 
 # 
 # We assume the following attributes for our **Breeezy 5000**:
@@ -609,6 +618,6 @@ multi_feature_cluster.show_cluster_characteristics(df, merge_results, 3, 0.90)
 
 # Both algorithms could be expanded in their functionality, the first one is not fully automated, the second one is missing identification of cluster-defining characteristic combinations. <br>
 
-# The provided data has been sufficient to serve as a basis for creating an algorithm, however, the restriction to 26 weeks for each article limits the results, since the clustering is only based upon a fraction of an article's lifetime. This restriction also affects the usability of the algorithms, as the full dataset will result in longer run-times. If the run-times in a real-world-setting prove to be impractically long the algorithms need to be revised. <br><br>
+# The provided data has been sufficient to serve as a basis for creating an algorithm, however, the restriction to 26 weeks for each article limits the results, since the clustering is only based upon a fraction of an article's lifetime.
 
 # Overall, we consider variance as the determining factor for splitting time-series-clusters and absolute distance in combination with standardization for merging time-series-clusters a success.
