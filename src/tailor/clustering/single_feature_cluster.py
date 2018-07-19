@@ -21,7 +21,7 @@ def build_clusters(df, feature, distance_measure, distance_target):
 
         # Set the merging threshold as the values which fall below half of the average distance
         # NOTE: This is arbitrary and should be statistically proven
-        threshold = distances.cluster_distance.mean() / 2
+        threshold = distances.cluster_distance.mean() / 3
 
         a, b = closest_clusters(distances, threshold)
         if (a or b) is None:
