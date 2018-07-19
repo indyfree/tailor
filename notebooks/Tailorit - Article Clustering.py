@@ -75,13 +75,12 @@ raw_data.sample(3)
 #   * *discount* = *original_price* - *markdown* - *sells_price*
 #   * *avq* is the current stock divided by *stock_total*
 
-# Categorical features include the following:
+# Date and categorical features include the following:
 
-# In[3]:
+# In[8]:
 
 
-df = data.load_data()
-df.describe(include=['category'])
+raw_data.describe(include=np.object)
 
 
 # ## Consistency Checks
@@ -505,7 +504,7 @@ c2, feat = cluster_step(c2)
 cluster_characteristics(c2, feat)
 
 
-# The corresponding cluster for the Breeezy 5000 is **Cluster 4**. The *month* of the shoe, **July**, has been clustered in that cluster. 
+# The corresponding cluster for the Breeezy 5000 is **Cluster 4**. The desired release *month* of the shoe, **July**, has been clustered in that cluster. 
 
 # In[51]:
 
