@@ -5,7 +5,7 @@
     "table_beautifier/main": true,
     "collapsible_headings/main": true,
     "hide_input_all/main": false,
-    "hide_input/main": true,
+    "hide_input/main": false,
     "toc2/main": true
   },
   "toc2": {
