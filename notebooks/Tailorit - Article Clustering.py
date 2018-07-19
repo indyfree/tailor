@@ -56,7 +56,7 @@ from tailor.visualization import *
 
 # ## Example of the Raw Data
 
-# In[60]:
+# In[2]:
 
 
 raw_data = data.load_csv()
@@ -77,9 +77,10 @@ raw_data.sample(3)
 
 # Categorical features include the following:
 
-# In[62]:
+# In[3]:
 
 
+df = data.load_data()
 df.describe(include=['category'])
 
 
@@ -87,7 +88,7 @@ df.describe(include=['category'])
 
 # #### Check if the dataset contains null values
 
-# In[5]:
+# In[4]:
 
 
 raw_data.isna().values.any()
@@ -97,7 +98,7 @@ raw_data.isna().values.any()
 
 # #### Detect how many articles are contained in the dataset
 
-# In[6]:
+# In[5]:
 
 
 len(raw_data['article_id'].unique())
@@ -105,7 +106,7 @@ len(raw_data['article_id'].unique())
 
 # #### Get the maximum timespan the articles have been on sale
 
-# In[7]:
+# In[6]:
 
 
 raw_data['time_on_sale'].max()
@@ -116,7 +117,7 @@ raw_data['time_on_sale'].max()
 
 # #### Check how many articles don't have values defined for the full range of the 182 days
 
-# In[8]:
+# In[7]:
 
 
 tos = raw_data.groupby('article_id').apply(lambda x: x.time_on_sale.nunique())
@@ -127,7 +128,7 @@ len(tos[tos == 182])
 
 # ## Visualization of the Raw Data
 
-# In[9]:
+# In[8]:
 
 
 plot_articles(raw_data, [900001, 900002, 900030], 'article_count')
@@ -173,16 +174,15 @@ plot_articles(raw_data, [900001, 900002, 900030], 'avq');
 
 # ## Example of the Processed Data
 
-# In[55]:
+# In[9]:
 
 
-df = data.load_data()
 df.sample(3)
 
 
 # ## Visualization of the Processed Data
 
-# In[12]:
+# In[10]:
 
 
 plot_articles(df, [900001, 900002, 900030], 'article_count')
@@ -213,7 +213,7 @@ plot_articles(df, [900001, 900002, 900030], 'avq');
 # 
 # Next, we will look at the graphs of some features to get an idea, how the different characteristics are distributed.
 
-# In[13]:
+# In[11]:
 
 
 plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
@@ -221,7 +221,7 @@ plot_feature_characteristics(df, 'Abteilung', 'norm_article_count');
 
 # This graph visualizes the inter-feat variance of the feature 'Abteilung'. We can see that all curves are quite different from each other. That indicates that the characteristics should be treated individually. Therefore, building cluster out of these characteristics produces better populations.
 
-# In[14]:
+# In[12]:
 
 
 plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
@@ -231,13 +231,13 @@ plot_feature_characteristics(df, 'color', 'norm_article_count', legend=False);
 
 # Indeed, calculating the *inter-feat variances* of the two features clearly show that 'Abteilung' has a much larger variance then 'color', thus the feature 'Abteilung' is more interesting to consider for clustering.
 
-# In[15]:
+# In[13]:
 
 
 inter_feat_variance(df, distance.absolute, 'Abteilung', 'norm_article_count')
 
 
-# In[16]:
+# In[14]:
 
 
 inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
@@ -249,7 +249,7 @@ inter_feat_variance(df, distance.absolute, 'color', 'norm_article_count')
 
 # When we look at two pairs of articles we can see that the distance is lower when the curves are closer to each other
 
-# In[17]:
+# In[15]:
 
 
 plot_articles(df, [900001, 900080], 'article_count')
@@ -258,7 +258,7 @@ b = df.loc[df.article_id == 900080].set_index('time_on_sale')['article_count']
 print("distance: ", distance.absolute(a, b))
 
 
-# In[18]:
+# In[16]:
 
 
 plot_articles(df, [900001, 900050], 'article_count')
@@ -275,7 +275,7 @@ print("distance: ", distance.absolute(a, b))
 
 # If we plot and calculate the distance with the normalized values the two articles are now much closer. The distance measure is now implicitly taking the *shape* into account, when calculating the absolute distance between the normalized values.
 
-# In[19]:
+# In[17]:
 
 
 plot_articles(df, [900001, 900050], 'norm_article_count')
@@ -349,7 +349,7 @@ print("distance: ", distance.absolute(a, b))
 #         break
 # 
 #  ```
-# In words, we are considering every feature, ranked by its variance score. The features characteristics form a cluster, which get merged with similar characteristics (We want the clusters to be as similar as possible). The merging is going to happen more frequently towards the end of the `ranked_feature list`, since the feature characteristics are closer to another (low variance). Furthermore we are looking at the size of the clusters, and merge clusters which are too small (Remember we want the clusters to be as big as possible). The `min_cluster_size` and the `similarity_threshold` are parameters and can be set according to the customers preferences. Of course there is always a trade-of between similarity and size of a cluster.
+# In words, we are considering every feature, ranked by its variance score. The features characteristics form a cluster, which get merged with similar characteristics (We want the clusters to be as similar as possible). The merging is going to happen more frequently towards the end of the `ranked_feature list`, since the feature characteristics are closer to another (low variance). Furthermore we are looking at the size of the clusters, and merge clusters which are too small (Remember we want the clusters to be as big as possible). The `min_cluster_size` and the `target_value` are parameters and can be set according to the customers preferences. Of course there is always a trade-of between similarity and size of a cluster.
 
 # # Results and Evaluation
 
@@ -366,15 +366,15 @@ print("distance: ", distance.absolute(a, b))
 # - color: **mittelbraun**
 # - Abteilung: **Abteilung005**
 # - WHG: **WHG014**
-# - WUG: **WUG073**
-# - month: **August**
+# - WUG: **WUG084**
+# - month: **July**
 # - season: **Sommer**
 
 # ## Clustering Process
 
 # ### Setting the Clustering Parameters
 
-# In[20]:
+# In[18]:
 
 
 # Use standardized article count as measure for clustering
@@ -390,7 +390,7 @@ distance_measure = distance.absolute
 
 # As mentioned in the clustering outline, we have to find a feature, that we can use for the first step of clustering.
 
-# In[21]:
+# In[19]:
 
 
 feats = ranking.rank_features(df, distance_measure, features, target_value)
@@ -403,15 +403,15 @@ feats
 
 # We start building clusters using the feature *WUG*.
 
-# In[56]:
+# In[20]:
 
 
-# Select important feature
-feat = feats.iloc[1].feature
+# Select most important feature
+feat = feats.iloc[0].feature
 c1 = build_clusters(df, feat, distance_measure, target_value)
 
 
-# In[57]:
+# In[21]:
 
 
 cluster_characteristics(c1, feat)
@@ -419,14 +419,14 @@ cluster_characteristics(c1, feat)
 
 # After first clustering step, we can see that some big clusters (0, 1, 12, ...) and several small clusters have been formed. Since we want to generate clusters, that fulfill a minimum sample size, we now need to merge clusters that fall under the `min_cluster_size` with the respective closest cluster.
 
-# In[24]:
+# In[22]:
 
 
 c1 = merge_min_clusters(c1, feat, min_cluster_size,
                         distance.absolute, target_value)
 
 
-# In[25]:
+# In[23]:
 
 
 cluster_characteristics(c1, feat)
@@ -438,7 +438,7 @@ cluster_characteristics(c1, feat)
 
 # Visualizing the results we can see that the mean curves of the clusters are quite different. They follow a similar trend but have different course over time.
 
-# In[26]:
+# In[24]:
 
 
 plot_feature_characteristics(c1, 'cluster', target_value);
@@ -448,36 +448,36 @@ plot_feature_characteristics(c1, 'cluster', target_value);
 
 # Principal Component Analysis (PCA) is a common technique for feature reduction and visualization of multi-dimensional data in 2D. PCA transform the data onto new "orthogonal" axis, along the axis where there is the largest variance in the original data (the revenue curve with the 26 dimensions, one for each day). Time-series data is not the main use-case for PCA, but nevertheless we can see more than 50% of the variance explained by the first two components. 
 # 
-# Using PCA for visualization, we can see that some of the clusters are overlapping. This indicates that further clustering may be needed. However, there are also distinct clusters observable (e.g. Cluster 37) after the first step, which provides validation to our method.
+# Using PCA for visualization, we can see that some of the clusters are overlapping. This indicates that further clustering may be needed. However, there are also relatively distinct clusters observable (e.g. Cluster 43) after the first step, which provides validation to our method.
 
-# In[27]:
+# In[26]:
 
 
-plot_cluster_pca(c1, [0, 24, 37], target_value);
+plot_cluster_pca(c1, [43, 36, 64], target_value);
 
 
 # ### Cluster Evaluation
 
 # The first clustering step produced clusters that are characterized by *WHG*. 
 # 
-# The *Cluster 0* represents a reference population for the **Breeezy 5000**. *Cluster 0* includes amongst others, articles with `WHG = WUG014`, to which the **Breeezy 5000** belongs to.
+# The *Cluster 5* represents a reference population for the **Breeezy 5000**. *Cluster 5* includes amongst others, articles with `WHG = WUG084`, to which the **Breeezy 5000** belongs to.
 # 
-# We further want to inspect the cluster size and variance of *Cluster 0*:
+# We further want to inspect the cluster size and variance of *Cluster 5*:
 
-# In[28]:
+# In[48]:
 
 
-cluster = 0
+cluster = 5
 print("Number of articles: %s" %
       cluster_characteristics(c1, feat).loc[cluster].num_articles)
 print("Variance: %s" % cluster_variance(c1, cluster, distance_measure, target_value))
 
 
-# Our shoe is in a relatively large cluster (1406 articles), which has a variance slightly less than 1. We believe that we can find a better reference population by performing a second clustering step.
+# Our shoe is in a relatively large cluster (795 articles), which has a variance slightly above 0.5. We believe that we can find a better reference population by performing a second clustering step.
 
 # ### Clustering and Evaluation (Level 2)
 
-# In[30]:
+# In[39]:
 
 
 # For simplicity we define a function for a clustering step
@@ -491,39 +491,39 @@ def cluster_step(c):
     return (c, feat)
 
 
-# In[31]:
+# In[49]:
 
 
 # Select Cluster 0 from previous level
-c2 = c1.loc[c1.cluster == 0]
+c2 = c1.loc[c1.cluster == 5]
 c2, feat = cluster_step(c2)
 
 
-# In[32]:
+# In[50]:
 
 
 cluster_characteristics(c2, feat)
 
 
-# The corresponding cluster for the Breeezy 5000 is **Cluster 34**. The *brand* of the shoe, **Hödur**, has been clustered in that cluster. 
+# The corresponding cluster for the Breeezy 5000 is **Cluster 4**. The *month* of the shoe, **July**, has been clustered in that cluster. 
 
-# In[33]:
+# In[51]:
 
 
 plot_feature_characteristics(c2, 'cluster', target_value);
 
 
-# In[34]:
+# In[54]:
 
 
-cluster = 34
+cluster = 4
 print("Number of Articles: %s" %
       cluster_characteristics(c2, feat).loc[cluster].num_articles)
 print("Variance: %s" % cluster_variance(
     c2, cluster, distance_measure, target_value))
 
 
-# The 2nd level clustering for Cluster 0 produced a cluster (**Cluster 34**) that has a lot less variance (0.611 in comparison to 0.99), while still having a decent cluster size (81). Looking at the visual output we can see that the Cluster 34 has a distinct curve when compared to the other clusters. Cluster 34 represents a valid reference population for the **Breeezy 5000**.
+# The 2nd level clustering for Cluster 5 produced a cluster (**Cluster 4**) that has a lot less variance (0.21 in comparison to 0.53), while still having a decent cluster size (149). Looking at the visual output we can see that the Cluster 4 has a distinct curve when compared to the other clusters. Cluster 4 represents a valid reference population for the **Breeezy 5000**.
 
 # # Conclusion and Outlook
 
